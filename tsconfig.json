@@ -17,9 +17,13 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@factory/utils": ["libs/utils/index.ts"],
+    }
   },
   "angularCompilerOptions": {
+    "enableIvy": false,
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true
   }
