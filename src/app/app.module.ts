@@ -17,6 +17,6 @@ import { HelloComponent } from './hello.component';
     AppComponent,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

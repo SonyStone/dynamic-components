@@ -15,18 +15,18 @@ import { Test3Component } from './test-3.component';
 const components = [
   Test1Component,
   Test2Component,
-  Test2Component,
+  // Test2Component,
   Test3Component,
-  Test3Component,
-  Test2Component,
-  Test3Component,
-  Test1Component,
-  Test2Component,
-  Test2Component,
-  Test3Component,
-  Test3Component,
-  Test2Component,
-  Test3Component,
+  // Test3Component,
+  // Test2Component,
+  // Test3Component,
+  // Test1Component,
+  // Test2Component,
+  // Test2Component,
+  // Test3Component,
+  // Test3Component,
+  // Test2Component,
+  // Test3Component,
 ];
 
 @Component({
@@ -57,9 +57,7 @@ export class DynamicTestComponent implements OnInit, OnDestroy {
   sectionsLoader(viewContainerRef: ViewContainerRef): void {
     const injector = this.viewContainerRef.parentInjector;
 
-    const myNode = document.createElement('div');
-    const text = document.createTextNode('this is my text');
-    myNode.appendChild(text);
+
 
     const componentsReduser = (accumulator: Array<ComponentRef<Test1Component>>, component: typeof Test1Component, index: number) => {
 
@@ -68,7 +66,7 @@ export class DynamicTestComponent implements OnInit, OnDestroy {
             this.componentFactoryResolver.resolveComponentFactory(component),
             0,
             injector,
-            [[myNode]],
+            [[testNode()]],
           )
         : this.componentFactoryResolver
             .resolveComponentFactory(component)
@@ -108,3 +106,11 @@ export class DynamicTestComponent implements OnInit, OnDestroy {
     last.instance.appComponentService.addComponent(current);
   }
 }
+
+const testNode = () => {
+  const myNode = document.createElement('div');
+  const text = document.createTextNode('this is my text');
+  myNode.appendChild(text);
+
+  return myNode;
+};

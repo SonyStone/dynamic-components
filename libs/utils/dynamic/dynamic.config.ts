@@ -2,7 +2,9 @@ import { Injectable, InjectionToken } from '@angular/core';
 
 export const DYNAMIC_CONFIG = new InjectionToken<DynamicConfig>('FORMLY_CONFIG');
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root',
+})
 export class DynamicConfig {
   types: {[name: string]: TypeOption} = {};
 

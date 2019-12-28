@@ -1,14 +1,13 @@
-import { ChangeDetectionStrategy, Component, NgModule, Input } from '@angular/core';
-import { DynamicModule } from '@factory/utils';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Input, NgModule } from '@angular/core';
 
 @Component({
   selector: 'app-test-1',
   template: `
-  Link
+  Test 1
   <ng-content select="div"></ng-content>
   <input value="{{ number }}">
   <ng-content></ng-content>
-  <dynamic [configs]="children"></dynamic>
   `,
   styles: [`
     :host {
@@ -31,12 +30,13 @@ export class Test1Component {
 
 @NgModule({
   imports: [
-    DynamicModule.forChild({
-      types: [{
-        name: 'test-1',
-        component: Test1Component,
-      }]
-    }),
+    CommonModule,
+    // DynamicModule.forChild({
+    //   types: [{
+    //     name: 'test-1',
+    //     component: Test1Component,
+    //   }]
+    // }),
   ],
   declarations: [
     Test1Component
@@ -45,6 +45,9 @@ export class Test1Component {
     Test1Component,
   ],
   exports: [
+    Test1Component,
+  ],
+  bootstrap: [
     Test1Component,
   ],
 })

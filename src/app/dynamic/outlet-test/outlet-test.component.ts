@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'outlet-test',
@@ -10,10 +10,35 @@ export class OutletTestComponent {
 
   sectionConfig = [
     {
-      type: 'test-1',
+      type: 'test-2',
     },
     {
       type: 'test-1',
+      children: [
+        {
+          type: 'test-3',
+        },
+        {
+          type: 'test-3',
+        }
+      ]
     }
   ];
+
+  constructor(
+    private cd: ChangeDetectorRef,
+  ) {
+
+  }
+
+  toggle(): void {
+    this.sectionConfig = [
+      ...this.sectionConfig,
+      {
+        type: 'test-1',
+      }
+    ];
+
+    this.cd.markForCheck();
+  }
 }

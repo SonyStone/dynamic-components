@@ -9,6 +9,10 @@ const routes: Routes = [
     path: 'outlet-test',
     loadChildren: () => import('./outlet-test/outlet-test.module').then((mod) => mod.OutletTestModule),
   },
+  {
+    path: 'lazy-load-test',
+    loadChildren: () => import('./lazy-load-test/lazy-load-test.module').then((mod) => mod.LazyLoadTestModule),
+  },
 ];
 
 export const DynamicRoutingModule = RouterModule.forChild(routes);

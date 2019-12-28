@@ -1,28 +1,39 @@
-import { Inject, ModuleWithProviders, NgModule, Optional } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Inject, InjectionToken, ModuleWithProviders, NgModule, Optional } from '@angular/core';
+import { NgxdModule } from '@ngxd/core';
 
-import { ComponentOutletModule } from '../component-outlet';
-import { ComponentPipe } from './component.pipe';
 import { DynamicComponent } from './dynamic.component';
 import { DYNAMIC_CONFIG, DynamicConfig, DynamicOption } from './dynamic.config';
+import { DynamicDirective } from './dynamic.directive';
+import { Layouts } from './layout.interface';
 
 
 
 @NgModule({
   imports: [
-    ComponentOutletModule,
+    [
+      CommonModule,
+    ],
+    [
+      NgxdModule,
+    ],
   ],
   declarations: [
-    ComponentPipe,
     DynamicComponent,
+    DynamicDirective,
   ],
   exports: [
     DynamicComponent,
   ],
 })
 export class DynamicModule {
-  static forRoot(config: DynamicOption = {}): ModuleWithProviders {
+
+  static forRoot(layouts?: Layouts, config: DynamicOption = {}): ModuleWithProviders {
     return {
       ngModule: DynamicModule,
+      providers: [
+
+      ],
     };
   }
 
@@ -45,4 +56,14 @@ export class DynamicModule {
 
     configs.forEach(config => configService.addConfig(config));
   }
+}
+
+export const ANALYZE_FOR_ENTRY_COMPONENTS = new InjectionToken<any>('AnalyzeForEntryComponents');
+export const DYNAMICS = new InjectionToken<any[][]>('ROUTES');
+
+export function provideRoutes(routes: any): any {
+  return [
+    {provide: ANALYZE_FOR_ENTRY_COMPONENTS, multi: true, useValue: routes},
+    {provide: DYNAMICS, multi: true, useValue: routes},
+  ];
 }
