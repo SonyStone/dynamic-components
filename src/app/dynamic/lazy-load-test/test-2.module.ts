@@ -3,16 +3,16 @@ import { ChangeDetectionStrategy, Component, Input, NgModule, OnDestroy } from '
 import { DynamicModule } from '@factory/utils';
 
 @Component({
-  selector: 'app-test-1',
+  selector: 'app-test-2',
   template: `
-  Test 1
+  Test 2
   <ng-content select="div"></ng-content>
   <input value="{{ number }}">
   <ng-content></ng-content>
   `,
   styles: [`
     :host {
-      background-color: orange;
+      background-color: green;
       display: block;
       margin: 1rem;
       padding: 1rem;
@@ -22,17 +22,17 @@ import { DynamicModule } from '@factory/utils';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Test1Component implements OnDestroy {
+export class Test2Component implements OnDestroy {
   number = (Math.random() * 100).toFixed();
 
   @Input() children: any;
 
   constructor() {
-    console.log(`constructor :: Test1Component`);
+    console.log(`constructor :: Test2Component`);
   }
 
   ngOnDestroy(): void {
-    console.log(`destroy :: Test1Component`);
+    console.log(`destroy :: Test2Component`);
   }
 }
 
@@ -42,22 +42,22 @@ export class Test1Component implements OnDestroy {
     CommonModule,
     DynamicModule.forChild({
       types: [{
-        name: 'lazy-test-1',
-        component: Test1Component,
+        name: 'lazy-test-2',
+        component: Test2Component,
       }]
     }),
   ],
   declarations: [
-    Test1Component
+    Test2Component
   ],
   entryComponents: [
-    Test1Component,
+    Test2Component,
   ],
   exports: [
-    Test1Component,
+    Test2Component,
   ],
   bootstrap: [
-    Test1Component,
+    Test2Component,
   ],
 })
-export class Test1Module { }
+export class Test2Module { }

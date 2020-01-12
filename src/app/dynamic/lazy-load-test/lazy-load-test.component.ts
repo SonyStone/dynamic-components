@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Compiler, Component, Injector, NgModuleFactory } from '@angular/core';
-import { LayoutConfigLoader } from 'libs/utils/dynamic/more/config-loader';
+import { ChangeDetectionStrategy, Compiler, Component, NgModuleFactory, OnDestroy, ViewContainerRef } from '@angular/core';
 
-export const loadTest1 = {
-  qwerty: () => import('./test-1.module').then(m => m.Test1Module),
-};
+import { loadTest1 } from './load-test-1';
+import { ComponentRefMapService } from './view-ref-map.service';
+
+
 
 
 @Component({
@@ -11,29 +11,29 @@ export const loadTest1 = {
   styleUrls: ['lazy-load-test.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LazyLoadTestComponent {
-
-  loader = new LayoutConfigLoader(this.compiler);
+export class LazyLoadTestComponent  {
 
   constructor(
     private compiler: Compiler,
-    private injector: Injector,
+    private viewContainerRef: ViewContainerRef,
+    private componentRefMapService: ComponentRefMapService,
   ) {}
 
+  load() {
 
-  async load() {
-
-    const tempModule = await loadTest1.qwerty()
+    loadTest1.qwerty()
       .then((m) => (m instanceof NgModuleFactory)
         ? m
         : this.compiler.compileModuleAsync(m)
-      );
+      ).then((tempModule) => {
+        const componentRef = this.componentRefMapService.get(tempModule);
 
-    console.log(`tempModule`, tempModule, tempModule instanceof NgModuleFactory);
+        this.viewContainerRef.insert(componentRef.hostView);
+      });
 
-    const module = tempModule.create(this.injector);
+  }
 
-    console.log(`module`, module);
-
+  close(): void {
+    this.viewContainerRef.detach();
   }
 }

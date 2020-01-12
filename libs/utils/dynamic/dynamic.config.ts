@@ -1,12 +1,25 @@
-import { Injectable, InjectionToken } from '@angular/core';
+import { Injectable, InjectionToken, OnDestroy } from '@angular/core';
 
 export const DYNAMIC_CONFIG = new InjectionToken<DynamicConfig>('FORMLY_CONFIG');
+
+let id = 0;
 
 @Injectable({
   providedIn: 'root',
 })
-export class DynamicConfig {
+export class DynamicConfig implements OnDestroy {
   types: {[name: string]: TypeOption} = {};
+
+  private id;
+
+  constructor() {
+    this.id = id++;
+    console.log(`contruct :: DynamicConfig #${this.id}`, this);
+  }
+
+  ngOnDestroy(): void {
+    console.log(`destroy :: DynamicConfig #${this.id}`);
+  }
 
   addConfig(config: DynamicOption) {
     if (config.types) {
