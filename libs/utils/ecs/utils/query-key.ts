@@ -1,14 +1,14 @@
-import { Component } from '../component';
+import { ComponentConstructor } from '../component.interface';
 import { getName } from './get-name';
 
 /**
  * Get a key from a list of components
  * @param Components Array of components to generate the key
  */
-export function queryKey(components: (Component | any)[]) {
+export function queryKey(componentConstructor: (ComponentConstructor<any> | any)[]) {
   const names = [];
 
-  for (const T of components) {
+  for (const T of componentConstructor) {
     if (typeof T === 'object') {
       const operator = T.operator === 'not' ? '!' : T.operator;
       names.push(operator + getName(T.Component));

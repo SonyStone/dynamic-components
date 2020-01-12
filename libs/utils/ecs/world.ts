@@ -3,6 +3,7 @@ import { ComponentConstructor } from './component.interface';
 import { Entity, EntityManager } from './entity';
 import { SystemManager } from './system';
 import { System, SystemConstructor } from './system.interface';
+import { SystemBase } from './system-base';
 
 /**
  * The World is the root of the ECS.
@@ -48,7 +49,7 @@ export class World {
    * Register a system.
    * @param system Type of system to register
    */
-  registerSystem<T extends System>(system: SystemConstructor<T>, attributes: any): this {
+  registerSystem<T extends System>(system: SystemConstructor<T>, attributes?: any): this {
     this.systemManager.registerSystem(system, attributes);
     return this;
   }
@@ -57,7 +58,7 @@ export class World {
    * Get a system registered in this world.
    * @param System Type of system to get.
    */
-  getSystem<T extends System>(SystemClass: SystemConstructor<T>): System {
+  getSystem<T extends SystemBase>(SystemClass: SystemConstructor<T>): System {
     return this.systemManager.getSystem(SystemClass);
   }
 
@@ -73,7 +74,7 @@ export class World {
    * @param delta Delta time since the last call
    * @param time Elapsed time
    */
-  execute(delta: number, time: number): void {
+  run(delta?: number, time?: number): void {
     if (!delta) {
       const timePerformance = performance.now();
       delta = timePerformance - this.lastTime;
@@ -81,7 +82,7 @@ export class World {
     }
 
     if (this.enabled) {
-      this.systemManager.execute(delta, time);
+      this.systemManager.run(delta, time);
       this.entityManager.processDeferredRemoval();
     }
   }

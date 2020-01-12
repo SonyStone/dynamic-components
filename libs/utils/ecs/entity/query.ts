@@ -1,6 +1,7 @@
-import { Component } from '../component';
+import { ComponentConstructor } from '../component.interface';
 import { queryKey } from '../utils';
 import { Entity } from './entity';
+import { EntityManager } from './entity-manager';
 import { EventDispatcher } from './event-dispatcher';
 
 // tslint:disable:no-bitwise
@@ -11,10 +12,10 @@ export class Query {
   ENTITY_REMOVED = 'Query#ENTITY_REMOVED';
   COMPONENT_CHANGED = 'Query#COMPONENT_CHANGED';
 
-  Components = [];
-  NotComponents = [];
+  Components: ComponentConstructor<any>[] = [];
+  NotComponents: ComponentConstructor<any>[] = [];
 
-  entities = [];
+  entities: Entity[] = [];
 
   eventDispatcher = new EventDispatcher();
 
@@ -24,19 +25,18 @@ export class Query {
   key: any;
 
   /**
-   * @param components List of types of components to query
+   * @param componentConstructors List of types of components to query
    */
   constructor(
-    components: (Component | any)[],
-    manager: any,
+    componentConstructors: (ComponentConstructor<any> | any)[],
+    manager: EntityManager,
   ) {
 
-
-    components.forEach(component => {
-      if (typeof component === 'object') {
-        this.NotComponents.push(component.Component);
+    componentConstructors.forEach((componentConstructor) => {
+      if (typeof componentConstructor === 'object') {
+        this.NotComponents.push(componentConstructor.component);
       } else {
-        this.Components.push(component);
+        this.Components.push(componentConstructor);
       }
     });
 
@@ -44,10 +44,10 @@ export class Query {
       throw new Error('Can\'t create a query without components');
     }
 
-    this.key = queryKey(components);
+    this.key = queryKey(componentConstructors);
 
     // Fill the query with the existing entities
-    for (const entity of manager._entities) {
+    for (const entity of manager.entities) {
       if (this.match(entity)) {
         // @todo ??? this.addEntity(entity); => preventing the event to be generated
         entity.queries.push(this);
@@ -85,7 +85,7 @@ export class Query {
     }
   }
 
-  match(entity) {
+  match(entity: Entity) {
     return (
       entity.hasAllComponents(this.Components) &&
       !entity.hasAnyComponents(this.NotComponents)

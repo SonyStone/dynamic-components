@@ -1,5 +1,6 @@
-import { Entity } from './entity';
 import { Component } from '../component';
+import { ComponentConstructor } from '../component.interface';
+import { Entity } from './entity';
 
 /**
  * EventDispatcher
@@ -19,7 +20,7 @@ export class EventDispatcher {
    * @param eventName Name of the event to listen
    * @param listener Callback to trigger when the event is fired
    */
-  addEventListener(eventName: string, listener: () => void) {
+  addEventListener(eventName: string, listener: (entity: Entity, componentConstructor?: ComponentConstructor<any>) => void) {
     const listeners = this.listeners;
     if (listeners[eventName] === undefined) {
       listeners[eventName] = [];
@@ -35,7 +36,7 @@ export class EventDispatcher {
    * @param eventName Name of the event to check
    * @param listener Callback for the specified event
    */
-  hasEventListener(eventName: string, listener: () => void) {
+  hasEventListener(eventName: string, listener: (entity: Entity, componentConstructor?: ComponentConstructor<any>) => void) {
     return (
       this.listeners[eventName] !== undefined &&
       this.listeners[eventName].indexOf(listener) !== -1
@@ -47,7 +48,7 @@ export class EventDispatcher {
    * @param eventName Name of the event to remove
    * @param listener Callback for the specified event
    */
-  removeEventListener(eventName: string, listener: () => void) {
+  removeEventListener(eventName: string, listener: (entity: Entity, componentConstructor?: ComponentConstructor<any>) => void) {
     const listenerArray = this.listeners[eventName];
     if (listenerArray !== undefined) {
       const index = listenerArray.indexOf(listener);

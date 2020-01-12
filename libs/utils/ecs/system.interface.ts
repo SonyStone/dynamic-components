@@ -1,10 +1,11 @@
-import { Component } from './component';
-import { ComponentConstructor } from './component.interface';
-
 /**
  * A system that manipulates entities in the world.
  */
 export interface System {
+
+  priority?: number;
+  order?: number;
+
   /**
    * Whether the system will execute during the world tick.
    */
@@ -20,9 +21,8 @@ export interface System {
   stop(): void;
 }
 
-export type SystemConstructor<T extends System> = new (...args: any) => T;
+export interface SystemConstructor<T extends System> {
+  new (...args: any): T;
+  queries: any;
+}
 
-/**
- * Use the Not class to negate a component query.
- */
-export type Not = <T extends Component>(component: ComponentConstructor<T>) => object;

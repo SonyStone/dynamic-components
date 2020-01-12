@@ -1,7 +1,8 @@
-import { Entity } from './entity';
-import { Query } from './query';
+import { ComponentConstructor } from '../component.interface';
 import { queryKey } from '../utils';
-import { Component } from '../component';
+import { Entity } from './entity';
+import { EntityManager } from './entity-manager';
+import { Query } from './query';
 
 // tslint:disable:no-bitwise
 
@@ -10,13 +11,15 @@ import { Component } from '../component';
  */
 export class QueryManager {
   // Queries indexed by a unique identifier for the components it has
-  queries = {};
+  queries: {
+    [key: string]: Query;
+  } = {};
 
   constructor(
-    private world: any,
+    private world: EntityManager,
   ) {}
 
-  onEntityRemoved(entity) {
+  onEntityRemoved(entity: Entity) {
     for (const queryName in this.queries) {
       if (this.queries.hasOwnProperty(queryName)) {
 
@@ -32,9 +35,9 @@ export class QueryManager {
   /**
    * Callback when a component is added to an entity
    * @param entity Entity that just got the new component
-   * @param component Component added to the entity
+   * @param componentConstructor Component added to the entity
    */
-  onEntityComponentAdded(entity: Entity, component: Component) {
+  onEntityComponentAdded(entity: Entity, componentConstructor: ComponentConstructor<any>) {
     // @todo Use bitmask for checking components?
 
     // Check each indexed query to see if we need to add this entity to the list
@@ -44,7 +47,7 @@ export class QueryManager {
         const query = this.queries[queryName];
 
         if (
-          !!~query.NotComponents.indexOf(component) &&
+          !!~query.NotComponents.indexOf(componentConstructor) &&
           ~query.entities.indexOf(entity)
         ) {
           query.removeEntity(entity);
@@ -56,12 +59,14 @@ export class QueryManager {
         // and Entity has ALL the components of the query
         // and Entity is not already in the query
         if (
-          !~query.Components.indexOf(component) ||
+          !~query.Components.indexOf(componentConstructor) ||
           !query.match(entity) ||
           ~query.entities.indexOf(entity)
         ) {
           continue;
         }
+
+
 
         query.addEntity(entity);
       }
@@ -72,16 +77,16 @@ export class QueryManager {
   /**
    * Callback when a component is removed from an entity
    * @param entity Entity to remove the component from
-   * @param component Component to remove from the entity
+   * @param componentConstructor Component to remove from the entity
    */
-  onEntityComponentRemoved(entity: Entity, component: Component) {
+  onEntityComponentRemoved(entity: Entity, componentConstructor: ComponentConstructor<any>) {
     for (const queryName in this.queries) {
       if (this.queries.hasOwnProperty(queryName)) {
 
         const query = this.queries[queryName];
 
         if (
-          !!~query.NotComponents.indexOf(component) &&
+          !!~query.NotComponents.indexOf(componentConstructor) &&
           !~query.entities.indexOf(entity) &&
           query.match(entity)
         ) {
@@ -90,7 +95,7 @@ export class QueryManager {
         }
 
         if (
-          !!~query.Components.indexOf(component) &&
+          !!~query.Components.indexOf(componentConstructor) &&
           !!~query.entities.indexOf(entity) &&
           !query.match(entity)
         ) {
@@ -104,13 +109,13 @@ export class QueryManager {
 
   /**
    * Get a query for the specified components
-   * @param components Components that the query should have
+   * @param componentConstructors Components that the query should have
    */
-  getQuery(components: Component[]) {
-    const key = queryKey(components);
+  getQuery(componentConstructors: ComponentConstructor<any>[]) {
+    const key = queryKey(componentConstructors);
     let query = this.queries[key];
     if (!query) {
-      this.queries[key] = query = new Query(components, this.world);
+      this.queries[key] = query = new Query(componentConstructors, this.world);
     }
     return query;
   }

@@ -1,47 +1,46 @@
+import { ComponentConstructor } from '../component.interface';
 import { ObjectPool } from '../object-pool';
 import { componentPropertyName } from '../utils';
 import { DummyObjectPool } from './dummy-object-pool.js';
 
 export class ComponentManager {
-  Components = {};
-  componentPool = {};
-  numComponents = {};
+  Components: { [key: string]: ComponentConstructor<any>; } = {};
+  componentPool: { [key: string]: ObjectPool<any, ComponentConstructor<any>> | DummyObjectPool; } = {};
+  numComponents: { [key: string]: number } = {};
 
-  constructor() {}
-
-  registerComponent(Component) {
-    if (this.Components[Component.name]) {
-      console.warn(`Component type: '${Component.name}' already registered.`);
+  registerComponent(componentConstructor: ComponentConstructor<any>): void {
+    if (this.Components[componentConstructor.name]) {
+      console.warn(`Component type: '${componentConstructor.name}' already registered.`);
       return;
     }
 
-    this.Components[Component.name] = Component;
-    this.numComponents[Component.name] = 0;
+    this.Components[componentConstructor.name] = componentConstructor;
+    this.numComponents[componentConstructor.name] = 0;
   }
 
-  componentAddedToEntity(Component) {
-    if (!this.Components[Component.name]) {
-      this.registerComponent(Component);
+  componentAddedToEntity(componentConstructor: ComponentConstructor<any>): void {
+    if (!this.Components[componentConstructor.name]) {
+      this.registerComponent(componentConstructor);
     }
 
-    this.numComponents[Component.name]++;
+    this.numComponents[componentConstructor.name]++;
   }
 
-  componentRemovedFromEntity(Component) {
-    this.numComponents[Component.name]--;
+  componentRemovedFromEntity(componentConstructor: ComponentConstructor<any>): void {
+    this.numComponents[componentConstructor.name]--;
   }
 
-  getComponentsPool(Component) {
-    const componentName = componentPropertyName(Component);
+  getComponentsPool<T>(componentConstructor: ComponentConstructor<T>): ObjectPool<T, ComponentConstructor<T>> | DummyObjectPool {
+    const componentName = componentPropertyName(componentConstructor);
 
     if (!this.componentPool[componentName]) {
-      if (Component.prototype.reset) {
-        this.componentPool[componentName] = new ObjectPool(Component);
+      if (componentConstructor.prototype.reset) {
+        this.componentPool[componentName] = new ObjectPool(componentConstructor);
       } else {
         console.warn(
-          `Component '${Component.name}' won't benefit from pooling because 'reset' method was not implemeneted.`
+          `Component '${componentConstructor.name}' won't benefit from pooling because 'reset' method was not implemeneted.`
         );
-        this.componentPool[componentName] = new DummyObjectPool(Component);
+        this.componentPool[componentName] = new DummyObjectPool(componentConstructor);
       }
     }
 

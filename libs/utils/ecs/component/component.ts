@@ -3,6 +3,4 @@
  */
 export class Component {
   static isComponent = true;
-
-  name: any;
 }

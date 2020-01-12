@@ -1,8 +1,8 @@
-import { Component } from '../component';
+import { ComponentConstructor } from '../component.interface';
 
 /**
  * Return the name of a component
  */
-export function getName(component: Component) {
-  return component.name;
+export function getName<T>(componentConstructor: ComponentConstructor<T>) {
+  return componentConstructor.name;
 }

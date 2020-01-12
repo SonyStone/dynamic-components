@@ -20,6 +20,7 @@
     ],
     "paths": {
       "@factory/utils": ["libs/utils/index.ts"],
+      "@ecs": ["libs/utils/ecs/index.ts"],
     }
   },
   "angularCompilerOptions": {

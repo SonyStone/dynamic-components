@@ -1,5 +1,7 @@
+import { EntityManager } from './entity-manager';
 import { Query } from './query';
 import { wrapImmutableComponent } from './wrap-immutable-component';
+import { ComponentConstructor } from '../component.interface';
 
 // tslint:disable:no-bitwise
 
@@ -13,59 +15,59 @@ export class Entity {
   id = nextId++;
 
   // List of components types the entity has
-  ComponentTypes = [];
+  ComponentTypes: ComponentConstructor<any>[] = [];
 
   // Instance of the components
-  components = {};
+  components: { [key: string]: any; } = {};
 
-  componentsToRemove = {};
+  componentsToRemove: { [key: string]: any; } = {};
 
   // Queries where the entity is added
-  queries = [];
+  queries: Query[] = [];
 
   // Used for deferred removal
-  ComponentTypesToRemove = [];
+  ComponentTypesToRemove: ComponentConstructor<any>[] = [];
 
   alive = false;
 
   constructor(
-    private world?: any,
+    public world: EntityManager,
   ) {}
 
   // COMPONENTS
 
-  getComponent(Component, includeRemoved) {
-    let component = this.components[Component.name];
+  getComponent<T>(componentConstructor: ComponentConstructor<T>, includeRemoved: boolean): T {
+    let component = this.components[componentConstructor.name];
 
     if (!component && includeRemoved === true) {
-      component = this.componentsToRemove[Component.name];
+      component = this.componentsToRemove[componentConstructor.name];
     }
 
-    return DEBUG ? wrapImmutableComponent(Component, component) : component;
+    return DEBUG ? wrapImmutableComponent(componentConstructor, component) : component;
   }
 
-  getRemovedComponent(Component) {
-    return this.componentsToRemove[Component.name];
+  getRemovedComponent<T>(componentConstructor: ComponentConstructor<T>): T {
+    return this.componentsToRemove[componentConstructor.name];
   }
 
-  getComponents() {
+  getComponents<T>(): { [key: string]: T; } {
     return this.components;
   }
 
-  getComponentsToRemove() {
+  getComponentsToRemove<T>(): { [key: string]: T; } {
     return this.componentsToRemove;
   }
 
-  getComponentTypes() {
+  getComponentTypes(): ComponentConstructor<any>[] {
     return this.ComponentTypes;
   }
 
-  getMutableComponent(Component) {
-    const component = this.components[Component.name];
+  getMutableComponent<T>(componentConstructor: ComponentConstructor<T>): T {
+    const component = this.components[componentConstructor.name];
 
     for (const query of this.queries) {
       // @todo accelerate this check. Maybe having query._Components as an object
-      if (query.reactive && query.Components.indexOf(Component) !== -1) {
+      if (query.reactive && query.Components.indexOf(componentConstructor) !== -1) {
         query.eventDispatcher.dispatchEvent(
           Query.prototype.COMPONENT_CHANGED,
           this,
@@ -77,44 +79,46 @@ export class Entity {
     return component;
   }
 
-  addComponent(Component, values) {
-    this.world.entityAddComponent(this, Component, values);
+  addComponent(componentConstructor: ComponentConstructor<any>, values?: any): this {
+    this.world.entityAddComponent(this, componentConstructor, values);
+
     return this;
   }
 
-  removeComponent(Component, forceRemove) {
-    this.world.entityRemoveComponent(this, Component, forceRemove);
+  removeComponent(componentConstructor: ComponentConstructor<any>, forceRemove?: boolean): this {
+    this.world.entityRemoveComponent(this, componentConstructor, forceRemove);
+
     return this;
   }
 
-  hasComponent(Component, includeRemoved?: boolean) {
+  hasComponent(componentConstructor: ComponentConstructor<any>, includeRemoved?: boolean): boolean {
     return (
-      !!~this.ComponentTypes.indexOf(Component) ||
-      (includeRemoved === true && this.hasRemovedComponent(Component))
+      !!~this.ComponentTypes.indexOf(componentConstructor) ||
+      (includeRemoved === true && this.hasRemovedComponent(componentConstructor))
     );
   }
 
-  hasRemovedComponent(Component) {
-    return !!~this.ComponentTypesToRemove.indexOf(Component);
+  hasRemovedComponent(componentConstructor: ComponentConstructor<any>): boolean {
+    return !!~this.ComponentTypesToRemove.indexOf(componentConstructor);
   }
 
-  hasAllComponents(Components) {
-    for (const component of Components) {
+  hasAllComponents(componentConstructors: ComponentConstructor<any>[]): boolean {
+    for (const component of componentConstructors) {
       if (!this.hasComponent(component)) { return false; }
     }
 
     return true;
   }
 
-  hasAnyComponents(Components) {
-    for (const component of Components) {
+  hasAnyComponents(componentConstructors: ComponentConstructor<any>[]): boolean {
+    for (const component of componentConstructors) {
       if (this.hasComponent(component)) { return true; }
     }
 
     return false;
   }
 
-  removeAllComponents(forceRemove) {
+  removeAllComponents(forceRemove?: boolean) {
     return this.world.entityRemoveAllComponents(this, forceRemove);
   }
 

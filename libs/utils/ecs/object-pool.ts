@@ -1,13 +1,13 @@
-export class ObjectPool {
-  freeList = [];
+export class ObjectPool<TInstance, TCLass extends new (...args) => TInstance> {
+  freeList: TInstance[] = [];
   count = 0;
   isObjectPool = true;
 
-  createElement: any;
+  createElement: () => TInstance;
 
   // @todo Add initial size
   constructor(
-    private T: any,
+    private Class: TCLass,
     initialSize?: any,
   ) {
 
@@ -19,10 +19,10 @@ export class ObjectPool {
 
     this.createElement = extraArgs
       ? () => {
-          return new T(...extraArgs);
+          return new Class(...extraArgs);
         }
       : () => {
-          return new T();
+          return new Class();
         };
 
     if (typeof initialSize !== 'undefined') {
@@ -30,7 +30,7 @@ export class ObjectPool {
     }
   }
 
-  aquire() {
+  aquire(): TInstance {
     // Grow the list by 20%ish if we're out
     if (this.freeList.length <= 0) {
       this.expand(Math.round(this.count * 0.2) + 1);
@@ -41,27 +41,29 @@ export class ObjectPool {
     return item;
   }
 
-  release(item) {
-    item.reset();
+  release(item: TInstance): void {
+    if ((item as any).reset) {
+      (item as any).reset(); // !!!!!!!!!!!!!!
+    }
     this.freeList.push(item);
   }
 
-  expand(count) {
+  expand(count: number): void {
     for (let n = 0; n < count; n++) {
       this.freeList.push(this.createElement());
     }
     this.count += count;
   }
 
-  totalSize() {
+  totalSize(): number {
     return this.count;
   }
 
-  totalFree() {
+  totalFree(): number {
     return this.freeList.length;
   }
 
-  totalUsed() {
+  totalUsed(): number {
     return this.count - this.freeList.length;
   }
 }

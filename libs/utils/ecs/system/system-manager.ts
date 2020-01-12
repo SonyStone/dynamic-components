@@ -1,32 +1,41 @@
+import { SystemBase } from '../system-base';
+import { System, SystemConstructor } from '../system.interface';
+import { World } from '../world';
 
 // tslint:disable:no-bitwise
 
 export class SystemManager {
-  private systems = [];
-  private executeSystems = []; // Systems that have `execute` method
+  private systems: System[] = [];
+  private executeSystems: SystemBase[] = []; // Systems that have `execute` method
 
   lastExecutedSystem = null;
 
   constructor(
-    private world,
+    private world: World,
   ) {}
 
-  registerSystem(System, attributes) {
+  registerSystem(systemConstructor: SystemConstructor<SystemBase>, attributes) {
     if (
-      this.systems.find(s => s.constructor.name === System.name) !== undefined
+      this.systems.find(s => s.constructor.name === systemConstructor.name) !== undefined
     ) {
-      console.warn(`System '${System.name}' already registered.`);
+      console.warn(`System '${systemConstructor.name}' already registered.`);
       return this;
     }
 
-    const system = new System(this.world, attributes);
-    if (system.init) { system.init(); }
+    const system = new systemConstructor(this.world, attributes);
+
+    if ((system as any).init) {
+      (system as any).init();
+    }
+
     system.order = this.systems.length;
     this.systems.push(system);
-    if (system.execute) {
+
+    if (system.run) {
       this.executeSystems.push(system);
       this.sortSystems();
     }
+
     return this;
   }
 
@@ -36,43 +45,51 @@ export class SystemManager {
     });
   }
 
-  getSystem(System) {
-    return this.systems.find(s => s instanceof System);
+  getSystem(systemConstructor: SystemConstructor<any>): System {
+    return this.systems.find(s => s instanceof systemConstructor);
   }
 
-  getSystems() {
+  getSystems(): System[] {
     return this.systems;
   }
 
-  removeSystem(System) {
-    const index = this.systems.indexOf(System);
+  removeSystem(system: System): void {
+    const index = this.systems.indexOf(system);
 
     if (!~index) { return; }
 
     this.systems.splice(index, 1);
   }
 
-  executeSystem(system, delta, time) {
+  runSystem(system: SystemBase, delta: number, time: number): void {
+
     if (system.initialized) {
       if (system.canExecute()) {
         const startTime = performance.now();
-        system.execute(delta, time);
+
+        // main run;
+        system.run(delta, time);
+
         system.executeTime = performance.now() - startTime;
         this.lastExecutedSystem = system;
+
         system.clearEvents();
       }
     }
   }
 
-  stop() {
-    this.executeSystems.forEach(system => system.stop());
+  stop(): void {
+    for (const system of this.executeSystems) {
+      system.stop()
+    }
   }
 
-  execute(delta, time, forcePlay?: boolean) {
-    this.executeSystems.forEach(
-      system =>
-        (forcePlay || system.enabled) && this.executeSystem(system, delta, time)
-    );
+  run(delta: number, time: number, forcePlay?: boolean): void {
+    for (const system of this.executeSystems) {
+      if (forcePlay || system.enabled) {
+        this.runSystem(system, delta, time);
+      }
+    }
   }
 
   stats() {
@@ -86,9 +103,9 @@ export class SystemManager {
         queries: {}
       });
 
-      for (const name in system.ctx) {
-        if (system.ctx.hasOwnProperty(name)) {
-          systemStats.queries[name] = system.ctx[name].stats();
+      for (const name in (system as any).ctx) {
+        if ((system as any).ctx.hasOwnProperty(name)) {
+          systemStats.queries[name] = (system as any).ctx[name].stats();
         }
       }
     }
