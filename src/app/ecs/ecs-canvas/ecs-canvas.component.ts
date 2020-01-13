@@ -20,11 +20,11 @@ export class EcsCanvasComponent {
     const world = new World();
 
     world
-      .registerComponent(Circle as any)
-      .registerComponent(Velocity as any)
-      .registerComponent(Acceleration as any)
-      .registerComponent(Position as any)
-      .registerComponent(Intersecting as any)
+      .registerComponent(Circle)
+      .registerComponent(Velocity)
+      .registerComponent(Acceleration)
+      .registerComponent(Position)
+      .registerComponent(Intersecting)
       .registerSystem(MovementSystem)
       .registerSystem(Renderer)
       .registerSystem(IntersectionSystem);
@@ -66,22 +66,18 @@ export class EcsCanvasComponent {
       velocity.set(random(-20, 20), random(-20, 20));
     }
 
-    // window.world = world;
-    // window.Circle = Circle;
-    // window.Movement = Movement;
-
     // window.addEventListener( 'resize', () => {
     //   canvasComponent.width = canvas.width = window.innerWidth;
     //   canvasComponent.height = canvas.height = window.innerHeight;
     // }, false );
 
-    const delta = singletonEntity.getMutableComponent(PerformanceСompensation);
+    const performanceСompensation = singletonEntity.getMutableComponent(PerformanceСompensation);
 
     let lastTime = performance.now();
     function update() {
 
       const time = performance.now();
-      delta.delta = time - lastTime;
+      performanceСompensation.delta = time - lastTime;
       lastTime = time;
 
       world.run();

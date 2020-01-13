@@ -27,7 +27,7 @@ export class Circle {
 }
 
 export class CanvasContext {
-  ctx = null;
+  ctx: CanvasRenderingContext2D = null;
   width = 0;
   height = 0;
 }
