@@ -49,7 +49,7 @@ export class World {
    * Register a system.
    * @param system Type of system to register
    */
-  registerSystem<T extends System>(system: SystemConstructor<T>, attributes?: any): this {
+  registerSystem<T extends SystemBase>(system: SystemConstructor<T>, attributes?: any): this {
     this.systemManager.registerSystem(system, attributes);
     return this;
   }
@@ -70,19 +70,11 @@ export class World {
   }
 
   /**
-   * Update the systems per frame.
-   * @param delta Delta time since the last call
-   * @param time Elapsed time
+   * Update the systems.
    */
-  run(delta?: number, time?: number): void {
-    if (!delta) {
-      const timePerformance = performance.now();
-      delta = timePerformance - this.lastTime;
-      this.lastTime = timePerformance;
-    }
-
+  run(): void {
     if (this.enabled) {
-      this.systemManager.run(delta, time);
+      this.systemManager.run();
       this.entityManager.processDeferredRemoval();
     }
   }

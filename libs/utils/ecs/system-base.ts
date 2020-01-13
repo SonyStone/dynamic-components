@@ -165,7 +165,7 @@ export class SystemBase implements System {
     this.enabled = true;
   }
 
-  run(delta?: number, time?: number): void {}
+  run(): void {}
 
   // @question rename to clear queues?
   clearEvents() {

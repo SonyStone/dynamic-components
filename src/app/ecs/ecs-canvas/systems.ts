@@ -1,19 +1,21 @@
 import { SystemBase } from '@ecs';
 
-import { Acceleration, CanvasContext, Circle, DemoSettings, Intersecting, Position, Velocity } from './components';
+import { Acceleration, CanvasContext, Circle, DemoSettings, Intersecting, Position, Velocity, PerformanceСompensation } from './components';
 import { drawLine, fillCircle, intersection } from './utils';
 
 export class MovementSystem extends SystemBase {
 
   static queries = {
     entities: { components: [Circle, Velocity, Acceleration, Position] },
-    context: { components: [CanvasContext, DemoSettings], mandatory: true }
+    context: { components: [PerformanceСompensation, CanvasContext, DemoSettings], mandatory: true }
   };
 
-  run(delta: number) {
+  run() {
     const context = this.queries.context.results[0];
-    const canvasWidth = context.getComponent(CanvasContext).width;
-    const canvasHeight = context.getComponent(CanvasContext).height;
+    const canvasContext = context.getComponent(CanvasContext);
+    const canvasWidth = canvasContext.width;
+    const canvasHeight = canvasContext.height;
+    const delta = context.getComponent(PerformanceСompensation).delta;
     const multiplier = context.getComponent(DemoSettings).speedMultiplier;
 
     const entities = this.queries.entities.results;

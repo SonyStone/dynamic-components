@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, NgZone, Renderer2 } from '@angular/core';
 import { World } from '@ecs';
 
-import { Acceleration, CanvasContext, Circle, DemoSettings, Intersecting, Position, Velocity } from './components';
+import { Acceleration, CanvasContext, Circle, PerformanceСompensation, DemoSettings, Intersecting, Position, Velocity } from './components';
 import { IntersectionSystem, MovementSystem, Renderer } from './systems';
 import { random } from './utils';
 
@@ -31,6 +31,7 @@ export class EcsCanvasComponent {
 
     // Used for singleton components
     const singletonEntity = world.createEntity()
+        .addComponent(PerformanceСompensation)
         .addComponent(CanvasContext)
         .addComponent(DemoSettings);
 
@@ -74,13 +75,16 @@ export class EcsCanvasComponent {
     //   canvasComponent.height = canvas.height = window.innerHeight;
     // }, false );
 
+    const delta = singletonEntity.getMutableComponent(PerformanceСompensation);
+
     let lastTime = performance.now();
     function update() {
 
       const time = performance.now();
-      const delta = time - lastTime;
+      delta.delta = time - lastTime;
       lastTime = time;
-      world.run(delta);
+
+      world.run();
 
       requestAnimationFrame(update);
     }

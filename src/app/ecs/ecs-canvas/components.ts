@@ -36,6 +36,11 @@ export class DemoSettings {
   speedMultiplier = 0.001;
 }
 
+export class PerformanceСompensation {
+  delta: number;
+  time: number;
+}
+
 export class Intersecting {
   points = [];
 

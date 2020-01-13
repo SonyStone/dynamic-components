@@ -61,14 +61,14 @@ export class SystemManager {
     this.systems.splice(index, 1);
   }
 
-  runSystem(system: SystemBase, delta: number, time: number): void {
+  runSystem(system: SystemBase): void {
 
     if (system.initialized) {
       if (system.canExecute()) {
         const startTime = performance.now();
 
         // main run;
-        system.run(delta, time);
+        system.run();
 
         system.executeTime = performance.now() - startTime;
         this.lastExecutedSystem = system;
@@ -80,14 +80,14 @@ export class SystemManager {
 
   stop(): void {
     for (const system of this.executeSystems) {
-      system.stop()
+      system.stop();
     }
   }
 
-  run(delta: number, time: number, forcePlay?: boolean): void {
+  run(forcePlay?: boolean): void {
     for (const system of this.executeSystems) {
       if (forcePlay || system.enabled) {
-        this.runSystem(system, delta, time);
+        this.runSystem(system);
       }
     }
   }
