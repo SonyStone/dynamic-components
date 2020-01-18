@@ -1,9 +1,18 @@
 import { ChangeDetectionStrategy, Component, ElementRef, NgZone, Renderer2 } from '@angular/core';
-import { World } from '@ecs';
+import { createComponentClass, World, createType } from '@ecs';
 
-import { Acceleration, CanvasContext, Circle, PerformanceСompensation, DemoSettings, Intersecting, Position, Velocity } from './components';
+import {
+  Acceleration,
+  CanvasContext,
+  Circle,
+  DemoSettings,
+  PerformanceСompensation,
+  Position,
+  Velocity,
+} from './components';
 import { IntersectionSystem, MovementSystem, Renderer } from './systems';
 import { random } from './utils';
+import { Vector2 } from './math';
 
 @Component({
   templateUrl: 'ecs-canvas.component.html',
@@ -17,75 +26,102 @@ export class EcsCanvasComponent {
     private zone: NgZone,
   ) {
     this.zone.runOutsideAngular(() => {
-    const world = new World();
+      const world = new World();
 
-    world
-      .registerComponent(Circle)
-      .registerComponent(Velocity)
-      .registerComponent(Acceleration)
-      .registerComponent(Position)
-      .registerComponent(Intersecting)
-      .registerSystem(MovementSystem)
-      .registerSystem(Renderer)
-      .registerSystem(IntersectionSystem);
+      const CustomVector2 = createType({
+        baseType: Vector2,
+        create: (defaultValue) => defaultValue
+          ? new Vector2(defaultValue)
+          : new Vector2(),
+        reset: (src, key, defaultValue) => defaultValue
+          ? src[key].copy(defaultValue)
+          : src[key].set(0, 0),
+        clear: (src, key) => src[key].set(0, 0),
+      });
 
-    // Used for singleton components
-    const singletonEntity = world.createEntity()
-        .addComponent(PerformanceСompensation)
-        .addComponent(CanvasContext)
-        .addComponent(DemoSettings);
+      const ExampleComponent = createComponentClass({
+        number:  { default: 0.5 },
+        string:  { default: 'foo' },
+        bool:    { default: true },
+        array:   { default: [1, 2, 3] },
+        vector2: { default: new Vector2(3, 4), type: CustomVector2 }
+      }, 'ExampleComponent');
 
-    const canvas: HTMLCanvasElement = this.renderer.createElement('canvas');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+      console.log(`ExampleComponent :::::::`);
+      console.dir(ExampleComponent);
+      console.log(new ExampleComponent());
 
-    this.renderer.appendChild(this.elementRef.nativeElement, canvas);
+      world
+        // .registerComponent(Circle)
+        // .registerComponent(Velocity)
+        // .registerComponent(Acceleration)
+        // .registerComponent(Position)
+        // .registerComponent(Intersecting)
+        .registerSystem(MovementSystem)
+        .registerSystem(IntersectionSystem)
+        .registerSystem(Renderer);
 
-    const canvasComponent = singletonEntity.getMutableComponent(CanvasContext);
-    canvasComponent.ctx = canvas.getContext('2d');
-    canvasComponent.width = canvas.width;
-    canvasComponent.height = canvas.height;
+      // Used for singleton components
+      const singletonEntity = world.createEntity()
+          .addComponent(PerformanceСompensation)
+          .addComponent(CanvasContext)
+          .addComponent(DemoSettings);
 
-    for (let i = 0; i < 100; i++) {
-      const entity = world.createEntity()
-        .addComponent(Circle)
-        .addComponent(Velocity)
-        .addComponent(Acceleration)
-        .addComponent(Position);
+      const canvas: HTMLCanvasElement = this.renderer.createElement('canvas');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
 
-      const circle = entity.getMutableComponent(Circle);
-      const position = entity.getMutableComponent(Position);
+      this.renderer.appendChild(this.elementRef.nativeElement, canvas);
 
-      position.set(
-        random(0, canvas.width),
-        random(0, canvas.height),
-      );
-      circle.radius = random(20, 100);
+      const canvasComponent = singletonEntity.getMutableComponent(CanvasContext);
+      canvasComponent.ctx = canvas.getContext('2d');
+      canvasComponent.width = canvas.width;
+      canvasComponent.height = canvas.height;
 
-      const velocity = entity.getMutableComponent(Velocity);
-      velocity.set(random(-20, 20), random(-20, 20));
-    }
+      for (let i = 0; i < 50; i++) {
+        world.createEntity()
+          .addComponent(Circle, { radius: random(20, 100) })
+          .addComponent(Velocity, {
+            x: random(-200, 200),
+            y: random(-200, 200),
+          })
+          .addComponent(Acceleration)
+          .addComponent(Position, {
+            x: random(0, canvas.width),
+            y: random(0, canvas.height),
+          });
+      }
 
-    // window.addEventListener( 'resize', () => {
-    //   canvasComponent.width = canvas.width = window.innerWidth;
-    //   canvasComponent.height = canvas.height = window.innerHeight;
-    // }, false );
+      window.addEventListener( 'resize', () => {
+        canvasComponent.width = canvas.width = window.innerWidth;
+        canvasComponent.height = canvas.height = window.innerHeight;
+      }, false );
 
-    const performanceСompensation = singletonEntity.getMutableComponent(PerformanceСompensation);
+      const performanceСompensation = singletonEntity.getMutableComponent(PerformanceСompensation);
 
-    let lastTime = performance.now();
-    function update() {
+      let lastTime = performance.now();
 
-      const time = performance.now();
-      performanceСompensation.delta = time - lastTime;
-      lastTime = time;
+      let timeOut = 0;
 
-      world.run();
+      const update = () => {
 
-      requestAnimationFrame(update);
-    }
+        const time = performance.now();
+        performanceСompensation.delta = time - lastTime;
+        lastTime = time;
 
-    update();
-  });
+        world.run();
+
+        requestAnimationFrame(update);
+        if (timeOut > 0) {
+          timeOut--;
+        }
+
+      };
+
+      update();
+
+
+      console.log(`world`, world);
+    });
   }
 }

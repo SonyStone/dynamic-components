@@ -1,4 +1,4 @@
-import { ComponentConstructor } from '../component.interface';
+import { ComponentConstructor, Component } from '../component.interface';
 import { queryKey } from '../utils';
 import { Entity } from './entity';
 import { EntityManager } from './entity-manager';
@@ -12,8 +12,8 @@ export class Query {
   ENTITY_REMOVED = 'Query#ENTITY_REMOVED';
   COMPONENT_CHANGED = 'Query#COMPONENT_CHANGED';
 
-  Components: ComponentConstructor<any>[] = [];
-  NotComponents: ComponentConstructor<any>[] = [];
+  Components: ComponentConstructor[] = [];
+  NotComponents: ComponentConstructor[] = [];
 
   entities: Entity[] = [];
 
@@ -28,7 +28,7 @@ export class Query {
    * @param componentConstructors List of types of components to query
    */
   constructor(
-    componentConstructors: (ComponentConstructor<any> | any)[],
+    componentConstructors: (ComponentConstructor | any)[],
     manager: EntityManager,
   ) {
 

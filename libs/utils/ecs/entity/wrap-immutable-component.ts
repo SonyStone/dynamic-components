@@ -1,3 +1,5 @@
+import { Component } from '../component.interface';
+
 const proxyMap = new WeakMap();
 
 const proxyHandler = {
@@ -10,7 +12,7 @@ const proxyHandler = {
   }
 };
 
-export function wrapImmutableComponent(T, component) {
+export const wrapImmutableComponent = (component: Component) => {
   if (component === undefined) {
     return undefined;
   }
@@ -23,4 +25,4 @@ export function wrapImmutableComponent(T, component) {
   }
 
   return wrappedComponent;
-}
+};

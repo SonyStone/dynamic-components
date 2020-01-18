@@ -1,4 +1,4 @@
-import { ComponentConstructor } from '../component.interface';
+import { ComponentConstructor, Component } from '../component.interface';
 import { queryKey } from '../utils';
 import { Entity } from './entity';
 import { EntityManager } from './entity-manager';
@@ -16,10 +16,10 @@ export class QueryManager {
   } = {};
 
   constructor(
-    private world: EntityManager,
+    private entityManager: EntityManager,
   ) {}
 
-  onEntityRemoved(entity: Entity) {
+  onEntityRemoved(entity: Entity): void {
     for (const queryName in this.queries) {
       if (this.queries.hasOwnProperty(queryName)) {
 
@@ -37,7 +37,7 @@ export class QueryManager {
    * @param entity Entity that just got the new component
    * @param componentConstructor Component added to the entity
    */
-  onEntityComponentAdded(entity: Entity, componentConstructor: ComponentConstructor<any>) {
+  onEntityComponentAdded(entity: Entity, componentConstructor: ComponentConstructor): void {
     // @todo Use bitmask for checking components?
 
     // Check each indexed query to see if we need to add this entity to the list
@@ -79,7 +79,7 @@ export class QueryManager {
    * @param entity Entity to remove the component from
    * @param componentConstructor Component to remove from the entity
    */
-  onEntityComponentRemoved(entity: Entity, componentConstructor: ComponentConstructor<any>) {
+  onEntityComponentRemoved(entity: Entity, componentConstructor: ComponentConstructor): void {
     for (const queryName in this.queries) {
       if (this.queries.hasOwnProperty(queryName)) {
 
@@ -111,19 +111,22 @@ export class QueryManager {
    * Get a query for the specified components
    * @param componentConstructors Components that the query should have
    */
-  getQuery(componentConstructors: ComponentConstructor<any>[]) {
+  getQuery(componentConstructors: ComponentConstructor[]): Query {
     const key = queryKey(componentConstructors);
+
     let query = this.queries[key];
+
     if (!query) {
-      this.queries[key] = query = new Query(componentConstructors, this.world);
+      this.queries[key] = query = new Query(componentConstructors, this.entityManager);
     }
+
     return query;
   }
 
   /**
    * Return some stats from this class
    */
-  stats() {
+  stats(): any {
     const stats = {};
     for (const queryName in this.queries) {
       if (this.queries.hasOwnProperty(queryName)) {

@@ -1,14 +1,14 @@
-import { ComponentConstructor } from '../component.interface';
+import { ComponentConstructor, Component } from '../component.interface';
 import { ObjectPool } from '../object-pool';
 import { componentPropertyName } from '../utils';
 import { DummyObjectPool } from './dummy-object-pool.js';
 
 export class ComponentManager {
-  Components: { [key: string]: ComponentConstructor<any>; } = {};
-  componentPool: { [key: string]: ObjectPool<any, ComponentConstructor<any>> | DummyObjectPool; } = {};
+  Components: { [key: string]: ComponentConstructor; } = {};
+  componentPool: { [key: string]: ObjectPool<Component, ComponentConstructor> | DummyObjectPool<Component, ComponentConstructor>; } = {};
   numComponents: { [key: string]: number } = {};
 
-  registerComponent(componentConstructor: ComponentConstructor<any>): void {
+  registerComponent(componentConstructor: ComponentConstructor): void {
     if (this.Components[componentConstructor.name]) {
       console.warn(`Component type: '${componentConstructor.name}' already registered.`);
       return;
@@ -18,7 +18,7 @@ export class ComponentManager {
     this.numComponents[componentConstructor.name] = 0;
   }
 
-  componentAddedToEntity(componentConstructor: ComponentConstructor<any>): void {
+  componentAddedToEntity(componentConstructor: ComponentConstructor): void {
     if (!this.Components[componentConstructor.name]) {
       this.registerComponent(componentConstructor);
     }
@@ -26,11 +26,13 @@ export class ComponentManager {
     this.numComponents[componentConstructor.name]++;
   }
 
-  componentRemovedFromEntity(componentConstructor: ComponentConstructor<any>): void {
+  componentRemovedFromEntity(componentConstructor: ComponentConstructor): void {
     this.numComponents[componentConstructor.name]--;
   }
 
-  getComponentsPool<T>(componentConstructor: ComponentConstructor<T>): ObjectPool<T, ComponentConstructor<T>> | DummyObjectPool {
+  getComponentsPool(componentConstructor: ComponentConstructor)
+    : ObjectPool<Component, ComponentConstructor> | DummyObjectPool<Component, ComponentConstructor> {
+
     const componentName = componentPropertyName(componentConstructor);
 
     if (!this.componentPool[componentName]) {

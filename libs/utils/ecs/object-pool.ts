@@ -1,4 +1,6 @@
-export class ObjectPool<TInstance, TCLass extends new (...args) => TInstance> {
+import { Resettable } from './resettable.interface';
+
+export class ObjectPool<TInstance extends Resettable, TCLass extends new (...args) => TInstance> {
   freeList: TInstance[] = [];
   count = 0;
   isObjectPool = true;
@@ -7,23 +9,20 @@ export class ObjectPool<TInstance, TCLass extends new (...args) => TInstance> {
 
   // @todo Add initial size
   constructor(
-    private Class: TCLass,
-    initialSize?: any,
+    Class: TCLass,
+    initialSize?: number,
   ) {
 
     let extraArgs = null;
+
     if (arguments.length > 1) {
       extraArgs = Array.prototype.slice.call(arguments);
       extraArgs.shift();
     }
 
     this.createElement = extraArgs
-      ? () => {
-          return new Class(...extraArgs);
-        }
-      : () => {
-          return new Class();
-        };
+      ? () => new Class(...extraArgs)
+      : () => new Class();
 
     if (typeof initialSize !== 'undefined') {
       this.expand(initialSize);
@@ -42,8 +41,8 @@ export class ObjectPool<TInstance, TCLass extends new (...args) => TInstance> {
   }
 
   release(item: TInstance): void {
-    if ((item as any).reset) {
-      (item as any).reset(); // !!!!!!!!!!!!!!
+    if (item.reset) {
+      item.reset();
     }
     this.freeList.push(item);
   }

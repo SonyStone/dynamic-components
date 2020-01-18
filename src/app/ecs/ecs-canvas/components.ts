@@ -39,6 +39,11 @@ export class DemoSettings {
 export class PerformanceСompensation {
   delta: number;
   time: number;
+
+  reset() {
+    this.delta = 0;
+    this.time = 0;
+  }
 }
 
 export class Intersecting {

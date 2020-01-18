@@ -1,7 +1,7 @@
+import { ComponentManager } from '../component';
 import { ComponentConstructor } from '../component.interface';
 import { ObjectPool } from '../object-pool';
 import { componentPropertyName, getName } from '../utils';
-import { World } from '../world';
 import { Entity } from './entity';
 import { EventDispatcher } from './event-dispatcher';
 import { Query } from './query';
@@ -14,7 +14,6 @@ import { SystemStateComponent } from './system-state-component';
  * EntityManager
  */
 export class EntityManager {
-  componentsManager = this.world.componentsManager;
 
   // All the entities in this instance
   entities: Entity[] = [];
@@ -31,7 +30,7 @@ export class EntityManager {
   numStateComponents = 0;
 
   constructor(
-    private world: World,
+    private componentManager: ComponentManager,
   ) {}
 
   /**
@@ -41,7 +40,7 @@ export class EntityManager {
     const entity = this.entityPool.aquire();
 
     entity.alive = true;
-    entity.world = this;
+    entity.entityManager = this;
     this.entities.push(entity);
     this.eventDispatcher.dispatchEvent(ENTITY_CREATED, entity);
 
@@ -56,7 +55,7 @@ export class EntityManager {
    * @param componentConstructor Component to be added to the entity
    * @param values Optional values to replace the default attributes
    */
-  entityAddComponent(entity: Entity, componentConstructor: ComponentConstructor<any>, values: any): void {
+  entityAddComponent(entity: Entity, componentConstructor: ComponentConstructor, values?: { [key: string]: any }): void {
 
     if (~entity.ComponentTypes.indexOf(componentConstructor)) { return; }
 
@@ -66,7 +65,7 @@ export class EntityManager {
       this.numStateComponents++;
     }
 
-    const componentPool = this.world.componentsManager.getComponentsPool(
+    const componentPool = this.componentManager.getComponentsPool(
       componentConstructor
     );
 
@@ -87,7 +86,7 @@ export class EntityManager {
     }
 
     this.queryManager.onEntityComponentAdded(entity, componentConstructor);
-    this.world.componentsManager.componentAddedToEntity(componentConstructor);
+    this.componentManager.componentAddedToEntity(componentConstructor);
 
     this.eventDispatcher.dispatchEvent(COMPONENT_ADDED, entity, componentConstructor);
   }
@@ -98,7 +97,7 @@ export class EntityManager {
    * @param componentConstructor Component to remove from the entity
    * @param immediately If you want to remove the component immediately instead of deferred (Default is false)
    */
-  entityRemoveComponent(entity: Entity, componentConstructor: ComponentConstructor<any>, immediately?: boolean): void {
+  entityRemoveComponent(entity: Entity, componentConstructor: ComponentConstructor, immediately?: boolean): void {
     const index = entity.ComponentTypes.indexOf(componentConstructor);
     if (!~index) { return; }
 
@@ -133,15 +132,15 @@ export class EntityManager {
     }
   }
 
-  _entityRemoveComponentSync(entity: Entity, componentConstructor: ComponentConstructor<any>, index: number): void {
+  _entityRemoveComponentSync(entity: Entity, componentConstructor: ComponentConstructor, index: number): void {
     // Remove T listing on entity and property ref, then free the component.
     entity.ComponentTypes.splice(index, 1);
     const propName = componentPropertyName(componentConstructor);
     const componentName = getName(componentConstructor);
     const componentEntity = entity.components[componentName];
     delete entity.components[componentName];
-    this.componentsManager.componentPool[propName].release(componentEntity);
-    this.world.componentsManager.componentRemovedFromEntity(componentConstructor);
+    this.componentManager.componentPool[propName].release(componentEntity);
+    this.componentManager.componentRemovedFromEntity(componentConstructor);
   }
 
   /**
@@ -188,7 +187,7 @@ export class EntityManager {
     this.entities.splice(index, 1);
 
     // Prevent any access and free
-    entity.world = null;
+    entity.entityManager = null;
     this.entityPool.release(entity);
   }
 
@@ -222,8 +221,8 @@ export class EntityManager {
 
         const component = entity.componentsToRemove[componentName];
         delete entity.componentsToRemove[componentName];
-        this.componentsManager.componentPool[propName].release(component);
-        this.world.componentsManager.componentRemovedFromEntity(componentToREmove);
+        this.componentManager.componentPool[propName].release(component);
+        this.componentManager.componentRemovedFromEntity(componentToREmove);
 
         // this._entityRemoveComponentSync(entity, Component, index);
       }
@@ -236,7 +235,7 @@ export class EntityManager {
    * Get a query based on a list of components
    * @param componentConstructor List of components that will form the query
    */
-  queryComponents(componentConstructor: ComponentConstructor<any>[]): Query {
+  queryComponents(componentConstructor: ComponentConstructor[]): Query {
     return this.queryManager.getQuery(componentConstructor);
   }
 
@@ -257,16 +256,16 @@ export class EntityManager {
       numEntities: this.entities.length,
       numQueries: Object.keys(this.queryManager.queries).length,
       queries: this.queryManager.stats(),
-      numComponentPool: Object.keys(this.componentsManager.componentPool)
+      numComponentPool: Object.keys(this.componentManager.componentPool)
         .length,
       componentPool: {},
       eventDispatcher: this.eventDispatcher.stats
     };
 
-    for (const cname in this.componentsManager.componentPool) {
-      if (this.componentsManager.componentPool.hasOwnProperty(cname)) {
+    for (const cname in this.componentManager.componentPool) {
+      if (this.componentManager.componentPool.hasOwnProperty(cname)) {
 
-        const pool = this.componentsManager.componentPool[cname];
+        const pool = this.componentManager.componentPool[cname];
         stats.componentPool[cname] = {
           used: pool.totalUsed(),
           size: pool.count

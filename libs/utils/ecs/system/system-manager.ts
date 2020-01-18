@@ -1,28 +1,149 @@
-import { SystemBase } from '../system-base';
+import { EntityManager } from '../entity';
+import { Query } from '../entity/query';
 import { System, SystemConstructor } from '../system.interface';
-import { World } from '../world';
+import { canExecute } from './can-execute';
+import { clearEvents } from './clear-events';
 
 // tslint:disable:no-bitwise
 
 export class SystemManager {
   private systems: System[] = [];
-  private executeSystems: SystemBase[] = []; // Systems that have `execute` method
+  private executeSystems: System[] = []; // Systems that have `execute` method
 
   lastExecutedSystem = null;
 
   constructor(
-    private world: World,
+    private entityManager: EntityManager,
   ) {}
 
-  registerSystem(systemConstructor: SystemConstructor<SystemBase>, attributes) {
+  registerSystem(systemConstructor: SystemConstructor<System>, attributes) {
     if (
-      this.systems.find(s => s.constructor.name === systemConstructor.name) !== undefined
+      this.systems.find((s) => s.constructor.name === systemConstructor.name) !== undefined
     ) {
       console.warn(`System '${systemConstructor.name}' already registered.`);
+
       return this;
     }
 
-    const system = new systemConstructor(this.world, attributes);
+    const system = new systemConstructor();
+
+    // ----------
+
+    if (attributes && attributes.priority) {
+      system.priority = attributes.priority;
+    }
+
+    if (systemConstructor.SystemData) {
+
+      for (const queryName in systemConstructor.SystemData) {
+        if (systemConstructor.SystemData.hasOwnProperty(queryName)) {
+
+          const queryConfig = systemConstructor.SystemData[queryName];
+
+          const components = queryConfig.components;
+
+          if (!components || components.length === 0) {
+            throw new Error('\'components\' attribute can\'t be empty in a query');
+          }
+
+          const query = this.entityManager.queryComponents(components);
+
+          system.queriesOther[queryName] = query;
+
+          if (queryConfig.mandatory === true) {
+            system.mandatoryQueries.push(query);
+          }
+
+          system.queries[queryName] = {
+            results: query.entities
+          };
+
+          // Reactive configuration added/removed/changed
+          const validEvents = ['added', 'removed', 'changed'];
+
+          const eventMapping = {
+            added: Query.prototype.ENTITY_ADDED,
+            removed: Query.prototype.ENTITY_REMOVED,
+            changed: Query.prototype.COMPONENT_CHANGED // Query.prototype.ENTITY_CHANGED
+          };
+
+          if (queryConfig.listen) {
+            validEvents.forEach(eventName => {
+              // Is the event enabled on this system's query?
+              if (queryConfig.listen[eventName]) {
+                const event = queryConfig.listen[eventName];
+
+                if (eventName === 'changed') {
+                  query.reactive = true;
+                  if (event === true) {
+                    // Any change on the entity from the components in the query
+                    const eventList = (system.queries[queryName][eventName] = []);
+                    query.eventDispatcher.addEventListener(
+                      Query.prototype.COMPONENT_CHANGED,
+                      (entity) => {
+                        // Avoid duplicates
+                        if (eventList.indexOf(entity) === -1) {
+                          eventList.push(entity);
+                        }
+                      }
+                    );
+                  } else if (Array.isArray(event)) {
+                    const eventList = (system.queries[queryName][eventName] = []);
+                    query.eventDispatcher.addEventListener(
+                      Query.prototype.COMPONENT_CHANGED,
+                      (entity, changedComponent) => {
+                        // Avoid duplicates
+                        if (
+                          event.indexOf(changedComponent.constructor) !== -1 &&
+                          eventList.indexOf(entity) === -1
+                        ) {
+                          eventList.push(entity);
+                        }
+                      }
+                    );
+                  } else {
+                    /*
+                    // Checking just specific components
+                    let changedList = (this.queries[queryName][eventName] = {});
+                    event.forEach(component => {
+                      let eventList = (changedList[
+                        componentPropertyName(component)
+                      ] = []);
+                      query.eventDispatcher.addEventListener(
+                        Query.prototype.COMPONENT_CHANGED,
+                        (entity, changedComponent) => {
+                          if (
+                            changedComponent.constructor === component &&
+                            eventList.indexOf(entity) === -1
+                          ) {
+                            eventList.push(entity);
+                          }
+                        }
+                      );
+                    });
+                    */
+                  }
+                } else {
+                  const eventList = (system.queries[queryName][eventName] = []);
+
+                  query.eventDispatcher.addEventListener(eventMapping[eventName],
+                    entity => {
+                      // @fixme overhead?
+                      if (eventList.indexOf(entity) === -1) {
+
+                        eventList.push(entity);
+                      }
+                    }
+                  );
+                }
+              }
+            });
+          }
+        }
+      }
+    }
+
+    // ----------
 
     if ((system as any).init) {
       (system as any).init();
@@ -61,19 +182,19 @@ export class SystemManager {
     this.systems.splice(index, 1);
   }
 
-  runSystem(system: SystemBase): void {
+  runSystem(system: System): void {
 
     if (system.initialized) {
-      if (system.canExecute()) {
-        const startTime = performance.now();
+      if (canExecute(system)) {
+        const startTime = performance.now(); // ! debag performance
 
         // main run;
         system.run();
 
-        system.executeTime = performance.now() - startTime;
+        (system as any).executeTime = performance.now() - startTime; // ! debag performance
         this.lastExecutedSystem = system;
 
-        system.clearEvents();
+        clearEvents(system);
       }
     }
   }
@@ -81,6 +202,7 @@ export class SystemManager {
   stop(): void {
     for (const system of this.executeSystems) {
       system.stop();
+      (system as any).executeTime = 0; // ! debag performance
     }
   }
 

@@ -1,12 +1,16 @@
-import { Component } from '../component';
-import { ComponentConstructor } from '../component.interface';
+import { Component } from '../component.interface';
 import { Entity } from './entity';
+
+type Listener = (entity: Entity, component?: Component) => void;
 
 /**
  * EventDispatcher
  */
 export class EventDispatcher {
-  listeners = {};
+  listeners: { [key: string]: Listener[] } = {};
+
+  asd = new Map();
+
   stats = {
     fired: 0,
     handled: 0
@@ -20,8 +24,9 @@ export class EventDispatcher {
    * @param eventName Name of the event to listen
    * @param listener Callback to trigger when the event is fired
    */
-  addEventListener(eventName: string, listener: (entity: Entity, componentConstructor?: ComponentConstructor<any>) => void) {
+  addEventListener(eventName: string, listener: Listener) {
     const listeners = this.listeners;
+
     if (listeners[eventName] === undefined) {
       listeners[eventName] = [];
     }
@@ -36,7 +41,7 @@ export class EventDispatcher {
    * @param eventName Name of the event to check
    * @param listener Callback for the specified event
    */
-  hasEventListener(eventName: string, listener: (entity: Entity, componentConstructor?: ComponentConstructor<any>) => void) {
+  hasEventListener(eventName: string, listener: Listener) {
     return (
       this.listeners[eventName] !== undefined &&
       this.listeners[eventName].indexOf(listener) !== -1
@@ -48,7 +53,7 @@ export class EventDispatcher {
    * @param eventName Name of the event to remove
    * @param listener Callback for the specified event
    */
-  removeEventListener(eventName: string, listener: (entity: Entity, componentConstructor?: ComponentConstructor<any>) => void) {
+  removeEventListener(eventName: string, listener: Listener) {
     const listenerArray = this.listeners[eventName];
     if (listenerArray !== undefined) {
       const index = listenerArray.indexOf(listener);

@@ -1,31 +1,33 @@
-export class DummyObjectPool {
+import { Resettable } from '../resettable.interface';
+
+export class DummyObjectPool<TInstance extends Resettable, TCLass extends new (...args) => TInstance> {
   isDummyObjectPool = true;
   count = 0;
   used = 0;
 
   constructor(
-    private T: any
+    private T: TCLass
   ) {}
 
-  aquire() {
+  aquire(): TInstance {
     this.used++;
     this.count++;
     return new this.T();
   }
 
-  release() {
+  release(): void {
     this.used--;
   }
 
-  totalSize() {
+  totalSize(): number {
     return this.count;
   }
 
-  totalFree() {
+  totalFree(): number {
     return Infinity;
   }
 
-  totalUsed() {
+  totalUsed(): number {
     return this.used;
   }
 }
