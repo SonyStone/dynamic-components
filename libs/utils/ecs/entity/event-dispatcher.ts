@@ -7,9 +7,7 @@ type Listener = (entity: Entity, component?: Component) => void;
  * EventDispatcher
  */
 export class EventDispatcher {
-  listeners: { [key: string]: Listener[] } = {};
-
-  asd = new Map();
+  listeners = new Map<string, Listener[]>();
 
   stats = {
     fired: 0,
@@ -27,12 +25,14 @@ export class EventDispatcher {
   addEventListener(eventName: string, listener: Listener) {
     const listeners = this.listeners;
 
-    if (listeners[eventName] === undefined) {
-      listeners[eventName] = [];
+    if (!listeners.has(eventName)) {
+      listeners.set(eventName, []);
     }
 
-    if (listeners[eventName].indexOf(listener) === -1) {
-      listeners[eventName].push(listener);
+    const listenerArray = listeners.get(eventName);
+
+    if (listenerArray.indexOf(listener) === -1) {
+      listenerArray.push(listener);
     }
   }
 
@@ -43,8 +43,7 @@ export class EventDispatcher {
    */
   hasEventListener(eventName: string, listener: Listener) {
     return (
-      this.listeners[eventName] !== undefined &&
-      this.listeners[eventName].indexOf(listener) !== -1
+      this.listeners.has(eventName) && this.listeners.get(eventName).indexOf(listener) !== -1
     );
   }
 
@@ -54,7 +53,8 @@ export class EventDispatcher {
    * @param listener Callback for the specified event
    */
   removeEventListener(eventName: string, listener: Listener) {
-    const listenerArray = this.listeners[eventName];
+    const listenerArray = this.listeners.get(eventName);
+
     if (listenerArray !== undefined) {
       const index = listenerArray.indexOf(listener);
       if (index !== -1) {
@@ -71,7 +71,8 @@ export class EventDispatcher {
   dispatchEvent(eventName: string, entity?: Entity, component?: Component) {
     this.stats.fired++;
 
-    const listenerArray = this.listeners[eventName];
+    const listenerArray = this.listeners.get(eventName);
+
     if (listenerArray !== undefined) {
       const array = listenerArray.slice(0);
 

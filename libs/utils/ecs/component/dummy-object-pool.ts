@@ -1,18 +1,19 @@
+import { Pool } from '../pool.interface';
 import { Resettable } from '../resettable.interface';
 
-export class DummyObjectPool<TInstance extends Resettable, TCLass extends new (...args) => TInstance> {
-  isDummyObjectPool = true;
-  count = 0;
-  used = 0;
+export class DummyObjectPool<T extends Resettable> implements Pool<T> {
+  private count = 0;
+  private used = 0;
 
   constructor(
-    private T: TCLass
+    private objectConstructor: new (...args) => T
   ) {}
 
-  aquire(): TInstance {
+  aquire(): T {
     this.used++;
     this.count++;
-    return new this.T();
+
+    return new this.objectConstructor();
   }
 
   release(): void {

@@ -1,4 +1,4 @@
-import { Component, ComponentConstructor, ComponentMap } from '../component.interface';
+import { Component, ComponentConstructor } from '../component.interface';
 import { Resettable } from '../resettable.interface';
 import { EntityManager } from './entity-manager';
 import { Query } from './query';
@@ -11,8 +11,6 @@ const DEBUG = false;
 
 let nextId = 0;
 
-
-
 export class Entity implements Resettable {
   // Unique ID for this entity
   id = nextId++;
@@ -21,9 +19,9 @@ export class Entity implements Resettable {
   ComponentTypes: ComponentConstructor[] = [];
 
   // Instance of the components
-  components: ComponentMap = {};
+  components = new Map<string, Component>();
 
-  componentsToRemove: ComponentMap = {};
+  componentsToRemove = new Map<string, Component>();
 
   // Queries where the entity is added
   queries: Query[] = [];
@@ -40,24 +38,24 @@ export class Entity implements Resettable {
   // COMPONENTS
 
   getComponent(componentConstructor: ComponentConstructor, includeRemoved?: boolean): Component {
-    let component = this.components[componentConstructor.name];
+    let component = this.components.get(componentConstructor.name);
 
     if (!component && includeRemoved === true) {
-      component = this.componentsToRemove[componentConstructor.name];
+      component = this.componentsToRemove.get(componentConstructor.name);
     }
 
     return DEBUG ? wrapImmutableComponent(component) : component;
   }
 
   getRemovedComponent(componentConstructor: ComponentConstructor): Component {
-    return this.componentsToRemove[componentConstructor.name];
+    return this.componentsToRemove.get(componentConstructor.name);
   }
 
-  getComponents(): { [key: string]: Component; } {
+  getComponents(): Map<string, Component> {
     return this.components;
   }
 
-  getComponentsToRemove(): { [key: string]: Component; } {
+  getComponentsToRemove(): Map<string, Component> {
     return this.componentsToRemove;
   }
 
@@ -66,7 +64,7 @@ export class Entity implements Resettable {
   }
 
   getMutableComponent(componentConstructor: ComponentConstructor): Component {
-    const component = this.components[componentConstructor.name];
+    const component = this.components.get(componentConstructor.name);
 
     for (const query of this.queries) {
 
@@ -134,7 +132,7 @@ export class Entity implements Resettable {
     this.entityManager = null;
     this.ComponentTypes.length = 0;
     this.queries.length = 0;
-    this.components = {};
+    this.components.clear();
   }
 
   remove(forceRemove?: boolean) {

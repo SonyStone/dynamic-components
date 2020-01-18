@@ -21,7 +21,7 @@ export class Renderer implements System {
 
   run() {
 
-    console.log(`Renderer`, this, (this as any).executeTime);
+    // console.log(`Renderer`, this, (this as any).executeTime);
 
 
     const context = this.queries.context.results[0];

@@ -27,7 +27,7 @@ export class MovementSystem implements System {
 
   run() {
 
-    console.log(`MovementSystem`, this, (this as any).executeTime);
+    // console.log(`MovementSystem`, this, (this as any).executeTime);
 
     const context = this.queries.context.results[0];
     const canvasContext = context.getComponent(CanvasContext);

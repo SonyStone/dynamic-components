@@ -21,7 +21,7 @@ export class IntersectionSystem implements System {
 
   run() {
 
-    console.log(`IntersectionSystem`, this, (this as any).executeTime);
+    // console.log(`IntersectionSystem`, this, (this as any).executeTime);
 
     const entities = this.queries.entities.results;
 

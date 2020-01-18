@@ -5,9 +5,4 @@ export interface Component extends Resettable {
   copy?(src: Component): void;
 }
 
-export type ComponentConstructor =
-  new () => Component;
-
-export interface ComponentMap {
-  [key: string]: Component;
-}
+export type ComponentConstructor = new () => Component;
