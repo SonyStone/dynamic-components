@@ -1,19 +1,15 @@
-import { ChangeDetectionStrategy, Component, NgModule, Input } from '@angular/core';
-import { DynamicModule } from '@factory/utils';
 import { CommonModule } from '@angular/common';
-import { Interpolation } from '@angular/compiler';
+import { ChangeDetectionStrategy, Component, Input, NgModule, OnDestroy, Type } from '@angular/core';
+
+import { WithCustomElementComponent } from '../../doc-viewer/element-registry';
 
 @Component({
   selector: 'app-test-1',
   template: `
-  <p>Link: {{ lable }}<p>
+  Test 1
   <ng-content select="div"></ng-content>
   <input value="{{ number }}">
   <ng-content></ng-content>
-  <div class="flex">
-    <dynamic *ngFor="let child of children"
-             [configs]="child"></dynamic>
-    <div>
   `,
   styles: [`
     :host {
@@ -24,32 +20,26 @@ import { Interpolation } from '@angular/compiler';
       overflow: hidden;
       border: 1px solid #fff;
     }
-    .flex {
-      display: flex;
-    }
-    dynamic {
-      flex: 1 0 auto;
-    }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Test1Component {
+export class Test1Component implements OnDestroy {
   number = (Math.random() * 100).toFixed();
 
-  @Input() children: any[];
-  @Input() lable: string;
-}
+  @Input() children: any;
 
+  constructor() {
+    console.log(`constructor :: Test1Component`);
+  }
+
+  ngOnDestroy(): void {
+    console.log(`destroy :: Test1Component`);
+  }
+}
 
 @NgModule({
   imports: [
     CommonModule,
-    DynamicModule.forChild({
-      types: [{
-        name: 'test-1',
-        component: Test1Component,
-      }]
-    }),
   ],
   declarations: [
     Test1Component
@@ -61,4 +51,6 @@ export class Test1Component {
     Test1Component,
   ],
 })
-export class Test1Module { }
+export class Test1Module implements WithCustomElementComponent {
+  customElementComponent: Type<any> = Test1Component;
+}

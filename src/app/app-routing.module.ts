@@ -5,11 +5,13 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
   {
     path: 'dynamic',
-    loadChildren: () => import('./dynamic/dynamic.module').then((mod) => mod.DynamicModule),
+    loadChildren: () => import('./dynamic/dynamic.route-module')
+      .then((m) => m.DynamicRouteModule),
   },
   {
-    path: 'ecs',
-    loadChildren: () => import('./ecs/ecs.module').then((mod) => mod.EcsModule),
+    path: 'dynamic-2',
+    loadChildren: () => import('./dynamic-2/dynamic-2.route-module')
+      .then((m) => m.Dynamic2RouteModule),
   },
 ];
 

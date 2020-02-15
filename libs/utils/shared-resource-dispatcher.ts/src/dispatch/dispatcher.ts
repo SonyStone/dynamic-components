@@ -1,4 +1,5 @@
 import { Stage } from './stage';
+import { RunNow } from './system/system';
 
 export type SystemId = number;
 
@@ -6,7 +7,7 @@ export class Dispatcher {
 
   constructor(
     public stages: Stage[],
-    public threadLocal: ThreadLocal[],
+    public threadLocal: RunNow[],
   ) {}
 
   /**

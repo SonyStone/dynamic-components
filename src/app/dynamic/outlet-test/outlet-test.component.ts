@@ -9,20 +9,43 @@ import { ChangeDetectionStrategy, Component, ChangeDetectorRef } from '@angular/
 export class OutletTestComponent {
 
   sectionConfig = [
+
+    {
+      type: 'test-1',
+      children: [
+        [
+          {
+            type: 'test-3',
+          },
+          {
+            type: 'test-3',
+          },
+
+        ],
+        [
+          {
+            type: 'test-3',
+          },
+          {
+            type: 'test-2',
+          },
+          {
+            type: 'test-3',
+          },
+        ],
+        [
+          {
+            type: 'test-2',
+          },
+        ],
+      ],
+    },
     {
       type: 'test-2',
     },
     {
-      type: 'test-1',
-      children: [
-        {
-          type: 'test-3',
-        },
-        {
-          type: 'test-3',
-        }
-      ]
-    }
+      type: 'test-2',
+    },
   ];
 
   constructor(
@@ -33,10 +56,24 @@ export class OutletTestComponent {
 
   toggle(): void {
     this.sectionConfig = [
-      ...this.sectionConfig,
       {
         type: 'test-1',
-      }
+        children: [
+          [
+            {
+              type: 'test-3',
+            },
+            {
+              type: 'test-2',
+            },
+          ],
+          [
+            {
+              type: 'test-2',
+            },
+          ],
+        ],
+      },
     ];
 
     this.cd.markForCheck();
