@@ -5,9 +5,9 @@ import { DynamicModule } from '@factory/utils';
 
 import { HelloComponent } from './hello.component';
 import { OutletTestComponent } from './outlet-test.component';
-import { Test1Module } from './test-1.component';
-import { Test2Module } from './test-2.component';
-import { Test3Module } from './test-3.component';
+import { TestBlueModule } from './test-blue.component';
+import { TestGreenModule } from './test-green.component';
+import { TestOrangeModule } from './test-orange.component';
 
 const routes: Routes = [
   { path: '', component: OutletTestComponent },
@@ -20,9 +20,9 @@ const routes: Routes = [
       RouterModule.forChild(routes),
     ],
     DynamicModule.forRoot(),
-    Test1Module,
-    Test2Module,
-    Test3Module,
+    TestOrangeModule,
+    TestGreenModule,
+    TestBlueModule,
   ],
   providers: [],
   declarations: [

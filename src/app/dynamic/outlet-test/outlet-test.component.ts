@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 
 @Component({
   selector: 'outlet-test',
@@ -8,74 +8,65 @@ import { ChangeDetectionStrategy, Component, ChangeDetectorRef } from '@angular/
 })
 export class OutletTestComponent {
 
-  sectionConfig = [
+  sectionConfig: any = config1;
 
-    {
-      type: 'test-1',
-      children: [
-        [
-          {
-            type: 'test-3',
-          },
-          {
-            type: 'test-3',
-          },
-
-        ],
-        [
-          {
-            type: 'test-3',
-          },
-          {
-            type: 'test-2',
-          },
-          {
-            type: 'test-3',
-          },
-        ],
-        [
-          {
-            type: 'test-2',
-          },
-        ],
-      ],
-    },
-    {
-      type: 'test-2',
-    },
-    {
-      type: 'test-2',
-    },
-  ];
+  private alternativeSectionConfig = config2;
 
   constructor(
     private cd: ChangeDetectorRef,
-  ) {
-
-  }
+  ) {}
 
   toggle(): void {
-    this.sectionConfig = [
-      {
-        type: 'test-1',
-        children: [
-          [
-            {
-              type: 'test-3',
-            },
-            {
-              type: 'test-2',
-            },
-          ],
-          [
-            {
-              type: 'test-2',
-            },
-          ],
-        ],
-      },
-    ];
+    const temp = this.sectionConfig;
+    this.sectionConfig = this.alternativeSectionConfig;
+    this.alternativeSectionConfig = temp;
 
     this.cd.markForCheck();
   }
 }
+
+
+const config1 = [
+  {
+    type: 'test-orange',
+    children: [
+      {
+        type: 'test-blue',
+      },
+    ],
+  },
+  {
+    type: 'test-orange',
+    children: [
+      {
+        type: 'test-blue',
+      },
+    ],
+  },
+  {
+    type: 'test-green',
+  },
+];
+
+const config2 = [
+  {
+    type: 'test-blue',
+    // children: [
+    //   {
+    //     type: 'test-orange',
+
+    //   },
+    // ],
+  },
+  {
+    type: 'test-green',
+  },
+  {
+    type: 'test-orange',
+    // children: [
+    //   {
+    //     type: 'test-green',
+    //   },
+    // ],
+  },
+];

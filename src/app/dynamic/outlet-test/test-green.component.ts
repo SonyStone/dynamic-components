@@ -1,17 +1,18 @@
-import { ChangeDetectionStrategy, Component, NgModule } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, NgModule } from '@angular/core';
 import { DynamicModule } from '@factory/utils';
 
 @Component({
-  selector: 'app-test-1',
+  selector: 'app-test-green',
   template: `
-  Link
+  <span>green</span>
   <ng-content select="div"></ng-content>
   <input value="{{ number }}">
   <ng-content></ng-content>
+  <!-- <dynamic [configs]="children"></dynamic> -->
   `,
   styles: [`
     :host {
-      background-color: lightblue;
+      background-color: lightgreen;
       display: block;
       margin: 1rem;
       padding: 1rem;
@@ -21,8 +22,10 @@ import { DynamicModule } from '@factory/utils';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Test3Component {
+export class TestGreenComponent {
   number = (Math.random() * 100).toFixed();
+
+  // @Input() children: any;
 }
 
 
@@ -30,19 +33,16 @@ export class Test3Component {
   imports: [
     DynamicModule.forChild({
       types: [{
-        name: 'test-3',
-        component: Test3Component,
+        name: 'test-green',
+        component: TestGreenComponent,
       }]
     }),
   ],
   declarations: [
-    Test3Component
-  ],
-  entryComponents: [
-    Test3Component,
+    TestGreenComponent
   ],
   exports: [
-    Test3Component,
+    TestGreenComponent,
   ],
 })
-export class Test3Module { }
+export class TestGreenModule { }

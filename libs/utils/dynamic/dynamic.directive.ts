@@ -32,9 +32,7 @@ export class DynamicDirective implements OnDestroy {
     private templateRef: TemplateRef<null>,
     private viewContainer: ViewContainerRef,
     private configService: DynamicConfig,
-  ) {
-    console.log(this.configService);
-  }
+  ) {}
 
   ngOnDestroy() {
     this.viewContainer.clear();

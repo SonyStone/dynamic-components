@@ -1,19 +1,19 @@
-import { ChangeDetectionStrategy, Component, NgModule, Input } from '@angular/core';
-import { DynamicModule } from '@factory/utils';
 import { CommonModule } from '@angular/common';
-import { Interpolation } from '@angular/compiler';
+import { ChangeDetectionStrategy, Component, Input, NgModule } from '@angular/core';
+import { DynamicModule } from '@factory/utils';
 
 @Component({
-  selector: 'app-test-1',
+  selector: 'app-test-orange',
   template: `
-  <p>Link: {{ lable }}<p>
+  <span>orange</span>
   <ng-content select="div"></ng-content>
   <input value="{{ number }}">
   <ng-content></ng-content>
-  <div class="flex">
+  <dynamic [configs]="children"></dynamic>
+  <!-- <div class="flex">
     <dynamic *ngFor="let child of children"
              [configs]="child"></dynamic>
-    <div>
+    <div> -->
   `,
   styles: [`
     :host {
@@ -33,10 +33,10 @@ import { Interpolation } from '@angular/compiler';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Test1Component {
+export class TestOrangeComponent {
   number = (Math.random() * 100).toFixed();
 
-  @Input() children: any[];
+  @Input() children: any;
   @Input() lable: string;
 }
 
@@ -46,19 +46,16 @@ export class Test1Component {
     CommonModule,
     DynamicModule.forChild({
       types: [{
-        name: 'test-1',
-        component: Test1Component,
+        name: 'test-orange',
+        component: TestOrangeComponent,
       }]
     }),
   ],
   declarations: [
-    Test1Component
-  ],
-  entryComponents: [
-    Test1Component,
+    TestOrangeComponent
   ],
   exports: [
-    Test1Component,
+    TestOrangeComponent,
   ],
 })
-export class Test1Module { }
+export class TestOrangeModule { }

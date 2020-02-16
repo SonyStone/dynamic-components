@@ -50,9 +50,6 @@ export class Test1Component implements OnDestroy {
   declarations: [
     Test1Component
   ],
-  entryComponents: [
-    Test1Component,
-  ],
   exports: [
     Test1Component,
   ],

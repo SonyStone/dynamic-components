@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Inject, InjectionToken, ModuleWithProviders, NgModule, Optional } from '@angular/core';
-import { NgxdModule } from '@ngxd/core';
 
+import { NgxdModule } from '../ngxd';
 import { DynamicComponent } from './dynamic.component';
 import { DYNAMIC_CONFIG, DynamicConfig, DynamicOption } from './dynamic.config';
 import { DynamicDirective } from './dynamic.directive';
@@ -28,7 +28,7 @@ import { Layouts } from './layout.interface';
 })
 export class DynamicModule {
 
-  static forRoot(layouts?: Layouts, config: DynamicOption = {}): ModuleWithProviders {
+  static forRoot(layouts?: Layouts, config: DynamicOption = {}): ModuleWithProviders<DynamicModule> {
     return {
       ngModule: DynamicModule,
       providers: [
@@ -37,7 +37,7 @@ export class DynamicModule {
     };
   }
 
-  static forChild(config: DynamicOption = {}): ModuleWithProviders {
+  static forChild(config: DynamicOption = {}): ModuleWithProviders<DynamicModule> {
     return {
       ngModule: DynamicModule,
       providers: [

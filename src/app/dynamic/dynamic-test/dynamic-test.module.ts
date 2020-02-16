@@ -23,10 +23,5 @@ const routes: Routes = [
     DynamicTestComponent,
     AppComponentContainerDirective,
   ],
-  entryComponents: [
-    Test1Component,
-    Test2Component,
-    Test3Component,
-  ],
 })
 export class DynamicTestModule { }
