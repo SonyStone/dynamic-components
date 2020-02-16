@@ -5,15 +5,15 @@ import { DynamicModule } from '@factory/utils';
 @Component({
   selector: 'app-test-orange',
   template: `
-  <span>orange</span>
+  <span>orange {{ lable }}</span>
   <ng-content select="div"></ng-content>
   <input value="{{ number }}">
   <ng-content></ng-content>
-  <dynamic [configs]="children"></dynamic>
-  <!-- <div class="flex">
+  <pre>children: {{ children | json }}</pre>
+  <div class="flex">
     <dynamic *ngFor="let child of children"
              [configs]="child"></dynamic>
-    <div> -->
+  <div>
   `,
   styles: [`
     :host {
@@ -43,7 +43,9 @@ export class TestOrangeComponent {
 
 @NgModule({
   imports: [
-    CommonModule,
+    [
+      CommonModule,
+    ],
     DynamicModule.forChild({
       types: [{
         name: 'test-orange',

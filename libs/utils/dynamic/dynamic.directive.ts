@@ -45,8 +45,9 @@ export class DynamicDirective implements OnDestroy {
   private setValue(configs: OuteltConfig[]): void {
     if (!configs ||  configs.length === 0) { return; }
 
-    this.context.$implicit = configs.map((config) =>
-      ({
+    this.context.$implicit = configs.map((config) => {
+
+      return ({
         component: this.configService.getType(config.type).component,
         context: {
           ...config,
@@ -57,6 +58,7 @@ export class DynamicDirective implements OnDestroy {
         content: config.content,
         dontTrackBy: config.dontTrackBy,
       })
+    }
     );
   }
 }

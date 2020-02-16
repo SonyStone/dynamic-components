@@ -21,7 +21,6 @@ export type Content<T> = string | TemplateRef<T> | Type<T>;
 @Component({
   selector: 'dynamic',
   template: `
-
     <ng-container *dynamic="configs;
                             context: context;
                             let outlets;">
@@ -42,6 +41,7 @@ export type Content<T> = string | TemplateRef<T> | Type<T>;
 export class DynamicComponent {
 
   @Input() configs: OuteltConfig[];
+
   @Input() context: any[];
 
   @Output() action: EventEmitter<any> = new EventEmitter<any>();
@@ -50,6 +50,7 @@ export class DynamicComponent {
     if (config.dontTrackBy) {
       return;
     }
+
     return config.component;
   }
 

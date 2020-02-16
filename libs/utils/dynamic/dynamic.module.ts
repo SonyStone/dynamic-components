@@ -7,8 +7,6 @@ import { DYNAMIC_CONFIG, DynamicConfig, DynamicOption } from './dynamic.config';
 import { DynamicDirective } from './dynamic.directive';
 import { Layouts } from './layout.interface';
 
-
-
 @NgModule({
   imports: [
     [

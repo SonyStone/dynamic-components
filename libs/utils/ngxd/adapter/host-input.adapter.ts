@@ -26,8 +26,6 @@ export class HostInputAdapter<TComponent> {
 
     const defaultValue = host[name];
 
-    console.log(`redefine property`, host, name,)
-
     Object.defineProperty(host, name, {
       get: () => {
         if (this.defaultDescriptor && this.defaultDescriptor.get) {
@@ -43,6 +41,7 @@ export class HostInputAdapter<TComponent> {
         this.value = value;
         this.changes.next(value);
       },
+      configurable: true,
     });
 
     if (typeof defaultValue !== 'undefined') {
