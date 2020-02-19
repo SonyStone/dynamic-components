@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 
+import { configs } from '../test-configs';
+
 @Component({
   selector: 'ngx-outlet-test',
   templateUrl: 'ngx-outlet-test.component.html',
@@ -8,72 +10,17 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
 })
 export class NgxOutletTestComponent {
 
-  sectionConfig: any = config1;
+  configs = configs;
 
-  private alternativeSectionConfig = config2;
+  sectionConfig: any = this.configs[0];
 
   constructor(
     private cd: ChangeDetectorRef,
   ) {}
 
-  toggle(): void {
-    const temp = this.sectionConfig;
-    this.sectionConfig = this.alternativeSectionConfig;
-    this.alternativeSectionConfig = temp;
+  toggle(config: any): void {
+    this.sectionConfig = config;
 
     this.cd.markForCheck();
   }
 }
-
-const config1 = [
-  {
-    type: 'test-orange',
-    lable: 1,
-    children: [
-      [
-        {
-          type: 'test-green',
-          lable: 2,
-        },
-      ],
-    ],
-  },
-  {
-    type: 'test-orange',
-    lable: 3,
-    children: [
-      [
-        {
-          type: 'test-green',
-          lable: 4,
-        },
-      ],
-    ],
-  },
-  {
-    type: 'test-blue',
-    lable: 5,
-  },
-];
-
-const config2 = [
-  {
-    type: 'test-blue',
-    children: [
-      { type: 'test-orange' },
-    ],
-  },
-  {
-    type: 'test-green',
-  },
-  {
-    type: 'test-orange',
-    children: [
-      [
-        {
-          type: 'test-green',
-        },
-      ],
-    ],
-  },
-];

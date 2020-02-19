@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, NgModule } from '@angular/core';
-import { DynamicModule } from '@factory/utils';
+
+import { NgxdDynamicModule } from './dynamic/dynamic.module';
 
 @Component({
   selector: 'app-test-orange',
@@ -11,7 +12,7 @@ import { DynamicModule } from '@factory/utils';
   <ng-content></ng-content>
   <div class="flex">
     <div *ngFor="let child of children" class="flex-child">
-      <ng-container *dynamicOutlet="child"></ng-container>
+      <dynamic [configs]="child"></dynamic>
     </div>
   <div>
   `,
@@ -46,7 +47,7 @@ export class TestOrangeComponent {
     [
       CommonModule,
     ],
-    DynamicModule.forChild({
+    NgxdDynamicModule.forChild({
       types: [{
         name: 'test-orange',
         component: TestOrangeComponent,

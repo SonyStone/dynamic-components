@@ -1,5 +1,6 @@
-<h1>outlet-test</h1>
+<h1>ngxd-outlet-test</h1>
 
-<button (click)="toggle()">toggle</button>
+<button *ngFor="let config of configs; let i = index"
+        (click)="toggle(config)">config {{i}}</button>
 
-<ng-container *dynamicOutlet="sectionConfig"></ng-container>
+<dynamic [configs]="sectionConfig"></dynamic>

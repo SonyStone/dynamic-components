@@ -78,7 +78,7 @@ export class HostInputAdapter<TComponent> {
       }
     } else {
 
-      // delete this.host[this.name];
+      delete this.host[this.name];
       this.host[this.name] = defaultValue;
     }
   }

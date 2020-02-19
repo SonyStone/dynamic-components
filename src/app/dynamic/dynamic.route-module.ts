@@ -17,6 +17,11 @@ const routes: Routes = [
     loadChildren: () => import('./lazy-load-test/lazy-load-test.module')
       .then((m) => m.LazyLoadTestModule),
   },
+  {
+    path: 'ngxd-outlet-test',
+    loadChildren: () => import('./ngx-outlet-test/ngx-outlet-test.module')
+      .then((m) => m.NgxOutletTestModule),
+  },
 ];
 
 @NgModule({

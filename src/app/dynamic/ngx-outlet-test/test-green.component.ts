@@ -1,39 +1,30 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, NgModule } from '@angular/core';
-import { DynamicModule } from '@factory/utils';
+
+import { NgxdDynamicModule } from './dynamic/dynamic.module';
 
 @Component({
-  selector: 'app-test-orange',
+  selector: 'app-test-green',
   template: `
-  <span>orange {{ lable }}</span>
+  <span>green {{ lable }}</span>
   <ng-content select="div"></ng-content>
   <input value="{{ number }}">
   <ng-content></ng-content>
-  <div class="flex">
-    <div *ngFor="let child of children" class="flex-child">
-      <ng-container *dynamicOutlet="child"></ng-container>
-    </div>
-  <div>
+  <dynamic [configs]="children"></dynamic>
   `,
   styles: [`
     :host {
-      background-color: orange;
+      background-color: lightgreen;
       display: block;
       margin: 1rem;
       padding: 1rem;
       overflow: hidden;
       border: 1px solid #fff;
     }
-    .flex {
-      display: flex;
-    }
-    .flex-child {
-      flex: 1 0 auto;
-    }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TestOrangeComponent {
+export class TestGreenComponent {
   number = (Math.random() * 100).toFixed();
 
   @Input() children: any;
@@ -46,18 +37,18 @@ export class TestOrangeComponent {
     [
       CommonModule,
     ],
-    DynamicModule.forChild({
+    NgxdDynamicModule.forChild({
       types: [{
-        name: 'test-orange',
-        component: TestOrangeComponent,
+        name: 'test-green',
+        component: TestGreenComponent,
       }]
     }),
   ],
   declarations: [
-    TestOrangeComponent
+    TestGreenComponent
   ],
   exports: [
-    TestOrangeComponent,
+    TestGreenComponent,
   ],
 })
-export class TestOrangeModule { }
+export class TestGreenModule { }

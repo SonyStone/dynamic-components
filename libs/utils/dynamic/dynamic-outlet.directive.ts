@@ -41,14 +41,14 @@ export class DynamicOutletDirective implements OnChanges, OnDestroy {
         return;
       }
 
-      console.log(`:: outeltConfigs -->`, this.outeltConfigs)
+      // console.log(`:: outeltConfigs -->`, this.outeltConfigs)
 
       for (const outeltConfig of this.outeltConfigs) {
 
-        console.log(
-          `:: ${outeltConfig.lable} ${outeltConfig.type} -- start -->`,
-          `\n outeltConfig:`, outeltConfig,
-        );
+        // console.log(
+        //   `:: ${outeltConfig.lable} ${outeltConfig.type} -- start -->`,
+        //   `\n outeltConfig:`, outeltConfig,
+        // );
 
         const componentType = this.configService.getType(outeltConfig.type).component;
 
@@ -76,7 +76,7 @@ export class DynamicOutletDirective implements OnChanges, OnDestroy {
           this.componentFactoryResolver
         );
 
-        console.log(`host`, this.changeDetectorRef);
+        // console.log(`host`, this.changeDetectorRef);
 
         const hostAdapter: HostAdapter<any> = new HostAdapter(this.changeDetectorRef);
         hostAdapter.attach();
@@ -90,19 +90,19 @@ export class DynamicOutletDirective implements OnChanges, OnDestroy {
           doCheckComponentRef,
         );
 
-        console.log(
-          `:: ${outeltConfig.lable} ${outeltConfig.type} `,
-          `\n onInitComponentRef:`, onInitComponentRef,
-          `\n doCheckComponentRef:`, doCheckComponentRef,
-          `\n adapterRef:`, adapterRef,
-        );
+        // console.log(
+        //   `:: ${outeltConfig.lable} ${outeltConfig.type} `,
+        //   `\n onInitComponentRef:`, onInitComponentRef,
+        //   `\n doCheckComponentRef:`, doCheckComponentRef,
+        //   `\n adapterRef:`, adapterRef,
+        // );
 
         // updateContext
         adapterRef.updateContext(outeltConfig as any);
 
         this.adapterRefs.push(adapterRef);
 
-        console.log(`:: ${outeltConfig.lable} ${outeltConfig.type} <-- end --`);
+        // console.log(`:: ${outeltConfig.lable} ${outeltConfig.type} <-- end --`);
       }
     }
   }

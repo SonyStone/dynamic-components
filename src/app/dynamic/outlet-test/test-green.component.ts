@@ -9,7 +9,6 @@ import { CommonModule } from '@angular/common';
   <ng-content select="div"></ng-content>
   <input value="{{ number }}">
   <ng-content></ng-content>
-  <pre>children: {{ children | json }}</pre>
   <ng-container *dynamicOutlet="children"></ng-container>
   `,
   styles: [`
