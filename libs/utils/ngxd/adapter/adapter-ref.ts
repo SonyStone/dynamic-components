@@ -1,11 +1,6 @@
-import {
-  ChangeDetectorRef,
-  ComponentFactory,
-  ComponentRef,
-  SimpleChange,
-  Type,
-} from '@angular/core';
+import { ChangeDetectorRef, ComponentFactory, ComponentRef, SimpleChange } from '@angular/core';
 import { Subscription } from 'rxjs';
+
 import {
   BindingDef,
   hasProperty,
@@ -18,7 +13,7 @@ import {
 import { HostAdapter } from './host.adapter';
 import { LifecycleComponent } from './lifecycle.strategies';
 
-export class NgxComponentOutletAdapterRef<TComponent> {
+export class OutletAdapterRef<TComponent> {
 
   context: Partial<TComponent> = {};
 
@@ -33,7 +28,7 @@ export class NgxComponentOutletAdapterRef<TComponent> {
   private propertyDefs: PropertyDef[] = this.componentFactory.inputs.map(toPropertyDef);
   private bindingDefs: BindingDef[] = [];
 
-  private hostAdapter: HostAdapter<TComponent>;
+  private hostAdapter: HostAdapter<TComponent> = new HostAdapter(this.host);
 
   constructor(
     public componentFactory: ComponentFactory<TComponent>,
@@ -42,16 +37,20 @@ export class NgxComponentOutletAdapterRef<TComponent> {
     private onInitComponentRef: ComponentRef<LifecycleComponent> = componentRef,
     private doCheckComponentRef: ComponentRef<LifecycleComponent> = componentRef,
   ) {
-    this.attachHost();
+
+    this.hostAdapter.attach();
+
     this.attachInputs();
-    this.attachLifecycle();
-    this.attachOutputs();
+    // this.attachLifecycle();
+    // this.attachOutputs();
   }
 
   dispose(): void {
     this.disposeOutputs();
     this.disposeInputs();
-    this.detachHost();
+
+    this.hostAdapter.detach();
+    this.hostAdapter = null;
 
     if (this.componentRef) {
       this.componentRef.destroy();
@@ -70,6 +69,7 @@ export class NgxComponentOutletAdapterRef<TComponent> {
   }
 
   updateContext(context: Partial<TComponent>): void {
+
     const contextProps = (context)
       ? Object.keys(context)
       : [];
@@ -87,7 +87,7 @@ export class NgxComponentOutletAdapterRef<TComponent> {
     }
 
     const unattachedProps = this.propertyDefs.filter(
-      propertyDef =>
+      (propertyDef) =>
         !(
           contextProps.indexOf(propertyDef.outsidePropName) > -1 ||
           this.getBindingDef(propertyDef.outsidePropName)
@@ -108,16 +108,6 @@ export class NgxComponentOutletAdapterRef<TComponent> {
     return this.bindingDefs.find(_ => _.outsidePropName === outsidePropName);
   }
 
-  private attachHost(): void {
-    this.hostAdapter = new HostAdapter<TComponent>(this.host);
-    this.hostAdapter.attach();
-  }
-
-  private detachHost(): void {
-    this.hostAdapter.detach();
-    this.hostAdapter = null;
-  }
-
   private attachHostInput(propertyDef: PropertyDef): BindingDef {
     const bindingDef: BindingDef = this.hostAdapter.attachInput(propertyDef);
     this.bindingDefs.push(bindingDef);
@@ -131,6 +121,9 @@ export class NgxComponentOutletAdapterRef<TComponent> {
 
   private attachInputs(): void {
     this.bindingDefs = [];
+
+    // console.log(`attachInput`, this.propertyDefs);
+
     for (const propertyDef of this.propertyDefs) {
       const bindingDef: BindingDef = this.attachHostInput(propertyDef);
       this.attachContextPropertyToComponentInput(bindingDef);
@@ -139,18 +132,16 @@ export class NgxComponentOutletAdapterRef<TComponent> {
   }
 
   private attachInput(bindingDef: BindingDef) {
-    const host = this.host;
-    const hostAdapter = this.hostAdapter;
-    const context: Partial<TComponent> = this.context;
-    const defaultValue = host[bindingDef.outsidePropName];
 
+    const defaultValue = this.host[bindingDef.outsidePropName];
     if (typeof defaultValue !== 'undefined') {
-      context[bindingDef.outsidePropName] = defaultValue;
+      this.context[bindingDef.outsidePropName] = defaultValue;
     }
 
-    const subscription = hostAdapter.getInputAdapter(bindingDef).changes.subscribe(value => {
-      context[bindingDef.outsidePropName] = value;
-    });
+    const subscription = this.hostAdapter.getInputAdapter(bindingDef).changes
+      .subscribe(value => {
+        this.context[bindingDef.outsidePropName] = value;
+      });
 
     this.attachedInputs.push(subscription);
   }

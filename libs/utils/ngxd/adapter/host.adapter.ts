@@ -3,12 +3,16 @@ import { HostInputAdapter } from './host-input.adapter';
 
 export const PRIVATE_HOST_ADAPTER = PRIVATE_CONTEXT_PREFIX + 'HOST_ADAPTER';
 
+
+
 export class HostAdapter<TComponent> {
   inputs: Map<string, HostInputAdapter<TComponent>>;
   state: any;
   refCount: number;
 
-  constructor(private host: TComponent) {
+  constructor(
+    private host: TComponent,
+  ) {
     if (PRIVATE_HOST_ADAPTER in host) {
       return host[PRIVATE_HOST_ADAPTER];
     }
@@ -25,6 +29,9 @@ export class HostAdapter<TComponent> {
   }
 
   attachInput(propertyDef: PropertyDef): BindingDef {
+
+    // console.log(`attachInput`, this.host, propertyDef);
+
     const adapter = new HostInputAdapter<TComponent>(this.host, propertyDef.outsidePropName);
     adapter.attach();
     this.inputs.set(propertyDef.outsidePropName, adapter);

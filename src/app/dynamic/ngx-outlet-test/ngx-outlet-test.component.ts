@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 
 @Component({
-  selector: 'outlet-test',
-  templateUrl: 'outlet-test.component.html',
-  styleUrls: ['outlet-test.component.scss'],
+  selector: 'ngx-outlet-test',
+  templateUrl: 'ngx-outlet-test.component.html',
+  styleUrls: ['ngx-outlet-test.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OutletTestComponent {
+export class NgxOutletTestComponent {
 
   sectionConfig: any = config1;
 

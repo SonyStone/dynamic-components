@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, DoCheck, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'ngx-component-outlet-on-init-only',
+  selector: 'on-init-only',
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -10,7 +10,7 @@ export class OnInitOnlyComponent implements OnInit {
 }
 
 @Component({
-  selector: 'ngx-component-outlet-do-check-only',
+  selector: 'do-check-only',
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -19,7 +19,7 @@ export class DoCheckOnlyComponent implements DoCheck {
 }
 
 @Component({
-  selector: 'ngx-component-outlet-on-init-do-check',
+  selector: 'on-init-do-check',
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -66,20 +66,6 @@ export function getPropertyDescriptor(context: any, name: string): PropertyDescr
   return void 0;
 }
 
-export function deletePropertyDescriptor(context: any, name: string) {
-  const descriptor = Object.getOwnPropertyDescriptor(context, name);
-
-  if (descriptor) {
-    delete context[name];
-  }
-
-  const prototype = Object.getPrototypeOf(context);
-
-  if (prototype) {
-    return deletePropertyDescriptor(prototype, name);
-  }
-}
-
 export interface PropertyDef {
   insidePropName: string;
   outsidePropName: string;

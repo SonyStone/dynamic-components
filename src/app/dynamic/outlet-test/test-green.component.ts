@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
   <input value="{{ number }}">
   <ng-content></ng-content>
   <pre>children: {{ children | json }}</pre>
-  <dynamic [configs]="children"></dynamic>
+  <ng-container *dynamicOutlet="children"></ng-container>
   `,
   styles: [`
     :host {

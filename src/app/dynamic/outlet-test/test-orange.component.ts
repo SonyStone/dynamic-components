@@ -11,8 +11,9 @@ import { DynamicModule } from '@factory/utils';
   <ng-content></ng-content>
   <pre>children: {{ children | json }}</pre>
   <div class="flex">
-    <dynamic *ngFor="let child of children"
-             [configs]="child"></dynamic>
+    <div *ngFor="let child of children" class="flex-child">
+      <ng-container *dynamicOutlet="child"></ng-container>
+    </div>
   <div>
   `,
   styles: [`
@@ -27,7 +28,7 @@ import { DynamicModule } from '@factory/utils';
     .flex {
       display: flex;
     }
-    dynamic {
+    .flex-child {
       flex: 1 0 auto;
     }
   `],

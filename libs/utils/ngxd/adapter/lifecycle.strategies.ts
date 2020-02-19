@@ -111,5 +111,6 @@ export function resolveLifecycleComponents<TComponent>(
   componentFactoryResolver: ComponentFactoryResolver
 ): LifecycleComponents {
   const strategyConfig: StrategyConfig = resolveStrategy(componentType);
+
   return createLifecycleComponents(viewContainerRef, strategyConfig, componentFactoryResolver);
 }

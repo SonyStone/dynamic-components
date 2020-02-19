@@ -2,9 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Inject, InjectionToken, ModuleWithProviders, NgModule, Optional } from '@angular/core';
 
 import { NgxdModule } from '../ngxd';
-import { DynamicComponent } from './dynamic.component';
+import { DynamicOutletDirective } from './dynamic-outlet.directive';
 import { DYNAMIC_CONFIG, DynamicConfig, DynamicOption } from './dynamic.config';
-import { DynamicDirective } from './dynamic.directive';
 import { Layouts } from './layout.interface';
 
 @NgModule({
@@ -17,11 +16,14 @@ import { Layouts } from './layout.interface';
     ],
   ],
   declarations: [
-    DynamicComponent,
-    DynamicDirective,
+    [
+      DynamicOutletDirective,
+    ],
   ],
   exports: [
-    DynamicComponent,
+    [
+      DynamicOutletDirective,
+    ],
   ],
 })
 export class DynamicModule {
