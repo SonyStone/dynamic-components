@@ -1,6 +1,4 @@
-import { Directive, OnDestroy, ViewContainerRef } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Directive, OnDestroy, ViewContainerRef, ChangeDetectorRef, SkipSelf } from '@angular/core';
 
 import { AppComponentService } from './app-component.service';
 
@@ -13,28 +11,25 @@ import { AppComponentService } from './app-component.service';
 })
 export class AppComponentContainerDirective implements OnDestroy {
 
-  private ngUnsubscribe: Subject<any> = new Subject();
+  private subscription = this.appComponentService.component$
+    .subscribe((componentRef?) => {
+      this.viewContainerRef.detach();
+
+      if (componentRef) {
+        this.viewContainerRef.insert(componentRef.hostView);
+      }
+    });
 
   constructor(
+    @SkipSelf() private changeDetectorRef: ChangeDetectorRef,
     private viewContainerRef: ViewContainerRef,
     private appComponentService: AppComponentService,
   ) {
-    this.appComponentService.component$
-      .pipe(
-        takeUntil(this.ngUnsubscribe),
-      )
-      .subscribe((componentRef?) => {
-        this.viewContainerRef.detach();
-
-        if (componentRef) {
-          this.viewContainerRef.insert(componentRef.hostView);
-        }
-      });
+    console.log(`Directive changeDetectorRef`, this.changeDetectorRef);
   }
 
   ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
+    this.subscription.unsubscribe();
 
     this.viewContainerRef.clear();
   }

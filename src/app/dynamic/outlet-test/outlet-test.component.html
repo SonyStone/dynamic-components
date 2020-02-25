@@ -3,4 +3,4 @@
 <button *ngFor="let config of configs; let i = index"
         (click)="toggle(config)">config {{i}}</button>
 
-<ng-container *dynamicOutlet="sectionConfig"></ng-container>
+<ng-container *dynamic-outlet="sectionConfig"></ng-container>

@@ -1,4 +1,4 @@
-export const configs = [
+export const other = [
   [
     {
       type: 'test-orange',
@@ -151,6 +151,5 @@ export const configs = [
         },
       ],
     },
-
   ],
 ];

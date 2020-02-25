@@ -11,7 +11,7 @@ import { DynamicModule } from '@factory/utils';
   <ng-content></ng-content>
   <div class="flex">
     <div *ngFor="let child of children" class="flex-child">
-      <ng-container *dynamicOutlet="child"></ng-container>
+      <ng-container *dynamic-outlet="child"></ng-container>
     </div>
   <div>
   `,

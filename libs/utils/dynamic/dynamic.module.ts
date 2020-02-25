@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Inject, InjectionToken, ModuleWithProviders, NgModule, Optional } from '@angular/core';
 
 import { NgxdModule } from '../ngxd';
+import { DynamicChildrenOutletDirective } from './dynamic-children-outlet.directive';
 import { DynamicOutletDirective } from './dynamic-outlet.directive';
 import { DYNAMIC_CONFIG, DynamicConfig, DynamicOption } from './dynamic.config';
 import { Layouts } from './layout.interface';
@@ -18,11 +19,13 @@ import { Layouts } from './layout.interface';
   declarations: [
     [
       DynamicOutletDirective,
+      DynamicChildrenOutletDirective,
     ],
   ],
   exports: [
     [
       DynamicOutletDirective,
+      DynamicChildrenOutletDirective,
     ],
   ],
 })

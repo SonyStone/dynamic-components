@@ -74,6 +74,7 @@ export class DynamicTestComponent implements OnInit, OnDestroy {
 
       if (accumulator.length !== 0) {
         accumulator[index - 1].instance.appComponentService.addComponent(componentRef);
+        console.log(`changeDetectorRef`, accumulator[index - 1])
       }
 
       accumulator.push(componentRef);
