@@ -1,5 +1,5 @@
 import { DefaultIterableDiffer } from './iterable-differ';
-import { iterableChangesAsString, iterableDifferToString } from './util.spec';
+import { iterableChangesAsString, iterableDifferToString } from '../util-spec';
 
 
 describe('iterable differ', () => {

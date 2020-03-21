@@ -1,14 +1,16 @@
 import { DefaultKeyValueDiffer } from './keyvalue-differ';
-import { keyvalueDifferToString, testChangesAsString } from './util.spec';
+import { keyvalueDifferToString, keyvalueChangesAsString } from '../util-spec';
 
 describe('keyvalue differ', () => {
   describe('DefaultKeyValueDiffer', () => {
     let differ: DefaultKeyValueDiffer<any, any>;
     let m: Map<any, any>;
+    let o: { [k: string]: string; }
 
     beforeEach(() => {
       differ = new DefaultKeyValueDiffer<string, any>();
       m = new Map();
+      o = {};
     });
 
     afterEach(() => {
@@ -30,7 +32,7 @@ describe('keyvalue differ', () => {
       expect(
         keyvalueDifferToString(differ)
       ).toEqual(
-        testChangesAsString({
+        keyvalueChangesAsString({
           map: ['1[10->20]', '2[20->10]'],
           previous: ['1[10->20]', '2[20->10]'],
           changes: ['1[10->20]', '2[20->10]']
@@ -49,7 +51,7 @@ describe('keyvalue differ', () => {
       expect(
         keyvalueDifferToString(differ)
       ).toEqual(
-        testChangesAsString({
+        keyvalueChangesAsString({
           map: ['1[10->20]', '2[20->10]'],
           previous: ['1[10->20]', '2[20->10]'],
           changes: ['1[10->20]', '2[20->10]']
@@ -79,7 +81,7 @@ describe('keyvalue differ', () => {
       expect(
         keyvalueDifferToString(differ)
       ).toEqual(
-        testChangesAsString({
+        keyvalueChangesAsString({
           map: ['a[null->A]'],
           additions: ['a[null->A]']
         })
@@ -91,7 +93,7 @@ describe('keyvalue differ', () => {
       expect(
         keyvalueDifferToString(differ)
       ).toEqual(
-        testChangesAsString({
+        keyvalueChangesAsString({
           map: ['a', 'b[null->B]'],
           previous: ['a'],
           additions: ['b[null->B]']
@@ -104,7 +106,7 @@ describe('keyvalue differ', () => {
       expect(
         keyvalueDifferToString(differ)
       ).toEqual(
-        testChangesAsString({
+        keyvalueChangesAsString({
           map: ['a', 'b[B->BB]', 'd[null->D]'],
           previous: ['a', 'b[B->BB]'],
           additions: ['d[null->D]'],
@@ -117,7 +119,7 @@ describe('keyvalue differ', () => {
       expect(
         keyvalueDifferToString(differ)
       ).toEqual(
-        testChangesAsString({
+        keyvalueChangesAsString({
           map: ['a', 'd'],
           previous: ['a', 'b[BB->null]', 'd'],
           removals: ['b[BB->null]']
@@ -130,7 +132,7 @@ describe('keyvalue differ', () => {
       expect(
         keyvalueDifferToString(differ)
       ).toEqual(
-        testChangesAsString({
+        keyvalueChangesAsString({
           previous: ['a[A->null]', 'd[D->null]'],
           removals: ['a[A->null]', 'd[D->null]']
         })
@@ -145,7 +147,7 @@ describe('keyvalue differ', () => {
       expect(
         keyvalueDifferToString(differ)
       ).toEqual(
-        testChangesAsString({
+        keyvalueChangesAsString({
           map: ['foo'],
           previous: ['foo']
         })
@@ -165,7 +167,7 @@ describe('keyvalue differ', () => {
       expect(
         keyvalueDifferToString(differ)
       ).toEqual(
-        testChangesAsString({
+        keyvalueChangesAsString({
           map: ['b[0->1]', 'a[0->1]'],
           previous: ['a[0->1]', 'b[0->1]'],
           changes: ['b[0->1]', 'a[0->1]']
@@ -176,40 +178,40 @@ describe('keyvalue differ', () => {
     describe('JsObject changes', () => {
 
       it('should do basic object watching', () => {
-        let m: {[k: string]: string} = {};
-        differ.check(m);
+        o = {};
+        differ.check(o);
 
-        m.a = 'A';
-        differ.check(m);
+        o.a = 'A';
+        differ.check(o);
         expect(
           keyvalueDifferToString(differ)
         ).toEqual(
-          testChangesAsString({
+          keyvalueChangesAsString({
             map: ['a[null->A]'],
             additions: ['a[null->A]']
           })
         );
 
-        m.b = 'B';
-        differ.check(m);
+        o.b = 'B';
+        differ.check(o);
 
         expect(
           keyvalueDifferToString(differ)
         ).toEqual(
-          testChangesAsString({
+          keyvalueChangesAsString({
             map: ['a', 'b[null->B]'],
             previous: ['a'],
             additions: ['b[null->B]']
           })
         );
 
-        m.b = 'BB';
-        m.d = 'D';
-        differ.check(m);
+        o.b = 'BB';
+        o.d = 'D';
+        differ.check(o);
         expect(
           keyvalueDifferToString(differ)
         ).toEqual(
-          testChangesAsString({
+          keyvalueChangesAsString({
             map: ['a', 'b[B->BB]', 'd[null->D]'],
             previous: ['a', 'b[B->BB]'],
             additions: ['d[null->D]'],
@@ -217,26 +219,26 @@ describe('keyvalue differ', () => {
           })
         );
 
-        m = {};
-        m.a = 'A';
-        m.d = 'D';
-        differ.check(m);
+        o = {};
+        o.a = 'A';
+        o.d = 'D';
+        differ.check(o);
         expect(
           keyvalueDifferToString(differ)
         ).toEqual(
-          testChangesAsString({
+          keyvalueChangesAsString({
             map: ['a', 'd'],
             previous: ['a', 'b[BB->null]', 'd'],
             removals: ['b[BB->null]']
           })
         );
 
-        m = {};
-        differ.check(m);
+        o = {};
+        differ.check(o);
         expect(
           keyvalueDifferToString(differ)
         ).toEqual(
-          testChangesAsString({
+          keyvalueChangesAsString({
             previous: ['a[A->null]', 'd[D->null]'],
             removals: ['a[A->null]', 'd[D->null]']
           })
@@ -251,7 +253,7 @@ describe('keyvalue differ', () => {
         expect(
           keyvalueDifferToString(differ)
         ).toEqual(
-          testChangesAsString({
+          keyvalueChangesAsString({
             map: ['b[0->1]', 'a[0->1]'],
             previous: ['a[0->1]', 'b[0->1]'],
             changes: ['b[0->1]', 'a[0->1]']
@@ -268,7 +270,7 @@ describe('keyvalue differ', () => {
         expect(
           keyvalueDifferToString(differ)
         ).toEqual(
-          testChangesAsString({
+          keyvalueChangesAsString({
             map: ['a[2->1]', 'b[3->2]'],
             previous: ['b[3->2]', 'a[2->1]'],
             changes: ['a[2->1]', 'b[3->2]']
@@ -283,7 +285,7 @@ describe('keyvalue differ', () => {
         expect(
           keyvalueDifferToString(differ)
         ).toEqual(
-          testChangesAsString({
+          keyvalueChangesAsString({
             map: ['c[null->c]', 'a'],
             previous: ['a', 'b[b->null]'],
             additions: ['c[null->c]'],
@@ -310,7 +312,7 @@ describe('keyvalue differ', () => {
         m.set('a', 'A');
         differ.diff(m);
         expect(keyvalueDifferToString(differ.diff(null)))
-            .toEqual(testChangesAsString({previous: ['a[A->null]'], removals: ['a[A->null]']}));
+            .toEqual(keyvalueChangesAsString({previous: ['a[A->null]'], removals: ['a[A->null]']}));
       });
 
       it('should throw when given an invalid collection', () => {
