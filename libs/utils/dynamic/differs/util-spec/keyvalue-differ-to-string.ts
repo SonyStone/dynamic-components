@@ -5,8 +5,8 @@ import { keyvalueChangesAsString } from './keyvalue-changes-as-string';
 
 export function keyvalueDifferToString(keyValueChanges: KeyValueChanges<string, any>) {
 
-  const map: string[] = [];
-  keyValueChanges.forEachItem(r => map.push(keyvalueChangeRecordAsString(r)));
+  const state: string[] = [];
+  keyValueChanges.forEachItem(r => state.push(keyvalueChangeRecordAsString(r)));
 
   const previous: string[] = [];
   keyValueChanges.forEachPreviousItem(r => previous.push(keyvalueChangeRecordAsString(r)));
@@ -21,7 +21,7 @@ export function keyvalueDifferToString(keyValueChanges: KeyValueChanges<string, 
   keyValueChanges.forEachRemovedItem(r => removals.push(keyvalueChangeRecordAsString(r)));
 
   return keyvalueChangesAsString({
-    map,
+    state,
     previous,
     additions,
     changes,

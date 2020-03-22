@@ -26,5 +26,8 @@ export class DefaultIterableChangeRecord<V> implements IterableChangeRecord<V> {
   _nextIdentityChange: DefaultIterableChangeRecord<V>|null = null;
 
 
-  constructor(public item: V, public trackById: any) {}
+  constructor(
+    public item: V,
+    public trackById: any
+  ) {}
 }

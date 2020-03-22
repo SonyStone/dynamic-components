@@ -5,5 +5,5 @@ import { IterableChangeRecord } from '../iterable-differ/iterable-change-record.
 export function iterableChangeRecordAsString<V>(icr: IterableChangeRecord<V>): string {
   return (icr.previousIndex === icr.currentIndex)
     ? stringify(icr.item)
-    : `${stringify(icr.item)}[${stringify(icr.previousIndex)}->${stringify(icr.currentIndex)}]`;
+    : `[${stringify(icr.previousIndex)}->${stringify(icr.currentIndex)}]:${stringify(icr.item)}`;
 }

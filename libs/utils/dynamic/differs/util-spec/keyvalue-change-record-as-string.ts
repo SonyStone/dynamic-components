@@ -6,5 +6,5 @@ import { looseIdentical } from '../utils';
 export function keyvalueChangeRecordAsString(kvcr: KeyValueChangeRecord<string, any>) {
   return looseIdentical(kvcr.previousValue, kvcr.currentValue)
     ? stringify(kvcr.key)
-    : (`${stringify(kvcr.key)}[${stringify(kvcr.previousValue)}->${stringify(kvcr.currentValue)}]`);
+    : (`[${stringify(kvcr.key)}]:${stringify(kvcr.previousValue)}->${stringify(kvcr.currentValue)}`);
 }

@@ -33,9 +33,9 @@ describe('keyvalue differ', () => {
         keyvalueDifferToString(differ)
       ).toEqual(
         keyvalueChangesAsString({
-          map: ['1[10->20]', '2[20->10]'],
-          previous: ['1[10->20]', '2[20->10]'],
-          changes: ['1[10->20]', '2[20->10]']
+          state: ['[1]:10->20', '[2]:20->10'],
+          previous: ['[1]:10->20', '[2]:20->10'],
+          changes: ['[1]:10->20', '[2]:20->10']
         }),
       );
     });
@@ -52,9 +52,9 @@ describe('keyvalue differ', () => {
         keyvalueDifferToString(differ)
       ).toEqual(
         keyvalueChangesAsString({
-          map: ['1[10->20]', '2[20->10]'],
-          previous: ['1[10->20]', '2[20->10]'],
-          changes: ['1[10->20]', '2[20->10]']
+          state: ['[1]:10->20', '[2]:20->10'],
+          previous: ['[1]:10->20', '[2]:20->10'],
+          changes: ['[1]:10->20', '[2]:20->10']
         })
       );
     });
@@ -82,8 +82,8 @@ describe('keyvalue differ', () => {
         keyvalueDifferToString(differ)
       ).toEqual(
         keyvalueChangesAsString({
-          map: ['a[null->A]'],
-          additions: ['a[null->A]']
+          state: ['[a]:null->A'],
+          additions: ['[a]:null->A']
         })
       );
 
@@ -94,9 +94,9 @@ describe('keyvalue differ', () => {
         keyvalueDifferToString(differ)
       ).toEqual(
         keyvalueChangesAsString({
-          map: ['a', 'b[null->B]'],
+          state: ['a', '[b]:null->B'],
           previous: ['a'],
-          additions: ['b[null->B]']
+          additions: ['[b]:null->B']
         })
       );
 
@@ -107,10 +107,10 @@ describe('keyvalue differ', () => {
         keyvalueDifferToString(differ)
       ).toEqual(
         keyvalueChangesAsString({
-          map: ['a', 'b[B->BB]', 'd[null->D]'],
-          previous: ['a', 'b[B->BB]'],
-          additions: ['d[null->D]'],
-          changes: ['b[B->BB]']
+          state: ['a', '[b]:B->BB', '[d]:null->D'],
+          previous: ['a', '[b]:B->BB'],
+          additions: ['[d]:null->D'],
+          changes: ['[b]:B->BB']
         })
       );
 
@@ -120,9 +120,9 @@ describe('keyvalue differ', () => {
         keyvalueDifferToString(differ)
       ).toEqual(
         keyvalueChangesAsString({
-          map: ['a', 'd'],
-          previous: ['a', 'b[BB->null]', 'd'],
-          removals: ['b[BB->null]']
+          state: ['a', 'd'],
+          previous: ['a', '[b]:BB->null', 'd'],
+          removals: ['[b]:BB->null']
         })
       );
 
@@ -133,8 +133,8 @@ describe('keyvalue differ', () => {
         keyvalueDifferToString(differ)
       ).toEqual(
         keyvalueChangesAsString({
-          previous: ['a[A->null]', 'd[D->null]'],
-          removals: ['a[A->null]', 'd[D->null]']
+          previous: ['[a]:A->null', '[d]:D->null'],
+          removals: ['[a]:A->null', '[d]:D->null']
         })
       );
     });
@@ -148,7 +148,7 @@ describe('keyvalue differ', () => {
         keyvalueDifferToString(differ)
       ).toEqual(
         keyvalueChangesAsString({
-          map: ['foo'],
+          state: ['foo'],
           previous: ['foo']
         })
       );
@@ -168,9 +168,9 @@ describe('keyvalue differ', () => {
         keyvalueDifferToString(differ)
       ).toEqual(
         keyvalueChangesAsString({
-          map: ['b[0->1]', 'a[0->1]'],
-          previous: ['a[0->1]', 'b[0->1]'],
-          changes: ['b[0->1]', 'a[0->1]']
+          state: ['[b]:0->1', '[a]:0->1'],
+          previous: ['[a]:0->1', '[b]:0->1'],
+          changes: ['[b]:0->1', '[a]:0->1']
         })
       );
     });
@@ -187,8 +187,8 @@ describe('keyvalue differ', () => {
           keyvalueDifferToString(differ)
         ).toEqual(
           keyvalueChangesAsString({
-            map: ['a[null->A]'],
-            additions: ['a[null->A]']
+            state: ['[a]:null->A'],
+            additions: ['[a]:null->A']
           })
         );
 
@@ -199,9 +199,9 @@ describe('keyvalue differ', () => {
           keyvalueDifferToString(differ)
         ).toEqual(
           keyvalueChangesAsString({
-            map: ['a', 'b[null->B]'],
+            state: ['a', '[b]:null->B'],
             previous: ['a'],
-            additions: ['b[null->B]']
+            additions: ['[b]:null->B']
           })
         );
 
@@ -212,10 +212,10 @@ describe('keyvalue differ', () => {
           keyvalueDifferToString(differ)
         ).toEqual(
           keyvalueChangesAsString({
-            map: ['a', 'b[B->BB]', 'd[null->D]'],
-            previous: ['a', 'b[B->BB]'],
-            additions: ['d[null->D]'],
-            changes: ['b[B->BB]']
+            state: ['a', '[b]:B->BB', '[d]:null->D'],
+            previous: ['a', '[b]:B->BB'],
+            additions: ['[d]:null->D'],
+            changes: ['[b]:B->BB']
           })
         );
 
@@ -227,9 +227,9 @@ describe('keyvalue differ', () => {
           keyvalueDifferToString(differ)
         ).toEqual(
           keyvalueChangesAsString({
-            map: ['a', 'd'],
-            previous: ['a', 'b[BB->null]', 'd'],
-            removals: ['b[BB->null]']
+            state: ['a', 'd'],
+            previous: ['a', '[b]:BB->null', 'd'],
+            removals: ['[b]:BB->null']
           })
         );
 
@@ -239,8 +239,8 @@ describe('keyvalue differ', () => {
           keyvalueDifferToString(differ)
         ).toEqual(
           keyvalueChangesAsString({
-            previous: ['a[A->null]', 'd[D->null]'],
-            removals: ['a[A->null]', 'd[D->null]']
+            previous: ['[a]:A->null', '[d]:D->null'],
+            removals: ['[a]:A->null', '[d]:D->null']
           })
         );
 
@@ -254,9 +254,9 @@ describe('keyvalue differ', () => {
           keyvalueDifferToString(differ)
         ).toEqual(
           keyvalueChangesAsString({
-            map: ['b[0->1]', 'a[0->1]'],
-            previous: ['a[0->1]', 'b[0->1]'],
-            changes: ['b[0->1]', 'a[0->1]']
+            state: ['[b]:0->1', '[a]:0->1'],
+            previous: ['[a]:0->1', '[b]:0->1'],
+            changes: ['[b]:0->1', '[a]:0->1']
           })
         );
       });
@@ -271,9 +271,9 @@ describe('keyvalue differ', () => {
           keyvalueDifferToString(differ)
         ).toEqual(
           keyvalueChangesAsString({
-            map: ['a[2->1]', 'b[3->2]'],
-            previous: ['b[3->2]', 'a[2->1]'],
-            changes: ['a[2->1]', 'b[3->2]']
+            state: ['[a]:2->1', '[b]:3->2'],
+            previous: ['[b]:3->2', '[a]:2->1'],
+            changes: ['[a]:2->1', '[b]:3->2']
           })
         );
       });
@@ -286,10 +286,10 @@ describe('keyvalue differ', () => {
           keyvalueDifferToString(differ)
         ).toEqual(
           keyvalueChangesAsString({
-            map: ['c[null->c]', 'a'],
-            previous: ['a', 'b[b->null]'],
-            additions: ['c[null->c]'],
-            removals: ['b[b->null]']
+            state: ['[c]:null->c', 'a'],
+            previous: ['a', '[b]:b->null'],
+            additions: ['[c]:null->c'],
+            removals: ['[b]:b->null']
           })
         );
       });
@@ -312,7 +312,7 @@ describe('keyvalue differ', () => {
         m.set('a', 'A');
         differ.diff(m);
         expect(keyvalueDifferToString(differ.diff(null)))
-            .toEqual(keyvalueChangesAsString({previous: ['a[A->null]'], removals: ['a[A->null]']}));
+            .toEqual(keyvalueChangesAsString({previous: ['[a]:A->null'], removals: ['[a]:A->null']}));
       });
 
       it('should throw when given an invalid collection', () => {

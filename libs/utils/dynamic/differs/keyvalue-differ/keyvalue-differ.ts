@@ -24,6 +24,9 @@ export class DefaultKeyValueDiffer<K, V> implements KeyValueDiffer<K, V>, KeyVal
         this._removalsHead !== null;
   }
 
+  /**
+   * all items in new state
+   */
   forEachItem(fn: (r: KeyValueChangeRecord<K, V>) => void) {
     let record: DefaultKeyValueChangeRecord<K, V>|null;
     for (record = this._mapHead; record !== null; record = record._next) {
@@ -31,6 +34,9 @@ export class DefaultKeyValueDiffer<K, V> implements KeyValueDiffer<K, V>, KeyVal
     }
   }
 
+  /**
+   * all items in previous state
+   */
   forEachPreviousItem(fn: (r: KeyValueChangeRecord<K, V>) => void) {
     let record: DefaultKeyValueChangeRecord<K, V>|null;
     for (record = this._previousMapHead; record !== null; record = record._nextPrevious) {
@@ -38,6 +44,9 @@ export class DefaultKeyValueDiffer<K, V> implements KeyValueDiffer<K, V>, KeyVal
     }
   }
 
+  /**
+   * all keyValue item added
+   */
   forEachAddedItem(fn: (r: KeyValueChangeRecord<K, V>) => void) {
     let record: DefaultKeyValueChangeRecord<K, V>|null;
     for (record = this._additionsHead; record !== null; record = record._nextAdded) {
@@ -45,6 +54,9 @@ export class DefaultKeyValueDiffer<K, V> implements KeyValueDiffer<K, V>, KeyVal
     }
   }
 
+  /**
+   * all keyValue item removed
+   */
   forEachRemovedItem(fn: (r: KeyValueChangeRecord<K, V>) => void) {
     let record: DefaultKeyValueChangeRecord<K, V>|null;
     for (record = this._removalsHead; record !== null; record = record._nextRemoved) {
@@ -52,6 +64,9 @@ export class DefaultKeyValueDiffer<K, V> implements KeyValueDiffer<K, V>, KeyVal
     }
   }
 
+  /**
+   * all values in keyValue item changed
+   */
   forEachChangedItem(fn: (r: KeyValueChangeRecord<K, V>) => void) {
     let record: DefaultKeyValueChangeRecord<K, V>|null;
     for (record = this._changesHead; record !== null; record = record._nextChanged) {
@@ -69,8 +84,6 @@ export class DefaultKeyValueDiffer<K, V> implements KeyValueDiffer<K, V>, KeyVal
 
     return this.check(map) ? this : null;
   }
-
-  onDestroy() {}
 
   /**
    * Check the current state of the map vs the previous.

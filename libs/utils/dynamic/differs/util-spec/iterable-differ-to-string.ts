@@ -4,8 +4,8 @@ import { iterableChangesAsString } from './iterable-changes-as-string';
 
 export function iterableDifferToString<V>(iterableChanges: IterableChanges<V>) {
 
-  const collection: string[] = [];
-  iterableChanges.forEachItem((r) => collection.push(iterableChangeRecordAsString(r)));
+  const state: string[] = [];
+  iterableChanges.forEachItem((r) => state.push(iterableChangeRecordAsString(r)));
 
   const previous: string[] = [];
   iterableChanges.forEachPreviousItem((r) => previous.push(iterableChangeRecordAsString(r)));
@@ -23,7 +23,7 @@ export function iterableDifferToString<V>(iterableChanges: IterableChanges<V>) {
   iterableChanges.forEachIdentityChange((r) => identityChanges.push(iterableChangeRecordAsString(r)));
 
   return iterableChangesAsString({
-    collection,
+    state,
     previous,
     additions,
     moves,
