@@ -1,6 +1,7 @@
 export const other = [
   [
     {
+      cacheId: '1',
       type: 'test-orange',
       lable: 1,
       children: [
@@ -13,6 +14,7 @@ export const other = [
       ],
     },
     {
+      cacheId: '2',
       type: 'test-orange',
       lable: 3,
       children: [
@@ -69,6 +71,10 @@ export const other = [
       type: 'test-orange',
       children: [
         [
+          {
+            cacheId: 'test',
+            type: 'test-orange',
+          },
           {
             type: 'test-green',
           },

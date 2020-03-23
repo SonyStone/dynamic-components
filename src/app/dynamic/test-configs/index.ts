@@ -4,7 +4,7 @@ import { other } from './test-configs';
 
 
 export const configs = [
-  ...arrayTest,
+  // ...arrayTest,
   // ...cycleTest,
-  // ...other,
+  ...other,
 ];

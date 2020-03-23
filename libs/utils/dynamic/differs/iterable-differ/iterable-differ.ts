@@ -25,17 +25,22 @@ export class DefaultIterableDiffer<V> implements IterableDiffer<V> {
 
 
   diff(collection: NgIterable<V>|null|undefined): IterableChanges<V>|null {
-    if (collection == null) collection = [];
+
+    if (collection == null) {
+      collection = [];
+    }
+
     if (!isListLikeIterable(collection)) {
       throw new Error(
-          `Error trying to diff '${stringify(collection)}'. Only arrays and iterables are allowed`);
+        `Error trying to diff '${stringify(collection)}'. Only arrays and iterables are allowed`
+      );
     }
 
     if (this.check(collection)) {
       return this.changes;
-    } else {
-      return null;
     }
+
+    return null;
   }
 
   check(collection: NgIterable<V>): boolean {

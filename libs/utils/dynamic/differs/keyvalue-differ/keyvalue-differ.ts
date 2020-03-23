@@ -14,14 +14,22 @@ export class DefaultKeyValueDiffer<K, V> implements KeyValueDiffer<K, V> {
   changes: KeyValueChanges<K, V> = new DefaultKeyValuChanges(this.changeRecors);
 
   diff(map?: KeyValue<K, V> | null): any {
+
     if (!map) {
       map = new Map();
-    } else if (!(map instanceof Map || isJsObject(map))) {
-      throw new Error(
-          `Error trying to diff '${stringify(map)}'. Only maps and objects are allowed`);
     }
 
-    return this.check(map) ? this : null;
+    if (!(map instanceof Map || isJsObject(map))) {
+      throw new Error(
+        `Error trying to diff '${stringify(map)}'. Only maps and objects are allowed`
+      );
+    }
+
+    if (this.check(map)) {
+      return this;
+    }
+
+    return null;
   }
 
   /**
