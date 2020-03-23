@@ -4,187 +4,217 @@ import { keyvalueDifferToString, keyvalueChangesAsString } from '../util-spec';
 describe('keyvalue differ', () => {
   describe('DefaultKeyValueDiffer', () => {
     let differ: DefaultKeyValueDiffer<any, any>;
-    let m: Map<any, any>;
-    let o: { [k: string]: string; }
 
-    beforeEach(() => {
-      differ = new DefaultKeyValueDiffer<string, any>();
-      m = new Map();
-      o = {};
-    });
+    describe('JS Map changes', () => {
 
-    afterEach(() => {
-      differ = null;
-    });
+      let m: Map<any, any>;
 
-    it('should handle changing key/values correctly', () => {
-
-      differ.check({
-        1: 10,
-        2: 20
+      beforeEach(() => {
+        differ = new DefaultKeyValueDiffer<string, any>();
+        m = new Map();
       });
 
-      differ.check({
-        1: 20,
-        2: 10,
+      it('should handle changing key/values correctly', () => {
+
+        differ.check({
+          1: 10,
+          2: 20
+        });
+
+        differ.check({
+          1: 20,
+          2: 10,
+        });
+
+        expect(
+          keyvalueDifferToString(differ.changes)
+        ).toEqual(
+          keyvalueChangesAsString({
+            state: ['[1]:10->20', '[2]:20->10'],
+            previous: ['[1]:10->20', '[2]:20->10'],
+            changes: ['[1]:10->20', '[2]:20->10']
+          }),
+        );
       });
 
-      expect(
-        keyvalueDifferToString(differ)
-      ).toEqual(
-        keyvalueChangesAsString({
-          state: ['[1]:10->20', '[2]:20->10'],
-          previous: ['[1]:10->20', '[2]:20->10'],
-          changes: ['[1]:10->20', '[2]:20->10']
-        }),
-      );
-    });
+      it('should handle changing key/values correctly', () => {
+        m.set(1, 10);
+        m.set(2, 20);
+        differ.check(m);
 
-    it('should handle changing key/values correctly', () => {
-      m.set(1, 10);
-      m.set(2, 20);
-      differ.check(m);
-
-      m.set(2, 10);
-      m.set(1, 20);
-      differ.check(m);
-      expect(
-        keyvalueDifferToString(differ)
-      ).toEqual(
-        keyvalueChangesAsString({
-          state: ['[1]:10->20', '[2]:20->10'],
-          previous: ['[1]:10->20', '[2]:20->10'],
-          changes: ['[1]:10->20', '[2]:20->10']
-        })
-      );
-    });
-
-    it('should expose previous and current value', () => {
-      m.set(1, 10);
-      differ.check(m);
-
-      m.set(1, 20);
-      differ.check(m);
-
-      differ.forEachChangedItem((record: any) => {
-        expect(record.previousValue).toEqual(10);
-        expect(record.currentValue).toEqual(20);
+        m.set(2, 10);
+        m.set(1, 20);
+        differ.check(m);
+        expect(
+          keyvalueDifferToString(differ.changes)
+        ).toEqual(
+          keyvalueChangesAsString({
+            state: ['[1]:10->20', '[2]:20->10'],
+            previous: ['[1]:10->20', '[2]:20->10'],
+            changes: ['[1]:10->20', '[2]:20->10']
+          })
+        );
       });
 
-    });
+      it('should expose previous and current value', () => {
+        m.set(1, 10);
+        differ.check(m);
 
-    it('should do basic map watching', () => {
-      differ.check(m);
+        m.set(1, 20);
+        differ.check(m);
 
-      m.set('a', 'A');
-      differ.check(m);
-      expect(
-        keyvalueDifferToString(differ)
-      ).toEqual(
-        keyvalueChangesAsString({
-          state: ['[a]:null->A'],
-          additions: ['[a]:null->A']
-        })
-      );
+        differ.changes.forEachChangedItem((record: any) => {
+          expect(record.previousValue).toEqual(10);
+          expect(record.currentValue).toEqual(20);
+        });
 
-      m.set('b', 'B');
-      differ.check(m);
+      });
 
-      expect(
-        keyvalueDifferToString(differ)
-      ).toEqual(
-        keyvalueChangesAsString({
-          state: ['a', '[b]:null->B'],
-          previous: ['a'],
-          additions: ['[b]:null->B']
-        })
-      );
+      it('should do basic map watching', () => {
+        differ.check(m);
 
-      m.set('b', 'BB');
-      m.set('d', 'D');
-      differ.check(m);
-      expect(
-        keyvalueDifferToString(differ)
-      ).toEqual(
-        keyvalueChangesAsString({
-          state: ['a', '[b]:B->BB', '[d]:null->D'],
-          previous: ['a', '[b]:B->BB'],
-          additions: ['[d]:null->D'],
-          changes: ['[b]:B->BB']
-        })
-      );
+        m.set('a', 'A');
+        differ.check(m);
+        expect(
+          keyvalueDifferToString(differ.changes)
+        ).toEqual(
+          keyvalueChangesAsString({
+            state: ['[a]:null->A'],
+            additions: ['[a]:null->A']
+          })
+        );
 
-      m.delete('b');
-      differ.check(m);
-      expect(
-        keyvalueDifferToString(differ)
-      ).toEqual(
-        keyvalueChangesAsString({
-          state: ['a', 'd'],
-          previous: ['a', '[b]:BB->null', 'd'],
-          removals: ['[b]:BB->null']
-        })
-      );
+        m.set('b', 'B');
+        differ.check(m);
 
-      m.clear();
-      differ.check(m);
+        expect(
+          keyvalueDifferToString(differ.changes)
+        ).toEqual(
+          keyvalueChangesAsString({
+            state: ['a', '[b]:null->B'],
+            previous: ['a'],
+            additions: ['[b]:null->B']
+          })
+        );
 
-      expect(
-        keyvalueDifferToString(differ)
-      ).toEqual(
-        keyvalueChangesAsString({
-          previous: ['[a]:A->null', '[d]:D->null'],
-          removals: ['[a]:A->null', '[d]:D->null']
-        })
-      );
-    });
+        m.set('b', 'BB');
+        m.set('d', 'D');
+        differ.check(m);
+        expect(
+          keyvalueDifferToString(differ.changes)
+        ).toEqual(
+          keyvalueChangesAsString({
+            state: ['a', '[b]:B->BB', '[d]:null->D'],
+            previous: ['a', '[b]:B->BB'],
+            additions: ['[d]:null->D'],
+            changes: ['[b]:B->BB']
+          })
+        );
 
-    it('should not see a NaN value as a change', () => {
-      m.set('foo', Number.NaN);
-      differ.check(m);
+        m.delete('b');
+        differ.check(m);
+        expect(
+          keyvalueDifferToString(differ.changes)
+        ).toEqual(
+          keyvalueChangesAsString({
+            state: ['a', 'd'],
+            previous: ['a', '[b]:BB->null', 'd'],
+            removals: ['[b]:BB->null']
+          })
+        );
 
-      differ.check(m);
-      expect(
-        keyvalueDifferToString(differ)
-      ).toEqual(
-        keyvalueChangesAsString({
-          state: ['foo'],
-          previous: ['foo']
-        })
-      );
-    });
+        m.clear();
+        differ.check(m);
 
-    it('should work regardless key order', () => {
-      m.set('a', 0);
-      m.set('b', 0);
-      differ.check(m);
+        expect(
+          keyvalueDifferToString(differ.changes)
+        ).toEqual(
+          keyvalueChangesAsString({
+            previous: ['[a]:A->null', '[d]:D->null'],
+            removals: ['[a]:A->null', '[d]:D->null']
+          })
+        );
+      });
 
-      m = new Map();
-      m.set('b', 1);
-      m.set('a', 1);
-      differ.check(m);
+      it('should not see a NaN value as a change', () => {
+        m.set('foo', Number.NaN);
+        differ.check(m);
 
-      expect(
-        keyvalueDifferToString(differ)
-      ).toEqual(
-        keyvalueChangesAsString({
-          state: ['[b]:0->1', '[a]:0->1'],
-          previous: ['[a]:0->1', '[b]:0->1'],
-          changes: ['[b]:0->1', '[a]:0->1']
-        })
-      );
-    });
+        differ.check(m);
+        expect(
+          keyvalueDifferToString(differ.changes)
+        ).toEqual(
+          keyvalueChangesAsString({
+            state: ['foo'],
+            previous: ['foo']
+          })
+        );
+      });
 
-    describe('JsObject changes', () => {
+      it('should work regardless key order', () => {
+        m.set('a', 0);
+        m.set('b', 0);
+        differ.check(m);
+
+        m = new Map();
+        m.set('b', 1);
+        m.set('a', 1);
+        differ.check(m);
+
+        expect(
+          keyvalueDifferToString(differ.changes)
+        ).toEqual(
+          keyvalueChangesAsString({
+            state: ['[b]:0->1', '[a]:0->1'],
+            previous: ['[a]:0->1', '[b]:0->1'],
+            changes: ['[b]:0->1', '[a]:0->1']
+          })
+        );
+      });
+
+      describe('diff', () => {
+        it('should return self when there is a change', () => {
+          m.set('a', 'A');
+          expect(differ.diff(m)).toBe(differ);
+        });
+
+        it('should return null when there is no change', () => {
+          m.set('a', 'A');
+          differ.diff(m);
+          expect(differ.diff(m)).toEqual(null);
+        });
+
+        it('should treat null as an empty list', () => {
+          m.set('a', 'A');
+          differ.diff(m);
+          differ.diff(null)
+          expect(keyvalueDifferToString(differ.changes))
+              .toEqual(keyvalueChangesAsString({previous: ['[a]:A->null'], removals: ['[a]:A->null']}));
+        });
+
+        it('should throw when given an invalid collection', () => {
+          expect(() => differ.diff('invalid' as any)).toThrowError(/Error trying to diff 'invalid'/);
+        });
+      });
+    })
+
+    describe('JS Object changes', () => {
+
+      let o: { [k: string]: string; }
+
+      beforeEach(() => {
+        differ = new DefaultKeyValueDiffer<string, any>();
+        o = {};
+      });
 
       it('should do basic object watching', () => {
-        o = {};
+
         differ.check(o);
 
         o.a = 'A';
         differ.check(o);
         expect(
-          keyvalueDifferToString(differ)
+          keyvalueDifferToString(differ.changes)
         ).toEqual(
           keyvalueChangesAsString({
             state: ['[a]:null->A'],
@@ -196,7 +226,7 @@ describe('keyvalue differ', () => {
         differ.check(o);
 
         expect(
-          keyvalueDifferToString(differ)
+          keyvalueDifferToString(differ.changes)
         ).toEqual(
           keyvalueChangesAsString({
             state: ['a', '[b]:null->B'],
@@ -209,7 +239,7 @@ describe('keyvalue differ', () => {
         o.d = 'D';
         differ.check(o);
         expect(
-          keyvalueDifferToString(differ)
+          keyvalueDifferToString(differ.changes)
         ).toEqual(
           keyvalueChangesAsString({
             state: ['a', '[b]:B->BB', '[d]:null->D'],
@@ -224,7 +254,7 @@ describe('keyvalue differ', () => {
         o.d = 'D';
         differ.check(o);
         expect(
-          keyvalueDifferToString(differ)
+          keyvalueDifferToString(differ.changes)
         ).toEqual(
           keyvalueChangesAsString({
             state: ['a', 'd'],
@@ -236,7 +266,7 @@ describe('keyvalue differ', () => {
         o = {};
         differ.check(o);
         expect(
-          keyvalueDifferToString(differ)
+          keyvalueDifferToString(differ.changes)
         ).toEqual(
           keyvalueChangesAsString({
             previous: ['[a]:A->null', '[d]:D->null'],
@@ -251,7 +281,7 @@ describe('keyvalue differ', () => {
         differ.check({b: 1, a: 1});
 
         expect(
-          keyvalueDifferToString(differ)
+          keyvalueDifferToString(differ.changes)
         ).toEqual(
           keyvalueChangesAsString({
             state: ['[b]:0->1', '[a]:0->1'],
@@ -268,7 +298,7 @@ describe('keyvalue differ', () => {
         differ.check({a: 1, b: 2});
 
         expect(
-          keyvalueDifferToString(differ)
+          keyvalueDifferToString(differ.changes)
         ).toEqual(
           keyvalueChangesAsString({
             state: ['[a]:2->1', '[b]:3->2'],
@@ -283,7 +313,7 @@ describe('keyvalue differ', () => {
         differ.check({c: 'c', a: 'a'});
 
         expect(
-          keyvalueDifferToString(differ)
+          keyvalueDifferToString(differ.changes)
         ).toEqual(
           keyvalueChangesAsString({
             state: ['[c]:null->c', 'a'],
@@ -295,30 +325,5 @@ describe('keyvalue differ', () => {
       });
 
     });
-
-    describe('diff', () => {
-      it('should return self when there is a change', () => {
-        m.set('a', 'A');
-        expect(differ.diff(m)).toBe(differ);
-      });
-
-      it('should return null when there is no change', () => {
-        m.set('a', 'A');
-        differ.diff(m);
-        expect(differ.diff(m)).toEqual(null);
-      });
-
-      it('should treat null as an empty list', () => {
-        m.set('a', 'A');
-        differ.diff(m);
-        expect(keyvalueDifferToString(differ.diff(null)))
-            .toEqual(keyvalueChangesAsString({previous: ['[a]:A->null'], removals: ['[a]:A->null']}));
-      });
-
-      it('should throw when given an invalid collection', () => {
-        expect(() => differ.diff('invalid' as any)).toThrowError(/Error trying to diff 'invalid'/);
-      });
-    });
   });
-
 })

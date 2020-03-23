@@ -1,18 +1,19 @@
 import { getPreviousIndex } from './get-previous-index';
 import { DefaultIterableChangeRecord } from './iterable-change-record';
 import { IterableChangeRecord } from './iterable-change-record.interface';
+import { IterableChangeRecors } from './iterable-change-recors';
 import { IterableChanges } from './iterable-changes.interface';
-import { DefaultIterableDiffer } from './iterable-differ';
+
 
 export class DefaultIterableChanges<V> implements IterableChanges<V> {
 
   constructor(
-    private differ: DefaultIterableDiffer<V>,
+    private changeRecors: IterableChangeRecors<V>,
   ) {}
 
   forEachItem(fn: (record: DefaultIterableChangeRecord<V>) => void) {
     let record: DefaultIterableChangeRecord<V>|null;
-    for (record = this.differ.itHead; record !== null; record = record._next) {
+    for (record = this.changeRecors.itHead; record !== null; record = record._next) {
       fn(record);
     }
   }
@@ -20,8 +21,8 @@ export class DefaultIterableChanges<V> implements IterableChanges<V> {
   forEachOperation(
     fn: (item: IterableChangeRecord<V>, previousIndex: number|null, currentIndex: number|null) => void,
   ) {
-    let nextIt = this.differ.itHead;
-    let nextRemove = this.differ.removalsHead;
+    let nextIt = this.changeRecors.itHead;
+    let nextRemove = this.changeRecors.removalsHead;
     let addRemoveOffset = 0;
     let moveOffsets: number[]|null = null;
 
@@ -71,35 +72,35 @@ export class DefaultIterableChanges<V> implements IterableChanges<V> {
 
   forEachPreviousItem(fn: (record: DefaultIterableChangeRecord<V>) => void) {
     let record: DefaultIterableChangeRecord<V>|null;
-    for (record = this.differ.previousItHead; record !== null; record = record._nextPrevious) {
+    for (record = this.changeRecors.previousItHead; record !== null; record = record._nextPrevious) {
       fn(record);
     }
   }
 
   forEachAddedItem(fn: (record: DefaultIterableChangeRecord<V>) => void) {
     let record: DefaultIterableChangeRecord<V>|null;
-    for (record = this.differ.additionsHead; record !== null; record = record._nextAdded) {
+    for (record = this.changeRecors.additionsHead; record !== null; record = record._nextAdded) {
       fn(record);
     }
   }
 
   forEachMovedItem(fn: (record: DefaultIterableChangeRecord<V>) => void) {
     let record: DefaultIterableChangeRecord<V>|null;
-    for (record = this.differ.movesHead; record !== null; record = record._nextMoved) {
+    for (record = this.changeRecors.movesHead; record !== null; record = record._nextMoved) {
       fn(record);
     }
   }
 
   forEachRemovedItem(fn: (record: DefaultIterableChangeRecord<V>) => void) {
     let record: DefaultIterableChangeRecord<V>|null;
-    for (record = this.differ.removalsHead; record !== null; record = record._nextRemoved) {
+    for (record = this.changeRecors.removalsHead; record !== null; record = record._nextRemoved) {
       fn(record);
     }
   }
 
   forEachIdentityChange(fn: (record: DefaultIterableChangeRecord<V>) => void) {
     let record: DefaultIterableChangeRecord<V>|null;
-    for (record = this.differ.identityChangesHead; record !== null; record = record._nextIdentityChange) {
+    for (record = this.changeRecors.identityChangesHead; record !== null; record = record._nextIdentityChange) {
       fn(record);
     }
   }

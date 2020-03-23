@@ -8,13 +8,15 @@ describe('iterable differ', () => {
 
   describe('JS Array changes', () => {
 
-    beforeEach(() => { differ = new DefaultIterableDiffer(); });
+    beforeEach(() => {
+      differ = new DefaultIterableDiffer();
+    });
 
     it('should support iterables', () => {
 
       differ.check([]);
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: [],
@@ -24,7 +26,7 @@ describe('iterable differ', () => {
       differ.check([1]);
 
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['[null->0]:1'],
@@ -35,7 +37,7 @@ describe('iterable differ', () => {
       differ.check([2, 1]);
 
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['[null->0]:2', '[0->1]:1'],
@@ -49,13 +51,13 @@ describe('iterable differ', () => {
     it('should detect additions', () => {
       const l: any[] = [];
       differ.check(l);
-      expect(iterableDifferToString(differ.iterableChanges)).toEqual(iterableChangesAsString({state: []}));
+      expect(iterableDifferToString(differ.changes)).toEqual(iterableChangesAsString({state: []}));
 
       l.push('a');
       differ.check(l);
 
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['[null->0]:a'],
@@ -67,7 +69,7 @@ describe('iterable differ', () => {
       differ.check(l);
 
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['a', '[null->1]:b'],
@@ -84,7 +86,7 @@ describe('iterable differ', () => {
       l = [1, 0];
       differ.check(l);
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['[null->0]:1', '[0->1]:0'],
@@ -97,7 +99,7 @@ describe('iterable differ', () => {
       l = [2, 1, 0];
       differ.check(l);
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['[null->0]:2', '[0->1]:1', '[1->2]:0'],
@@ -118,7 +120,7 @@ describe('iterable differ', () => {
       differ.check(l);
 
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['[1->0]:2', '[0->1]:1'],
@@ -137,7 +139,7 @@ describe('iterable differ', () => {
       differ.check(l);
 
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['[1->0]:b', '[0->1]:a', 'c'],
@@ -151,7 +153,7 @@ describe('iterable differ', () => {
       differ.check(l);
 
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['b', '[2->1]:c', '[1->2]:a'],
@@ -169,7 +171,7 @@ describe('iterable differ', () => {
       differ.check(l);
 
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['[null->0]:a'],
@@ -180,7 +182,7 @@ describe('iterable differ', () => {
       l.push('b');
       differ.check(l);
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['a', '[null->1]:b'],
@@ -194,7 +196,7 @@ describe('iterable differ', () => {
       differ.check(l);
 
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['a', 'b', '[null->2]:c', '[null->3]:d'],
@@ -207,7 +209,7 @@ describe('iterable differ', () => {
       differ.check(l);
 
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['a', 'b', '[3->2]:d'],
@@ -225,7 +227,7 @@ describe('iterable differ', () => {
       differ.check(l);
 
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['[2->0]:d', '[null->1]:c', '[1->2]:b', '[0->3]:a'],
@@ -242,7 +244,7 @@ describe('iterable differ', () => {
       differ.check(l);
 
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: [NaN],
@@ -258,7 +260,7 @@ describe('iterable differ', () => {
       l.unshift('foo');
       differ.check(l);
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['[null->0]:foo', '[0->1]:NaN', '[1->2]:NaN'],
@@ -276,7 +278,7 @@ describe('iterable differ', () => {
       l.splice(1, 1);
       differ.check(l);
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['a', '[2->1]:c'],
@@ -289,7 +291,7 @@ describe('iterable differ', () => {
       l.splice(1, 0, 'b');
       differ.check(l);
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['a', '[null->1]:b', '[1->2]:c'],
@@ -307,7 +309,7 @@ describe('iterable differ', () => {
       l.splice(0, 1);
       differ.check(l);
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['a', 'a', '[3->2]:b', '[4->3]:b'],
@@ -325,7 +327,7 @@ describe('iterable differ', () => {
       l.splice(0, 0, 'b');
       differ.check(l);
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['[2->0]:b', '[0->1]:a', '[1->2]:a', 'b', '[null->4]:b'],
@@ -346,7 +348,7 @@ describe('iterable differ', () => {
       l.push('c');
       differ.check(l);
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['[1->0]:b', '[0->1]:a', 'c'],
@@ -364,7 +366,7 @@ describe('iterable differ', () => {
       l[5] = 'c';
       differ.check(l);
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['a', '[null->1]:b', '[1->2]:*', 'd', '-', '[null->5]:c', '[5->6]:-', 'e'],
@@ -378,7 +380,7 @@ describe('iterable differ', () => {
 
     describe('diff', () => {
       it('should return self when there is a change', () => {
-        expect(differ.diff(['a', 'b'])).toBe(differ.iterableChanges);
+        expect(differ.diff(['a', 'b'])).toBe(differ.changes);
       });
 
       it('should return null when there is no change', () => {
@@ -405,7 +407,6 @@ describe('iterable differ', () => {
     });
   })
 
-
   describe('JS Set changes', () => {
 
     beforeEach(() => { differ = new DefaultIterableDiffer(); });
@@ -415,7 +416,7 @@ describe('iterable differ', () => {
 
       differ.check(set);
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: [],
@@ -427,7 +428,7 @@ describe('iterable differ', () => {
       differ.check(set);
 
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['[null->0]:a'],
@@ -440,7 +441,7 @@ describe('iterable differ', () => {
       differ.check(set);
 
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['a', '[null->1]:b'],
@@ -454,7 +455,7 @@ describe('iterable differ', () => {
       differ.check(set);
 
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['[1->0]:b'],
@@ -466,7 +467,7 @@ describe('iterable differ', () => {
     });
   })
 
-  fdescribe('JS Map changes', () => {
+  describe('JS Map changes', () => {
 
     beforeEach(() => {
       // map return as [key, value] tuple
@@ -479,7 +480,7 @@ describe('iterable differ', () => {
 
       differ.check(map);
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: [],
@@ -491,7 +492,7 @@ describe('iterable differ', () => {
       differ.check(map);
 
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['[null->0]:[1, a]'],
@@ -504,7 +505,7 @@ describe('iterable differ', () => {
       differ.check(map);
 
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['[1, a]', '[null->1]:[b, 2]'],
@@ -518,7 +519,7 @@ describe('iterable differ', () => {
       differ.check(map);
 
       expect(
-        iterableDifferToString(differ.iterableChanges)
+        iterableDifferToString(differ.changes)
       ).toEqual(
         iterableChangesAsString({
           state: ['[1->0]:[b, 2]'],

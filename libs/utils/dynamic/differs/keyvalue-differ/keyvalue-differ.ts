@@ -1,80 +1,19 @@
 import { stringify } from '@angular/compiler/src/util';
 
-import { isJsObject, looseIdentical } from '../utils';
-import { DefaultKeyValueChangeRecord } from './key-value-change-record';
-import { KeyValueChanges } from './key-value-changes.interface';
-import { KeyValueChangeRecord } from './keyvalue-change-record.interface';
+import { isJsObject } from '../utils';
+import { DefaultKeyValuChanges } from './keyvalu-changes';
+import { DefaultKeyValueChangeRecord } from './keyvalue-change-record';
+import { KeyValueChangeRecors } from './keyvalue-change-recors';
+import { KeyValueChanges } from './keyvalue-changes.interface';
 import { KeyValueDiffer } from './keyvalue-differ.interface';
+import { KeyValue } from './keyvalue.interface';
 
-export class DefaultKeyValueDiffer<K, V> implements KeyValueDiffer<K, V>, KeyValueChanges<K, V> {
-  private _records = new Map<K, DefaultKeyValueChangeRecord<K, V>>();
-  private _mapHead: DefaultKeyValueChangeRecord<K, V>|null = null;
-  // _appendAfter is used in the check loop
-  private _appendAfter: DefaultKeyValueChangeRecord<K, V>|null = null;
-  private _previousMapHead: DefaultKeyValueChangeRecord<K, V>|null = null;
-  private _changesHead: DefaultKeyValueChangeRecord<K, V>|null = null;
-  private _changesTail: DefaultKeyValueChangeRecord<K, V>|null = null;
-  private _additionsHead: DefaultKeyValueChangeRecord<K, V>|null = null;
-  private _additionsTail: DefaultKeyValueChangeRecord<K, V>|null = null;
-  private _removalsHead: DefaultKeyValueChangeRecord<K, V>|null = null;
-  private _removalsTail: DefaultKeyValueChangeRecord<K, V>|null = null;
+export class DefaultKeyValueDiffer<K, V> implements KeyValueDiffer<K, V> {
 
-  get isDirty(): boolean {
-    return this._additionsHead !== null || this._changesHead !== null ||
-        this._removalsHead !== null;
-  }
+  changeRecors = new KeyValueChangeRecors<K, V>();
+  changes: KeyValueChanges<K, V> = new DefaultKeyValuChanges(this.changeRecors);
 
-  /**
-   * all items in new state
-   */
-  forEachItem(fn: (r: KeyValueChangeRecord<K, V>) => void) {
-    let record: DefaultKeyValueChangeRecord<K, V>|null;
-    for (record = this._mapHead; record !== null; record = record._next) {
-      fn(record);
-    }
-  }
-
-  /**
-   * all items in previous state
-   */
-  forEachPreviousItem(fn: (r: KeyValueChangeRecord<K, V>) => void) {
-    let record: DefaultKeyValueChangeRecord<K, V>|null;
-    for (record = this._previousMapHead; record !== null; record = record._nextPrevious) {
-      fn(record);
-    }
-  }
-
-  /**
-   * all keyValue item added
-   */
-  forEachAddedItem(fn: (r: KeyValueChangeRecord<K, V>) => void) {
-    let record: DefaultKeyValueChangeRecord<K, V>|null;
-    for (record = this._additionsHead; record !== null; record = record._nextAdded) {
-      fn(record);
-    }
-  }
-
-  /**
-   * all keyValue item removed
-   */
-  forEachRemovedItem(fn: (r: KeyValueChangeRecord<K, V>) => void) {
-    let record: DefaultKeyValueChangeRecord<K, V>|null;
-    for (record = this._removalsHead; record !== null; record = record._nextRemoved) {
-      fn(record);
-    }
-  }
-
-  /**
-   * all values in keyValue item changed
-   */
-  forEachChangedItem(fn: (r: KeyValueChangeRecord<K, V>) => void) {
-    let record: DefaultKeyValueChangeRecord<K, V>|null;
-    for (record = this._changesHead; record !== null; record = record._nextChanged) {
-      fn(record);
-    }
-  }
-
-  diff(map?: Map<any, any>|{[k: string]: any}|null): any {
+  diff(map?: KeyValue<K, V> | null): any {
     if (!map) {
       map = new Map();
     } else if (!(map instanceof Map || isJsObject(map))) {
@@ -89,20 +28,20 @@ export class DefaultKeyValueDiffer<K, V> implements KeyValueDiffer<K, V>, KeyVal
    * Check the current state of the map vs the previous.
    * The algorithm is optimised for when the keys do no change.
    */
-  check(map: Map<any, any>|{[k: string]: any}): boolean {
-    this._reset();
+  check(map: KeyValue<K, V>): boolean {
+    this.changeRecors.reset();
 
-    let insertBefore = this._mapHead;
-    this._appendAfter = null;
+    let insertBefore = this.changeRecors.mapHead;
+    this.changeRecors.appendAfter = null;
 
-    this._forEach(map, (value: any, key: any) => {
+    this.changeRecors.forEach(map, (value, key) => {
       if (insertBefore && insertBefore.key === key) {
-        this._maybeAddToChanges(insertBefore, value);
-        this._appendAfter = insertBefore;
+        this.changeRecors.maybeAddToChanges(insertBefore, value);
+        this.changeRecors.appendAfter = insertBefore;
         insertBefore = insertBefore._next;
       } else {
-        const record = this._getOrCreateRecordForKey(key, value);
-        insertBefore = this._insertBeforeOrAppend(insertBefore, record);
+        const record = this.changeRecors.getOrCreateRecordForKey(key, value);
+        insertBefore = this.changeRecors.insertBeforeOrAppend(insertBefore, record);
       }
     });
 
@@ -112,14 +51,14 @@ export class DefaultKeyValueDiffer<K, V> implements KeyValueDiffer<K, V>, KeyVal
         insertBefore._prev._next = null;
       }
 
-      this._removalsHead = insertBefore;
+      this.changeRecors.removalsHead = insertBefore;
 
       for (let record: DefaultKeyValueChangeRecord<K, V>|null = insertBefore; record !== null;
            record = record._nextRemoved) {
-        if (record === this._mapHead) {
-          this._mapHead = null;
+        if (record === this.changeRecors.mapHead) {
+          this.changeRecors.mapHead = null;
         }
-        this._records.delete(record.key);
+        this.changeRecors.records.delete(record.key);
         record._nextRemoved = record._next;
         record.previousValue = record.currentValue;
         record.currentValue = null;
@@ -129,142 +68,9 @@ export class DefaultKeyValueDiffer<K, V> implements KeyValueDiffer<K, V>, KeyVal
     }
 
     // Make sure tails have no next records from previous runs
-    if (this._changesTail) this._changesTail._nextChanged = null;
-    if (this._additionsTail) this._additionsTail._nextAdded = null;
+    if (this.changeRecors.changesTail) this.changeRecors.changesTail._nextChanged = null;
+    if (this.changeRecors.additionsTail) this.changeRecors.additionsTail._nextAdded = null;
 
-    return this.isDirty;
-  }
-
-  /**
-   * Inserts a record before `before` or append at the end of the list when `before` is null.
-   *
-   * Notes:
-   * - This method appends at `this._appendAfter`,
-   * - This method updates `this._appendAfter`,
-   * - The return value is the new value for the insertion pointer.
-   */
-  private _insertBeforeOrAppend(
-    before: DefaultKeyValueChangeRecord<K, V>|null,
-    record: DefaultKeyValueChangeRecord<K, V>,
-  ): DefaultKeyValueChangeRecord<K, V>|null {
-    if (before) {
-      const prev = before._prev;
-      record._next = before;
-      record._prev = prev;
-      before._prev = record;
-      if (prev) {
-        prev._next = record;
-      }
-      if (before === this._mapHead) {
-        this._mapHead = record;
-      }
-
-      this._appendAfter = before;
-      return before;
-    }
-
-    if (this._appendAfter) {
-      this._appendAfter._next = record;
-      record._prev = this._appendAfter;
-    } else {
-      this._mapHead = record;
-    }
-
-    this._appendAfter = record;
-    return null;
-  }
-
-  private _getOrCreateRecordForKey(key: K, value: V): DefaultKeyValueChangeRecord<K, V> {
-    if (this._records.has(key)) {
-      const record = this._records.get(key);
-
-      this._maybeAddToChanges(record, value);
-      const prev = record._prev;
-      const next = record._next;
-      if (prev) {
-        prev._next = next;
-      }
-      if (next) {
-        next._prev = prev;
-      }
-      record._next = null;
-      record._prev = null;
-
-      return record;
-    } else {
-      const record = new DefaultKeyValueChangeRecord<K, V>(key);
-
-      this._records.set(key, record);
-      record.currentValue = value;
-      this._addToAdditions(record);
-
-      return record;
-    }
-  }
-
-  /** @internal */
-  _reset() {
-    if (this.isDirty) {
-      let record: DefaultKeyValueChangeRecord<K, V>|null;
-      // let `_previousMapHead` contain the state of the map before the changes
-      this._previousMapHead = this._mapHead;
-
-      for (record = this._previousMapHead; record !== null; record = record._next) {
-        record._nextPrevious = record._next;
-      }
-
-      // Update `record.previousValue` with the value of the item before the changes
-      // We need to update all changed items (that's those which have been added and changed)
-      for (record = this._changesHead; record !== null; record = record._nextChanged) {
-        record.previousValue = record.currentValue;
-      }
-
-      for (record = this._additionsHead; record != null; record = record._nextAdded) {
-        record.previousValue = record.currentValue;
-      }
-
-      this._changesHead = this._changesTail = null;
-      this._additionsHead = this._additionsTail = null;
-      this._removalsHead = null;
-    }
-  }
-
-  // Add the record or a given key to the list of changes only when the value has actually changed
-  private _maybeAddToChanges(record: DefaultKeyValueChangeRecord<K, V>, newValue: any): void {
-    if (!looseIdentical(newValue, record.currentValue)) {
-      record.previousValue = record.currentValue;
-      record.currentValue = newValue;
-      this._addToChanges(record);
-    }
-  }
-
-  private _addToAdditions(record: DefaultKeyValueChangeRecord<K, V>) {
-    if (this._additionsHead === null) {
-      this._additionsHead = this._additionsTail = record;
-    } else {
-      this._additionsTail._nextAdded = record;
-      this._additionsTail = record;
-    }
-  }
-
-  private _addToChanges(record: DefaultKeyValueChangeRecord<K, V>) {
-    if (this._changesHead === null) {
-      this._changesHead = this._changesTail = record;
-    } else {
-      this._changesTail._nextChanged = record;
-      this._changesTail = record;
-    }
-  }
-
-  /** @internal */
-  private _forEach(obj: Map<K, V>|{[k: string]: V}, fn: (v: V, k: any) => void) {
-    if (obj instanceof Map) {
-      obj.forEach(fn);
-    } else {
-      Object.keys(obj).forEach(k => fn(obj[k], k));
-    }
+    return this.changeRecors.isDirty;
   }
 }
-
-
-

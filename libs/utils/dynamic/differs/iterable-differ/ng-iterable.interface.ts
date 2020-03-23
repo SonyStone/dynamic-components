@@ -3,4 +3,4 @@
  *
  * @publicApi
  */
-export type NgIterable<T> = Array<T>| Iterable<T>;
+export type NgIterable<T> = Array<T> | Iterable<T>;

@@ -1,4 +1,4 @@
-import { KeyValueChanges } from './key-value-changes.interface';
+import { KeyValueChanges } from './keyvalue-changes.interface';
 
 /**
  * A differ that tracks changes made to an object over time.

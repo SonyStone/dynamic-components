@@ -1,4 +1,4 @@
-import { KeyValueChanges } from '../keyvalue-differ/key-value-changes.interface';
+import { KeyValueChanges } from '../keyvalue-differ/keyvalue-changes.interface';
 import { keyvalueChangeRecordAsString } from './keyvalue-change-record-as-string';
 import { keyvalueChangesAsString } from './keyvalue-changes-as-string';
 
