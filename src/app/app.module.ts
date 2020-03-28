@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HelloComponent } from './hello.component';
 
 
 @NgModule({
@@ -13,7 +12,6 @@ import { HelloComponent } from './hello.component';
     AppRoutingModule
   ],
   declarations: [
-    HelloComponent,
     AppComponent,
   ],
   providers: [],

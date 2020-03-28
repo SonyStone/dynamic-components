@@ -156,6 +156,7 @@ export class ComponentCreaterService implements OnDestroy {
     index: number,
     createComponent: () => ComponentRef<any>,
   ): ComponentRef<any> {
+
     if (!outeltConfig.cacheId) {
       const componentRef = createComponent();
 

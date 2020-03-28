@@ -5,6 +5,9 @@ export class ComponentCacheService {
 
   cache: Map<string, ComponentRef<any>> = new Map();
 
+  /**
+   * components in use in view
+   */
   inUse: Set<ViewRef> = new Set();
 
   constructor() { }
@@ -14,6 +17,7 @@ export class ComponentCacheService {
     yes: (componentRef: ComponentRef<any>) => void,
     no: () => ComponentRef<any>,
   ): ComponentRef<any> {
+
     if (this.cache.has(id)) {
       const componentRef = this.cache.get(id);
       this.inUse.add(componentRef.hostView);
