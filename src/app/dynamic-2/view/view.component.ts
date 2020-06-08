@@ -6,6 +6,7 @@ const template = `
   <p>qwe asd zxc</p>
   <app-test-1>
     <app-test-1></app-test-1>
+    <app-test-1></app-test-1>
   </app-test-1>
 `;
 

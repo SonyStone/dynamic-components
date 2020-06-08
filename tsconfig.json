@@ -19,8 +19,16 @@
       "dom"
     ],
     "paths": {
-      "@factory/utils": ["libs/utils/index.ts"],
-      "@ecs": ["libs/utils/ecs/index.ts"],
+      "@factory/utils": [
+        "libs/utils/index.ts"
+      ],
+      // "store": [
+      //   "dist/store/store",
+      //   "dist/store"
+      // ],
+      "store": [
+        "projects/store/src/public-api.ts"
+      ]
     }
   },
   "angularCompilerOptions": {

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 
 const routes: Routes = [
@@ -12,6 +12,11 @@ const routes: Routes = [
     path: 'dynamic-2',
     loadChildren: () => import('./dynamic-2/dynamic-2.route-module')
       .then((m) => m.Dynamic2RouteModule),
+  },
+  {
+    path: 'store',
+    loadChildren: () => import('./store/store.route-module')
+      .then((m) => m.StoreRouteModule),
   },
 ];
 
