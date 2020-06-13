@@ -11,7 +11,7 @@ export class DefaultIterableChanges<V> implements IterableChanges<V> {
     private changeRecors: IterableChangeRecors<V>,
   ) {}
 
-  forEachItem(fn: (record: DefaultIterableChangeRecord<V>) => void) {
+  forEachItem(fn: (record: IterableChangeRecord<V>) => void) {
     let record: DefaultIterableChangeRecord<V>|null;
     for (record = this.changeRecors.itHead; record !== null; record = record._next) {
       fn(record);
@@ -70,35 +70,35 @@ export class DefaultIterableChanges<V> implements IterableChanges<V> {
     }
   }
 
-  forEachPreviousItem(fn: (record: DefaultIterableChangeRecord<V>) => void) {
+  forEachPreviousItem(fn: (record: IterableChangeRecord<V>) => void) {
     let record: DefaultIterableChangeRecord<V>|null;
     for (record = this.changeRecors.previousItHead; record !== null; record = record._nextPrevious) {
       fn(record);
     }
   }
 
-  forEachAddedItem(fn: (record: DefaultIterableChangeRecord<V>) => void) {
+  forEachAddedItem(fn: (record: IterableChangeRecord<V>) => void) {
     let record: DefaultIterableChangeRecord<V>|null;
     for (record = this.changeRecors.additionsHead; record !== null; record = record._nextAdded) {
       fn(record);
     }
   }
 
-  forEachMovedItem(fn: (record: DefaultIterableChangeRecord<V>) => void) {
+  forEachMovedItem(fn: (record: IterableChangeRecord<V>) => void) {
     let record: DefaultIterableChangeRecord<V>|null;
     for (record = this.changeRecors.movesHead; record !== null; record = record._nextMoved) {
       fn(record);
     }
   }
 
-  forEachRemovedItem(fn: (record: DefaultIterableChangeRecord<V>) => void) {
+  forEachRemovedItem(fn: (record: IterableChangeRecord<V>) => void) {
     let record: DefaultIterableChangeRecord<V>|null;
     for (record = this.changeRecors.removalsHead; record !== null; record = record._nextRemoved) {
       fn(record);
     }
   }
 
-  forEachIdentityChange(fn: (record: DefaultIterableChangeRecord<V>) => void) {
+  forEachIdentityChange(fn: (record: IterableChangeRecord<V>) => void) {
     let record: DefaultIterableChangeRecord<V>|null;
     for (record = this.changeRecors.identityChangesHead; record !== null; record = record._nextIdentityChange) {
       fn(record);

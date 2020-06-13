@@ -17,8 +17,14 @@
 <hr>
 <p>user</p>
 
-<user-1></user-1>
+<ng-container dataRoot="user-admin">
 
-<user-2></user-2>
+  <ng-container *test></ng-container>
 
-<user-3></user-3>
+  <user-1></user-1>
+
+  <user-2></user-2>
+
+  <user-3></user-3>
+
+</ng-container>

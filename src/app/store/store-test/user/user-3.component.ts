@@ -8,6 +8,8 @@ import { userTypeProviders } from '../user-type';
   selector: 'user-3',
   template: `
 
+  <span>(Component) user-3</span>
+
   <ng-container *getData="let userType from 'user-type'; let next = next">
 
     <pre>userType: {{ userType }}</pre>

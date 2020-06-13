@@ -8,17 +8,22 @@ export class KeyValueChangeRecors<K, V> {
 
   // _appendAfter is used in the check loop
   appendAfter: DefaultKeyValueChangeRecord<K, V>|null = null;
+
   previousMapHead: DefaultKeyValueChangeRecord<K, V>|null = null;
+
   changesHead: DefaultKeyValueChangeRecord<K, V>|null = null;
   changesTail: DefaultKeyValueChangeRecord<K, V>|null = null;
+
   additionsHead: DefaultKeyValueChangeRecord<K, V>|null = null;
   additionsTail: DefaultKeyValueChangeRecord<K, V>|null = null;
+
   removalsHead: DefaultKeyValueChangeRecord<K, V>|null = null;
   removalsTail: DefaultKeyValueChangeRecord<K, V>|null = null;
 
   get isDirty(): boolean {
-    return this.additionsHead !== null || this.changesHead !== null ||
-        this.removalsHead !== null;
+    return this.additionsHead !== null
+      || this.changesHead !== null
+      || this.removalsHead !== null;
   }
 
   /**

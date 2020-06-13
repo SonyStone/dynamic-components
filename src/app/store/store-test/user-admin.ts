@@ -1,6 +1,7 @@
-import { Injectable, OnDestroy, Provider } from '@angular/core';
-import { mapTo } from 'rxjs/operators';
-import { AbstractContext, StoreService } from 'store';
+import { Injectable, Provider } from '@angular/core';
+import { mapTo, tap, shareReplay, startWith, delay } from 'rxjs/operators';
+import { AbstractContext, Data, StoreService } from 'store';
+import { pipe } from 'rxjs';
 
 @Injectable()
 export class UserAdminStore extends StoreService<string> {
@@ -8,15 +9,23 @@ export class UserAdminStore extends StoreService<string> {
 }
 
 @Injectable()
-export class UserAdminContext extends AbstractContext<string> implements OnDestroy {
+@Data({ selector: 'user-admin' })
+export class UserAdminContext implements AbstractContext<UserAdminContext> {
 
-  $implicit = 'user admin';
+  $implicit: string;
+  user: string;
 
-  user = this.$implicit;
+  buttons = { rename: 'rename admin', reset: 'reset admin' };
 
-  private subscription = this.store.state$.subscribe((store) => {
-    this.update(store);
-  })
+  context$ = this.store.state$
+    .pipe(
+      tap((store) => this.update(store)),
+      mapTo(this),
+      startWith(this),
+      shareReplay(1),
+    )
+
+  get = () => this.store.action(pipe(delay(1000), mapTo('user admin')))
 
   rename = (user: string) => this.store.action(mapTo(user));
 
@@ -25,25 +34,15 @@ export class UserAdminContext extends AbstractContext<string> implements OnDestr
   constructor(
     private store: UserAdminStore,
   ) {
-    super();
+    this.get();
   }
 
-  update(user: string): this {
+  update(user: string): void {
     this.$implicit = this.user = user;
-
-    return super._update();
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 }
 
 export const userAdminProviders: Provider[] = [
   UserAdminStore,
   UserAdminContext,
-  {
-    provide: 'user-admin',
-    useExisting: UserAdminContext,
-  },
-]
+];

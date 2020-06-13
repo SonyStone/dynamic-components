@@ -1,0 +1,71 @@
+<h1>dynamic 3</h1>
+
+<ng-container *ngIf="false">
+  <pre>*dynamic</pre>
+
+  <ng-container *dynamic="'test-5'"></ng-container>
+
+  <hr>
+</ng-container>
+
+
+
+<ng-container *getData="let $implicit from 'test-data'
+                        let data1 = data1;
+                        let data2 = data2;
+                        let data3 = data3;
+                        let allData = allData;
+                        let onAction = onAction;">
+
+  <pre>test-data</pre>
+  <p>{{ $implicit }}</p>
+  <pre>{{ allData | json }}</pre>
+  <hr>
+
+  <ng-container *ngIf="true">
+
+    <ng-container *getData="let componentName from 'test-components'">
+      <pre>{{ componentName }}</pre>
+
+
+      <pre>*dynamic</pre>
+
+      <ng-container *dynamic="componentName; 
+                              context: allData;"></ng-container>
+
+    </ng-container>
+    <hr>
+  </ng-container>
+
+  <!-- <ng-container *ngIf="false">
+    <pre>*ngxComponentOutlet</pre>
+
+    <ng-container *ngxComponentOutlet="component;
+                                     context: {
+                                       test: data1,
+                                       testChanges: onAction
+                                     };"></ng-container>
+
+    <hr>
+  </ng-container> -->
+
+  <ng-container *ngIf="false">
+
+    <ng-container *dynamic="'test-2'"></ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="false">
+
+    <ng-container *dynamic="'test-3'"></ng-container>
+  </ng-container>
+
+  <!-- <ng-container *ngIf="false">
+    <pre>*ngComponentOutlet</pre>
+
+    <ng-container *ngComponentOutlet="component"></ng-container>
+  </ng-container> -->
+
+
+</ng-container>
+
+<pre>other</pre>

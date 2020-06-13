@@ -6,3 +6,5 @@ export * from './keyvalue-changes.interface';
 export * from './keyvalue-differ';
 export * from './keyvalue-differ.interface';
 export * from './keyvalue.interface';
+
+export * from './keyvalue-differ-with-bounds';

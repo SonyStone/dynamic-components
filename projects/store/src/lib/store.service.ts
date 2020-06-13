@@ -1,6 +1,6 @@
 import { OnDestroy } from '@angular/core';
 import { ConnectableObservable, ObservableInput, of, OperatorFunction, Subject, Unsubscribable } from 'rxjs';
-import { exhaustMap, mapTo, publishReplay, tap } from 'rxjs/operators';
+import { exhaustMap, publishReplay, tap } from 'rxjs/operators';
 
 import { AnyOperatorFunction, Store } from './store.interface';
 

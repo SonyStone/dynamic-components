@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, NgModule } from '@angular/core';
+import { ChangeDetectionStrategy, Component, NgModule, Injector } from '@angular/core';
 import { StoreModule } from 'store';
 
 import { userTypeProviders } from '../user-type';
@@ -8,7 +8,10 @@ import { userTypeProviders } from '../user-type';
   selector: 'user-2',
   template: `
 
-  <ng-container *getData="let userType from 'user-type'; let next = next">
+  <span>(Component) user-2</span>
+
+  <ng-container *getData="let userType from 'user-type';
+                          let next = next;">
 
   <pre>userType: {{ userType }}</pre>
 
@@ -17,11 +20,14 @@ import { userTypeProviders } from '../user-type';
     <ng-container *ngIf="(userType | getData) as user">
       <pre>user: {{ user.user }}</pre>
 
-      <button *ngIf="user.rename"
-              (click)="user.rename('papa')">rename</button>
+      <button *ngIf="user.rename as rename"
+              (click)="rename('papa')">rename</button>
 
-      <button *ngIf="user.reset"
-              (click)="user.reset()">reset</button>
+      <button *ngIf="user.reset as reset"
+              (click)="reset()">reset</button>
+
+      <button *ngIf="user.clear as clear"
+              (click)="clear()">clear</button>
 
     </ng-container>
   </ng-container>
@@ -56,4 +62,12 @@ export class User2Component {}
     User2Component,
   ],
 })
-export class User2Module { }
+export class User2Module {
+  constructor(
+    private injector: Injector,
+  ) {
+    // console.log(injector);
+
+    // injector.
+  }
+}

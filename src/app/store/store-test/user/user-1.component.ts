@@ -8,7 +8,10 @@ import { userTypeProviders } from '../user-type';
   selector: 'user-1',
   template: `
 
-  <ng-container *getData="let userType from 'user-type'; let next = next">
+  <span>(Component) user-1</span>
+
+  <ng-container *getData="let userType from 'user-type';
+                          let next = next;">
 
     <pre>userType: {{ userType }}</pre>
 
@@ -16,15 +19,16 @@ import { userTypeProviders } from '../user-type';
 
     <ng-container *getData="let user from userType;
                             let rename = rename;
+                            let buttons = buttons;
                             let reset = reset;">
 
       <pre>user: {{ user }}</pre>
 
       <button *ngIf="rename"
-              (click)="rename('papa')">rename</button>
+              (click)="rename('papa')">{{ buttons.rename }}</button>
 
       <button *ngIf="reset"
-              (click)="reset()">reset</button>
+              (click)="reset()">{{ buttons.reset }}</button>
 
     </ng-container>
   </ng-container>

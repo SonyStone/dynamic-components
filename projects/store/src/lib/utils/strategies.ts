@@ -2,8 +2,9 @@ import { EventEmitter } from '@angular/core';
 import { isObservable, Observable, SubscriptionLike } from 'rxjs';
 
 import { isPromise } from './is-promise';
+import { AsyncLike } from './switch-to-observable';
 
-export type AsyncLike<T> = Observable<T> | Promise<T> | T;
+
 export type DisposebleLike<T> = SubscriptionLike | Promise<T> | T;
 
 export interface SubscriptionStrategy<T> {

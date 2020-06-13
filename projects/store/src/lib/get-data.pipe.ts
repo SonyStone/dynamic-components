@@ -1,77 +1,68 @@
-import { Injector, Pipe, PipeTransform, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Inject, Injector, OnDestroy, Pipe, PipeTransform } from '@angular/core';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import { DataContextStore } from './get-data.directive';
-import { StrategyHandler } from './utils/strategy.handler';
-import { AbstractContext, Updatetable } from './view-context.service';
+import { Updatetable } from './abstract.context';
+import { DATA_INJECTOR, DataInjectorGetter } from './data';
+import { switchToObservable } from './utils/switch-to-observable';
 
 @Pipe({
   name: 'getData',
   pure: false,
 })
-export class GetDataPipe<T> implements PipeTransform, OnDestroy, Updatetable<T> {
+export class GetDataPipe<C> implements PipeTransform, OnDestroy, Updatetable<C> {
 
-  private strategyHandler = new StrategyHandler<AbstractContext<T>>();
+  private selector: string | undefined;
+  private selectorSubject = new Subject<string>();
 
-  private latestValue: AbstractContext<T> | null = null;
+  private context: C | undefined;
 
-  private selector: string;
+  private subscription = this.selectorSubject
+    .pipe(
+      this.getDataInjector(this.injector),
+      switchToObservable(),
+      map((obj) => obj?.context$ || undefined),
+      switchToObservable(),
+    )
+    .subscribe((context) => {
+      this.update(context);
+    })
 
   constructor(
+    @Inject(DATA_INJECTOR) private getDataInjector: DataInjectorGetter<C>,
     private injector: Injector,
-    private data: DataContextStore,
     private cd: ChangeDetectorRef,
   ) {}
 
   transform(selector: string): any {
 
-    console.log(`transform`, selector, this.latestValue);
-
     if (!this.selector) {
+
       if (typeof selector === 'string') {
         this.selector = selector;
-        const contextAsync = this.data.get<T>(selector, this.injector);
 
-        if (contextAsync) {
-          this.strategyHandler.handleContext(
-            contextAsync,
-            (context) => {
-              context.set(this);
-              this.updateLatestValue(context)
-            },
-          )
-        } else {
-          this.dispose();
-        }
+        this.selectorSubject.next(this.selector);
       }
 
-      return this.latestValue;
+      return this.context;
     }
 
-    if (selector !== this.selector) {
-      this.dispose();
+    if (this.selector !== selector) {
+
+      this.selector = null;
+
       return this.transform(selector);
     }
 
-    return this.latestValue;
+    return this.context;
   }
 
-  update(context: AbstractContext<T>): void {
-    this.updateLatestValue(context);
+  update(context: C): void {
+    this.context = context;
+    this.cd.markForCheck();
   }
 
   ngOnDestroy(): void {
-    this.dispose();
-  }
-
-  private dispose(): void {
-    this.strategyHandler.dispose();
-    this.latestValue?.remove(this);
-    this.latestValue = null;
-    this.selector = null;
-  }
-
-  private updateLatestValue(value: AbstractContext<T>): void {
-    this.latestValue = value;
-    this.cd.markForCheck();
+    this.subscription.unsubscribe();
   }
 }

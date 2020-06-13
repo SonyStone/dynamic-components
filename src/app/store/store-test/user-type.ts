@@ -1,5 +1,6 @@
 import { Injectable, Provider } from '@angular/core';
-import { AbstractContext } from 'store';
+import { BehaviorSubject, timer } from 'rxjs';
+import { AbstractContext, Data } from 'store';
 
 const userTypes = [
   'user',
@@ -8,34 +9,31 @@ const userTypes = [
 ]
 
 @Injectable()
-export class UserTypeContext extends AbstractContext<string> {
+@Data({ selector: 'user-type' })
+export class UserTypeContext implements AbstractContext<UserTypeContext> {
 
-  type = 0;
+  type = 1;
 
   $implicit = userTypes[this.type];
 
   userType = this.$implicit;
 
+  context$ = new BehaviorSubject<this>(this);
+
+  sub = timer(3000, 3000).subscribe(() => this.next());
+
   next = () => {
     this.type++;
     this.type = (this.type !== userTypes.length) ? this.type : 0;
     this.update(userTypes[this.type]);
+    this.context$.next(this);
   };
 
-  constructor() {
-    super();
-  }
-
-  update(user: string): this {
+  update(user: string): void {
     this.$implicit = this.userType = user;
-
-    return super._update();
   }
 }
 
 export const userTypeProviders: Provider[] = [
-  {
-    provide: 'user-type',
-    useFactory: () => new UserTypeContext(),
-  },
+  UserTypeContext,
 ]

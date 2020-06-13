@@ -14,6 +14,11 @@ const routes: Routes = [
       .then((m) => m.Dynamic2RouteModule),
   },
   {
+    path: 'dynamic-3',
+    loadChildren: () => import('./dynamic-3/dynamic-3.route-module')
+      .then((m) => m.Dynamic3RouteModule),
+  },
+  {
     path: 'store',
     loadChildren: () => import('./store/store.route-module')
       .then((m) => m.StoreRouteModule),

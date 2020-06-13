@@ -9,9 +9,10 @@ export class IterableChangeRecors<V> {
   unlinkedRecords: DuplicateMap<V>|null = null;
 
   previousItHead: DefaultIterableChangeRecord<V>|null = null;
-  itHead: DefaultIterableChangeRecord<V>|null = null;
 
+  itHead: DefaultIterableChangeRecord<V>|null = null;
   itTail: DefaultIterableChangeRecord<V>|null = null;
+
   additionsHead: DefaultIterableChangeRecord<V>|null = null;
   additionsTail: DefaultIterableChangeRecord<V>|null = null;
 

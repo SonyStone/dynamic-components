@@ -1,44 +1,17 @@
 import { EmbeddedViewRef, Injectable, OnDestroy, TemplateRef, ViewContainerRef } from '@angular/core';
 
-export abstract class AbstractContext<T> {
+import { Updatetable } from './abstract.context';
 
-  $implicit: any;
-
-  private viewContexts = new Set<Updatetable<T>>();
-
-  set(viewContext: Updatetable<T>): void {
-    this.viewContexts.add(viewContext);
-
-    this._update();
-  }
-
-  remove(viewContext: Updatetable<T>): void {
-    this.viewContexts.delete(viewContext);
-
-    this._update();
-  }
-
-  _update(): this {
-    this.viewContexts.forEach((view) => view.update(this));
-
-
-    return this;
-  }
-}
-
-export interface Updatetable<T> {
-  update(conetxt: AbstractContext<T>): void
-}
 
 @Injectable()
 export class ViewContextHandler<C> implements OnDestroy, Updatetable<C> {
 
-  private viewRef: EmbeddedViewRef<AbstractContext<C>> | undefined;
+  private viewRef: EmbeddedViewRef<C> | undefined;
 
-  private context: AbstractContext<C>;
+  private context: C;
 
   constructor(
-    private templateRef: TemplateRef<AbstractContext<C>>,
+    private templateRef: TemplateRef<C>,
     private viewContainer: ViewContainerRef,
   ) {}
 
@@ -46,7 +19,7 @@ export class ViewContextHandler<C> implements OnDestroy, Updatetable<C> {
     this.clear();
   }
 
-  update(context: AbstractContext<C>): this {
+  update(context: C): this {
 
     if (!context) {
       this.clear();

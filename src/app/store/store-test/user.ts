@@ -1,7 +1,7 @@
-import { Injectable, OnDestroy, Provider } from '@angular/core';
-import { of } from 'rxjs';
-import { mapTo, shareReplay } from 'rxjs/operators';
-import { AbstractContext, StoreService } from 'store';
+import { Injectable, Provider, OnDestroy } from '@angular/core';
+import { pipe, timer } from 'rxjs';
+import { delay, mapTo, tap } from 'rxjs/operators';
+import { AbstractContext, Data, StoreService } from 'store';
 
 
 @Injectable()
@@ -10,47 +10,56 @@ export class UserStore extends StoreService<string> {
 }
 
 @Injectable()
-export class UserContext extends AbstractContext<string> implements OnDestroy {
+export class UserContext implements OnDestroy {
 
-  $implicit = 'name';
+  $implicit: string;
+  user: string;
 
-  user = this.$implicit;
+  buttons = { rename: 'rename', reset: 'reset' };
 
-  private subscription = this.store.state$.subscribe((store) => {
-    this.update(store);
-  })
+  private subscription = timer(1000, 1000).subscribe(() => this.reset());
 
-  rename = (user: string) => this.store.action(mapTo(user));
+  get = () => this.store.action(pipe(delay(1000), mapTo('name')))
+
+  rename = (user: string) => this.store.action(mapTo(`${user} ${Math.random()}`));
 
   reset = () => this.store.action(mapTo(`name ${Math.random()}`));
 
   constructor(
     private store: UserStore,
   ) {
-    super();
-  }
-
-  update(user: string): this {
-    this.$implicit = this.user = user;
-
-    return super._update();
+    this.get();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+
+  update(user: string): void {
+    this.$implicit = this.user = user;
+  }
+}
+
+@Injectable()
+@Data({ selector: 'user' })
+export class UserData implements AbstractContext<UserContext> {
+
+  context$ = this.store.state$
+    .pipe(
+      tap((store) => {
+        this.context.update(store);
+      }),
+      mapTo(this.context)
+    )
+
+  constructor(
+    private store: UserStore,
+    protected context: UserContext,
+  ) {}
 }
 
 export const userProviders: Provider[] = [
   UserStore,
+  UserData,
   UserContext,
-  {
-    provide: 'user',
-    useFactory: (context: UserContext) =>
-      // of(context).pipe(shareReplay(1)),
-      new Promise((resolve) => resolve(context)),
-    deps: [
-      UserContext,
-    ],
-  },
 ]
