@@ -19,8 +19,37 @@
       "dom"
     ],
     "paths": {
-      "@factory/utils": ["libs/utils/index.ts"],
-      "@ecs": ["libs/utils/ecs/index.ts"],
+      "@factory/utils": [
+        "libs/utils/index.ts"
+      ],
+      // "store": [
+      //   "dist/store/store",
+      //   "dist/store"
+      // ],
+      "store": [
+        "projects/store/src/public-api.ts"
+      ],
+      // "object-pool": [
+      //   "dist/object-pool/object-pool",
+      //   "dist/object-pool"
+      // ],
+      "object-pool": [
+        "projects/object-pool/src/public-api.ts"
+      ],
+      // "differs": [
+      //   "dist/differs/differs",
+      //   "dist/differs"
+      // ],
+      "differs": [
+        "projects/differs/src/public-api.ts"
+      ],
+      // "dynamic": [
+      //   "dist/dynamic/dynamic",
+      //   "dist/dynamic"
+      // ],
+      "dynamic": [
+        "projects/dynamic/src/public-api.ts"
+      ]
     }
   },
   "angularCompilerOptions": {

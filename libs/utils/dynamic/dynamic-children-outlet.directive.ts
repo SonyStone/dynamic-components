@@ -1,8 +1,9 @@
 import { Directive, Input, ViewContainerRef, ViewRef } from '@angular/core';
 
-import { DynamicOutletDirective } from './dynamic-outlet.directive';
+import { ComponentCreaterService } from './component-creater.service';
 
 @Directive({
+  // tslint:disable-next-line:directive-selector
   selector: '[dynamic-children-outlet]',
 })
 export class DynamicChildrenOutletDirective {
@@ -11,9 +12,9 @@ export class DynamicChildrenOutletDirective {
 
   constructor(
     private viewContainerRef: ViewContainerRef,
-    private dynamicOutletDirective: DynamicOutletDirective,
+    private componentCreaterService: ComponentCreaterService,
   ) {
-    this.dynamicOutletDirective.addChild(this);
+    this.componentCreaterService.addChild(this);
   }
 
   insert(viewRef: ViewRef): void {

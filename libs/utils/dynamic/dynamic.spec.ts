@@ -141,7 +141,7 @@ describe('Dynamic', () => {
         expect(before.red).toEqual(after.red);
       });
 
-      it('should move nested elements, not recreate them', () => {
+      xit('should move nested elements, not recreate them', () => {
 
         component.config = [
           {
