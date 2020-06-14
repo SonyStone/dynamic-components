@@ -1,14 +1,13 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   Input,
   NgModule,
   OnChanges,
   OnDestroy,
   OnInit,
-  Type,
   SimpleChanges,
+  Type,
 } from '@angular/core';
 
 import { WithComponent } from './create-component';
@@ -55,10 +54,6 @@ export class Test4Component implements OnChanges, OnInit, OnDestroy {
   ngOnDestroy(): void {
     // console.log(`Test4 On Destroy`)
   }
-  // private sub = timer(1000, 1000).subscribe(() => {
-  //   this.number = (Math.random() * 100).toFixed();
-  //   this.cd.markForCheck();
-  // })
 }
 
 @NgModule({

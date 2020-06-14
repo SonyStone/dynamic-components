@@ -1,6 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, timer } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { AbstractContext, Data } from 'store';
 
 // tslint:disable:member-ordering
@@ -24,9 +23,6 @@ export class TestComponentsContext implements AbstractContext<TestComponentsCont
   context$ = new BehaviorSubject<this>(this);
 
   private subscription = timer(2000, 2000)
-    .pipe(
-      // take(0),
-    )
     .subscribe(() => this.next());
 
   next = () => {

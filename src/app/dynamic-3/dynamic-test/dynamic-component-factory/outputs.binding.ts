@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { KeyValueChangeRecord } from '@factory/utils';
+import { KeyValueChangeRecord } from 'differs';
 import { Resettable } from 'object-pool';
 import { Subscription } from 'rxjs';
 

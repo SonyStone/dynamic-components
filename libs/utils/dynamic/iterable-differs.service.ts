@@ -1,6 +1,5 @@
 import { Injectable, IterableDifferFactory } from '@angular/core';
-
-import { DefaultIterableDiffer, isListLikeIterable, TrackByFunction } from './differs';
+import { DefaultIterableDiffer, isListLikeIterable, TrackByFunction } from 'differs';
 
 
 export class DefaultIterableDifferFactory implements IterableDifferFactory {

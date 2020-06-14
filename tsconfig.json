@@ -35,6 +35,13 @@
       // ]
       "object-pool": [
         "projects/object-pool/src/public-api.ts"
+      ],
+      // "differs": [
+      //   "dist/differs/differs",
+      //   "dist/differs"
+      // ]
+      "differs": [
+        "projects/differs/src/public-api.ts",
       ]
     }
   },

@@ -1,36 +1,10 @@
-import { stringify } from '@angular/compiler/src/util';
-
-import { isJsObject } from '../utils';
-import { DefaultKeyValuChanges } from './keyvalu-changes';
 import { DefaultKeyValueChangeRecord } from './keyvalue-change-record';
-import { KeyValueChangeRecors } from './keyvalue-change-recors';
-import { KeyValueChanges } from './keyvalue-changes.interface';
-import { KeyValueDiffer } from './keyvalue-differ.interface';
+import { DefaultKeyValueDiffer } from './keyvalue-differ';
 import { KeyValue } from './keyvalue.interface';
 
-export class DefaultKeyValueDiffer<K, V> implements KeyValueDiffer<K, V> {
+export class KeyValueDifferWithBounds<K, V> extends DefaultKeyValueDiffer<K, V> {
 
-  changeRecors = new KeyValueChangeRecors<K, V>();
-  changes: KeyValueChanges<K, V> = new DefaultKeyValuChanges(this.changeRecors);
-
-  diff(map?: KeyValue<K, V> | null): any {
-
-    if (!map) {
-      map = new Map();
-    }
-
-    if (!(map instanceof Map || isJsObject(map))) {
-      throw new Error(
-        `Error trying to diff '${stringify(map)}'. Only maps and objects are allowed`
-      );
-    }
-
-    if (this.check(map)) {
-      return this;
-    }
-
-    return null;
-  }
+  bounds = new Set();
 
   /**
    * Check the current state of the map vs the previous.
@@ -43,13 +17,16 @@ export class DefaultKeyValueDiffer<K, V> implements KeyValueDiffer<K, V> {
     this.changeRecors.appendAfter = null;
 
     this.changeRecors.forEach(map, (value, key) => {
-      if (insertBefore && insertBefore.key === key) {
-        this.changeRecors.maybeAddToChanges(insertBefore, value);
-        this.changeRecors.appendAfter = insertBefore;
-        insertBefore = insertBefore._next;
-      } else {
-        const record = this.changeRecors.getOrCreateRecordForKey(key, value);
-        insertBefore = this.changeRecors.insertBeforeOrAppend(insertBefore, record);
+      if (this.bounds.has(key)) {
+
+        if (insertBefore && insertBefore.key === key) {
+          this.changeRecors.maybeAddToChanges(insertBefore, value);
+          this.changeRecors.appendAfter = insertBefore;
+          insertBefore = insertBefore._next;
+        } else {
+          const record = this.changeRecors.getOrCreateRecordForKey(key, value);
+          insertBefore = this.changeRecors.insertBeforeOrAppend(insertBefore, record);
+        }
       }
     });
 
@@ -80,5 +57,10 @@ export class DefaultKeyValueDiffer<K, V> implements KeyValueDiffer<K, V> {
     if (this.changeRecors.additionsTail) this.changeRecors.additionsTail._nextAdded = null;
 
     return this.changeRecors.isDirty;
+  }
+
+  reset(): void {
+    this.changeRecors.reset();
+    this.bounds.clear();
   }
 }

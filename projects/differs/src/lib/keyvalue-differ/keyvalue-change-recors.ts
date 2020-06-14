@@ -1,4 +1,4 @@
-import { looseIdentical } from '../utils';
+import { looseIdentical } from '../utils/loose-identical';
 import { DefaultKeyValueChangeRecord } from './keyvalue-change-record';
 import { KeyValue } from './keyvalue.interface';
 

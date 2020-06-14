@@ -1,6 +1,7 @@
 import { stringify } from '@angular/compiler/src/util';
 
-import { isListLikeIterable, looseIdentical } from '../utils';
+import { isListLikeIterable } from '../utils/is-list-like-iterable';
+import { looseIdentical } from '../utils/loose-identical';
 import { DefaultIterableChanges } from './default-iterable-changes';
 import { DefaultIterableChangeRecord } from './iterable-change-record';
 import { IterableChangeRecors } from './iterable-change-recors';

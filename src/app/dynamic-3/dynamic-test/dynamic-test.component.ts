@@ -1,13 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Compiler,
-  Component,
-  ComponentFactoryResolver,
-  NgModuleRef,
-  ViewContainerRef,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { Test1Component } from './test-1';
 import { TestComponentsContext } from './test-components';
 import { TestDataContext } from './test-data';
 
@@ -21,14 +13,4 @@ import { TestDataContext } from './test-data';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DynamicTestComponent {
-
-  tempComponent = Test1Component;
-
-  constructor(
-    public componentFactoryResolver: ComponentFactoryResolver,
-    public viewContainer: ViewContainerRef,
-    public compiler: Compiler,
-    public moduleRef: NgModuleRef<any>,
-  ) {}
-}
+export class DynamicTestComponent {}

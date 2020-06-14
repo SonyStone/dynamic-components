@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, ComponentFactory, ComponentRef, Injector, OnChanges } from '@angular/core';
-import { KeyValueDifferWithBounds } from '@factory/utils';
+import { KeyValueDifferWithBounds } from 'differs';
 import { Resettable } from 'object-pool';
 
 import { Context } from './context.interface';

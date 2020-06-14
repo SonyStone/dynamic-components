@@ -1,5 +1,3 @@
-import { getSymbolIterator } from './symbol';
-
 export function iterateListLike(obj: any, fn: (p: any) => any) {
   for (const iterator of obj) {
     fn(iterator);

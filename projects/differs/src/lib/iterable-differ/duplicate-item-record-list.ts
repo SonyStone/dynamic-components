@@ -1,5 +1,5 @@
 import { DefaultIterableChangeRecord } from './iterable-change-record';
-import { looseIdentical } from '../utils';
+import { looseIdentical } from '../utils/loose-identical';
 
 // A linked list of CollectionChangeRecords with the same IterableChangeRecord_.item
 export class DuplicateItemRecordList<V> {

@@ -1,4 +1,4 @@
-import { KeyValueChangeRecord } from '@factory/utils';
+import { KeyValueChangeRecord } from 'differs';
 import { Resettable } from 'object-pool';
 
 export class InputsBinding<C> implements Resettable {

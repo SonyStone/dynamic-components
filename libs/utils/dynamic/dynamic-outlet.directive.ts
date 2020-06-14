@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Directive, Input, OnChanges, OnDestroy, SimpleChanges, ViewContainerRef } from '@angular/core';
+import { IterableChangeRecord, IterableDiffer } from 'differs';
 
 import { ComponentCacheService } from './component-cache.service';
 import { ComponentCreaterService } from './component-creater.service';
-import { IterableChangeRecord, IterableDiffer } from './differs';
 import { IterableDiffers } from './iterable-differs.service';
 
 

@@ -1,5 +1,6 @@
 import { DefaultKeyValueDiffer } from './keyvalue-differ';
-import { keyvalueDifferToString, keyvalueChangesAsString } from '../util-spec';
+import { keyvalueDifferToString } from '../util-spec/keyvalue-differ-to-string';
+import { keyvalueChangesAsString } from '../util-spec/keyvalue-changes-as-string';
 
 describe('keyvalue differ', () => {
   describe('DefaultKeyValueDiffer', () => {

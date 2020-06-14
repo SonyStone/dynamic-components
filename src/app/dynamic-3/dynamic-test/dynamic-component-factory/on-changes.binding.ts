@@ -1,5 +1,5 @@
 import { OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
-import { KeyValueChangeRecord } from '@factory/utils';
+import { KeyValueChangeRecord } from 'differs';
 import { Resettable } from 'object-pool';
 
 export class OnChangesBinding<C extends Partial<OnChanges>> implements Resettable {
