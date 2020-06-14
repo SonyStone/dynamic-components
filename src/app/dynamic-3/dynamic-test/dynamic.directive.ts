@@ -12,8 +12,9 @@ import {
 import { combineLatest, Subject, Subscription } from 'rxjs';
 import { filter, map, shareReplay } from 'rxjs/operators';
 
-import { ComponentData, Context } from './component-data';
 import { WithComponent } from './create-component';
+import { Context } from './dynamic-component-factory/context.interface';
+import { DynamicComponentBindings } from './dynamic-component-factory/dynamic-component-factory';
 import { ModuleCompiler } from './module-compiler';
 
 export const components = {
@@ -23,7 +24,6 @@ export const components = {
   'test-4': () => import('./test-4').then((m) => m.Test4Module),
   'test-5': () => import('./test-5').then((m) => m.Test5Module),
 }
-
 
 @Directive({
   selector: '[dynamic]',
@@ -36,38 +36,36 @@ export class DynamicDirective implements OnChanges, OnDestroy {
   @Input('dynamicContext') context: Context | undefined;
   private contextSubject = new Subject<Context>();
 
-  componentData = new ComponentData<any>(this.injector);
+  private dynamicComponentBindings = new DynamicComponentBindings<any>();
 
   componentRef$ = this.selectorSubject.pipe(
     map((selector) => components[selector]),
     filter((moduleOrFactory) => !!moduleOrFactory),
     this.moduleCompiler.compile(),
     map((moduleFactory) => moduleFactory.create(this.moduleRef.injector)),
-    map((moduleRef) => {
-      const component = moduleRef.instance.component;
-      const componentFactoryResolver = moduleRef.componentFactoryResolver;
-
-      return this.componentData.init(component, componentFactoryResolver);
-    }),
+    map((moduleRef) => moduleRef.componentFactoryResolver.resolveComponentFactory(moduleRef.instance.component)),
+    map((componentFactory) => this.dynamicComponentBindings.set(componentFactory, this.injector)),
     shareReplay(),
   );
 
   private subscription = new Subscription()
     .add(
-      this.componentRef$.subscribe((componentData) => {
-        this.viewContainer.clear();
-        const index = this.viewContainer.length;
+      this.componentRef$
+        .subscribe((dynamicComponentBindings) => {
+          this.viewContainer.clear();
+          const index = this.viewContainer.length;
 
-        this.viewContainer.insert(componentData.componentRef.hostView, index);
+          this.viewContainer.insert(dynamicComponentBindings.componentRef.hostView, index);
 
-        componentData.componentRef.changeDetectorRef.markForCheck();
-      }),
+          dynamicComponentBindings.changeDetectorRef.markForCheck();
+        }),
     ).add(
       combineLatest(this.contextSubject, this.componentRef$)
         .pipe(
-          filter(([context, componentData]) => !!(context && componentData)),
-        ).subscribe(([context, componentData]) => {
-          componentData.update(context);
+          filter(([context, dynamicComponentBindings]) => !!(context && dynamicComponentBindings)),
+        )
+        .subscribe(([context, dynamicComponentBindings]) => {
+          dynamicComponentBindings.update(context);
         }),
     )
 

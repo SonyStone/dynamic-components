@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, NgModule, OnChanges, OnDestroy, OnInit, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, NgModule, Type } from '@angular/core';
 import { StoreModule } from 'store';
 
 import { WithComponent } from './create-component';

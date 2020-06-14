@@ -8,6 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "//object-pool": "//",
+    "test:object-pool": "ng test object-pool",
     "//dynamic-components": "//",
     "start:dynamic-components": "ng serve dynamic-components",
     "build:dynamic-components": "ng build dynamic-components",

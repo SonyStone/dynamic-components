@@ -17,7 +17,7 @@ export class TestDataContext implements AbstractContext<TestDataContext>, OnDest
 
   step = 0;
 
-  type = 0;
+  type = 2;
 
   $implicit = testData[this.type];
 
@@ -27,9 +27,9 @@ export class TestDataContext implements AbstractContext<TestDataContext>, OnDest
 
   context$ = new BehaviorSubject<this>(this);
 
-  private subscription = timer(1100, 1100)
+  private subscription = timer(900, 900)
     .pipe(
-      // take(3),
+      // take(1),
     )
     .subscribe(() => this.next());
 
@@ -52,6 +52,14 @@ export class TestDataContext implements AbstractContext<TestDataContext>, OnDest
     console.log(`onAction`, value);
   }
 
+  onClick = (value) => {
+    console.log(`onClick`, value);
+  }
+
+  otherAction = (value) => {
+    console.log(`otherAction`, value, `!!!`);
+  }
+
 
   dataSets = [
     () => ({
@@ -62,9 +70,11 @@ export class TestDataContext implements AbstractContext<TestDataContext>, OnDest
     () => ({
       template1: this.data1,
       template3: this.data3,
+      testChanges: this.onClick,
     }),
     () => ({
       template2: this.data2,
+      testChanges: this.otherAction,
     }),
   ]
 

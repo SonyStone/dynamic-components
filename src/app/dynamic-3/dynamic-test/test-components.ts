@@ -17,15 +17,15 @@ const testComponents = [
 @Data({ selector: 'test-components' })
 export class TestComponentsContext implements AbstractContext<TestComponentsContext>, OnDestroy {
 
-  type = 0;
+  type = 3;
 
   $implicit = testComponents[this.type];
 
   context$ = new BehaviorSubject<this>(this);
 
-  private subscription = timer(4000, 4000)
+  private subscription = timer(2000, 2000)
     .pipe(
-      // take(3),
+      // take(0),
     )
     .subscribe(() => this.next());
 

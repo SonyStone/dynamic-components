@@ -6,6 +6,7 @@ import { StoreModule } from 'store';
 
 import { DynamicTestComponent } from './dynamic-test.component';
 import { DynamicModule } from './dynamic.directive';
+import { Test1Module } from './test-1';
 
 const routes: Routes = [
   { path: '', component: DynamicTestComponent },
@@ -16,6 +17,7 @@ const routes: Routes = [
     [
       RouterModule.forChild(routes),
       CommonModule,
+      Test1Module,
     ],
     [
       StoreModule,

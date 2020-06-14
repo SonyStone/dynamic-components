@@ -44,8 +44,8 @@ export class Test4Component implements OnChanges, OnInit, OnDestroy {
   prop1: string;
 
   ngOnChanges({ template1, template2 }: SimpleChanges): void {
-    if (template1 && template2) {
-      this.prop1 = this.template1 + this.template2
+    if (template1 || template2) {
+      this.prop1 = `${this.template1} :: ${this.template2}`
     }
     // console.log(`Test4 On Changes`)
   }
