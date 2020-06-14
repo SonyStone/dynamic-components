@@ -1,18 +1,8 @@
 import { Compiler, Injectable, NgModuleFactory, Type } from '@angular/core';
+import { functionUnpacking } from 'dynamic';
 import { from, of, OperatorFunction, pipe } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { AsyncLike, switchToObservable } from 'store';
-
-// tslint:disable:ban-types
-const isFunctionNotClass = (func: unknown): func is (() => {}) => !/^class\s/.test(Function.prototype.toString.call(func));
-
-export const functionUnpacking = <F>(): OperatorFunction<(() => F) | F, any> =>
-  map((module) => (typeof module === 'function')
-    ? (isFunctionNotClass(module))
-      ? module()
-      : module
-    : module
-  );
 
 @Injectable({
   providedIn: 'root'

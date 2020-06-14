@@ -2,18 +2,15 @@
  * Public API Surface of store
  */
 
-export * from './lib/store.service';
+export { StoreService } from './lib/store.service';
 
-// export * from './commands';
+export { Store } from './lib/store.interface';
+export { GetDataDirective } from './lib/get-data.directive';
 
-export * from './lib/store.interface';
-export * from './lib/store-storage';
-export * from './lib/get-data.directive';
+export { ViewContextHandler } from './lib/view-context.service';
+export { StoreModule } from './lib/store.module';
 
-export * from './lib/view-context.service';
-export * from './lib/store.module';
-
-export * from './lib/data';
-export * from './lib/abstract.context';
+export { Data, DATA_MAP, DATA_INJECTOR } from './lib/data';
+export { AbstractContext, Updatetable } from './lib/abstract.context';
 
 export { switchToObservable, AsyncLike } from './lib/utils/switch-to-observable';

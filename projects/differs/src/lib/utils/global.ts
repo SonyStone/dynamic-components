@@ -1,3 +1,4 @@
+// tslint:disable:variable-name
 
 // TODO(jteplitz602): Load WorkerGlobalScope from lib.webworker.d.ts file #3492
 declare var WorkerGlobalScope: any /** TODO #9100 */;

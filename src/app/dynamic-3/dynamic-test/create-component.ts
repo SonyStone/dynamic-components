@@ -1,9 +1,8 @@
 import { Compiler, NgModuleFactory, NgModuleRef, Type, ViewContainerRef } from '@angular/core';
+import { functionUnpacking } from 'dynamic';
 import { from, of } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { switchToObservable } from 'store';
-
-import { functionUnpacking } from './module-compiler';
 
 export interface WithComponent<T> {
   component: Type<T>;

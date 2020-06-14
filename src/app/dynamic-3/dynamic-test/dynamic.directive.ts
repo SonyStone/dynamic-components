@@ -9,12 +9,11 @@ import {
   SimpleChanges,
   ViewContainerRef,
 } from '@angular/core';
+import { Context, DynamicComponentBindings } from 'dynamic';
 import { combineLatest, Subject, Subscription } from 'rxjs';
 import { filter, map, shareReplay } from 'rxjs/operators';
 
 import { WithComponent } from './create-component';
-import { Context } from './dynamic-component-factory/context.interface';
-import { DynamicComponentBindings } from './dynamic-component-factory/dynamic-component-factory';
 import { ModuleCompiler } from './module-compiler';
 
 export const components = {
