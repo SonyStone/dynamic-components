@@ -1,0 +1,83 @@
+<article>
+  <div class="page-actions"> <a href="https://github.com/reactivex/rxjs/edit/master/src/internal/observable/defer.ts?message=docs(index)%3A%20describe%20your%20change...#L5-L67"
+       aria-label="Suggest Edits"
+       title="Suggest Edits"><i class="material-icons"
+         aria-hidden="true"
+         role="img">mode_edit</i></a> <a href="https://github.com/reactivex/rxjs/tree/6.5.5/src/internal/observable/defer.ts#L5-L67"
+       aria-label="View Source"
+       title="View Source"><i class="material-icons"
+         aria-hidden="true"
+         role="img">code</i></a> </div>
+  <div class="breadcrumb">
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item": { "@id": "https://angular.io//api", "name": "API" }
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item": { "@id": "https://angular.io/api/index", "name": "rxjs/index" }
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item": { "@id": "https://angular.io/api/index/function/defer", "name": "defer" }
+          }
+        ]
+      }
+
+    </script>
+    <a href="/api">API</a> / <a href="api/index">rxjs/index</a>
+  </div>
+
+  <header class="api-header">
+    <h1>defer</h1> <label class="api-type-label function">function</label> <label class="api-status-label stable">stable</label>
+  </header>
+  <aio-toc class="embedded"></aio-toc>
+  <div class="api-body">
+    <p class="short-description"></p>
+    <p>Creates an Observable that, on subscribe, calls an Observable factory tomake an Observable for each new Observer.</p>
+    <p></p>
+    <code-example language="ts"
+                  hidecopy="true"
+                  class="no-box api-heading"> defer&#x3C;R extends ObservableInput&#x3C;any> | void>(observableFactory: () => R): Observable&#x3C;ObservedValueOf&#x3C;R>></code-example>
+    <h4 class="no-anchor">Parameters</h4>
+    <table class="is-full-width list-table parameters-table function-overload-parameters">
+      <tbody>
+        <tr class="function-overload-parameter">
+          <td class="param-name"><a id=""></a>observableFactory</td>
+          <td class="param-description">
+            <p> The Observablefactory function to invoke for each Observer that subscribes to the outputObservable. May also return a Promise, which will be converted on the flyto an Observable.</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h4 class="no-anchor">Returns</h4>
+    <p><code>Observable&#x3C;ObservedValueOf&#x3C;R>></code>: An Observable whose Observers' subscriptions triggeran invocation of the given Observable factory function.</p>
+    <section class="description">
+      <h2>Description</h2>
+      <p><span class="informal">Creates the Observable lazily, that is, only when itis subscribed.</span></p>
+      <p><img src="/assets/images/marble-diagrams/defer.png"
+             width="100%"
+             alt="defer marble diagram"></p>
+      <p><code>defer</code> allows you to create the Observable only when the Observersubscribes, and create a fresh Observable for each Observer. It waits untilan Observer subscribes to it, and then it generates an Observable,typically with an Observable factory function. It does this afresh for eachsubscriber, so although each subscriber may think it is subscribing to thesame Observable, in fact each subscriber gets its own individualObservable.</p>
+      <h2>Example</h2>
+      <h3>Subscribe to either an Observable of clicks or an Observable of interval, at random</h3>
+      <code-example language="ts">import { defer, fromEvent, interval } from 'rxjs';const clicksOrInterval = defer(function () { return Math.random() > 0.5 ? fromEvent(document, 'click') : interval(1000);});clicksOrInterval.subscribe(x => console.log(x));// Results in the following behavior:// If the result of Math.random() is greater than 0.5 it will listen// for clicks anywhere on the "document"; when document is clicked it// will log a MouseEvent object to the console. If the result is less// than 0.5 it will emit ascending numbers, one every second(1000ms).</code-example>
+    </section>
+    <section class="see-also">
+      <h2>See Also</h2>
+      <ul>
+        <li><a href="api/index/class/Observable"><code>Observable</code></a></li>
+      </ul>
+    </section>
+  </div>
+</article>
+<!-- links to this doc: - api/index - api/index/function/iif - api/index/function/using-->
+<!-- links from this doc: - /api - api/index - api/index/class/Observable - https://github.com/reactivex/rxjs/edit/master/src/internal/observable/defer.ts?message=docs(index)%3A%20describe%20your%20change...#L5-L67 - https://github.com/reactivex/rxjs/tree/6.5.5/src/internal/observable/defer.ts#L5-L67-->

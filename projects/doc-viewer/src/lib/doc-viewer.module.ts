@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 
-import { DocViewerComponent } from './doc-viewer.component';
+import { DocViewerDirective } from './doc-viewer.directive';
 
 @NgModule({
   imports: [],
   declarations: [
-    DocViewerComponent,
+    DocViewerDirective,
   ],
   exports: [
-    DocViewerComponent,
+    DocViewerDirective,
   ],
 })
 export class DocViewerModule { }

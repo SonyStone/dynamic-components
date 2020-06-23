@@ -1,1 +1,9 @@
-<app-doc-viewer [doc]="currentDocument"></app-doc-viewer>
+<button (click)="previous()">previous</button>
+<button (click)="next()">next</button>
+
+<instruction-style>
+  <div>
+    <ng-container docViewer [doc]="currentDocument"></ng-container>
+  </div>
+
+</instruction-style>

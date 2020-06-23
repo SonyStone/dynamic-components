@@ -30,4 +30,4 @@ const routes: Routes = [
     DynamicTestComponent,
   ],
 })
-export class DynamicTestModule { }
+export class DynamicTestModule {}

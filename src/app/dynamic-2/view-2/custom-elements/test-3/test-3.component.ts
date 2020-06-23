@@ -1,19 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, NgModule, OnDestroy, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, NgModule, Type } from '@angular/core';
 import { WithComponent } from 'dynamic';
 
 
 @Component({
-  selector: 'app-test-1',
+  selector: 'app-test-3',
   template: `
-  Test 1
+  Test 3
   <ng-content select="div"></ng-content>
   <input value="{{ number }}">
   <ng-content></ng-content>
   `,
   styles: [`
     :host {
-      background-color: orange;
+      background-color: gray;
       display: block;
       margin: 1rem;
       padding: 1rem;
@@ -23,18 +23,10 @@ import { WithComponent } from 'dynamic';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Test1Component implements OnDestroy {
+export class Test3Component {
   number = (Math.random() * 100).toFixed();
 
   @Input() children: any;
-
-  constructor() {
-    console.log(`constructor :: Test1Component`);
-  }
-
-  ngOnDestroy(): void {
-    console.log(`destroy :: Test1Component`);
-  }
 }
 
 @NgModule({
@@ -42,12 +34,12 @@ export class Test1Component implements OnDestroy {
     CommonModule,
   ],
   declarations: [
-    Test1Component
+    Test3Component
   ],
   exports: [
-    Test1Component,
+    Test3Component,
   ],
 })
-export class Test1Module implements WithComponent {
-  component: Type<any> = Test1Component;
+export class Test3Module implements WithComponent {
+  component: Type<any> = Test3Component;
 }

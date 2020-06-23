@@ -28,6 +28,8 @@ import { randomNumber } from './random-number';
   <ng-content></ng-content>
 
   <button (click)="changeTime()">time Changes</button>
+
+  <app-sub-test></app-sub-test>
   `,
   styles: [`
     :host {
@@ -75,11 +77,20 @@ export class Test1Component implements OnChanges, OnInit, OnDestroy {
   }
 }
 
-
+@Component({
+  selector: 'app-sub-test',
+  template: `<h2>sub test</h2>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class SubTest1Component {}
 
 @NgModule({
+  imports: [],
+  declarations: [
+    Test1Component,
+    SubTest1Component,
+  ],
   exports: [Test1Component],
-  declarations: [Test1Component],
 })
 export class Test1Module {
   component: Type<any> = Test1Component;

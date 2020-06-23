@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { ViewComponent } from './view.component';
-import { ViewModule } from './view.module';
+import { View2Module } from './view.module';
 
 const routes: Routes = [
   {
@@ -15,8 +15,8 @@ const routes: Routes = [
   imports: [
     RouterModule.forChild(routes),
     [
-      ViewModule,
+      View2Module,
     ],
   ],
 })
-export class ViewRouteModule {}
+export class View2RouteModule {}

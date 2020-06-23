@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, NgModule, OnDestroy, Type } from '@angular/core';
+import { WithComponent } from 'dynamic';
 
-import { WithCustomElementComponent } from '../../doc-viewer/element-registry';
 
 @Component({
   selector: 'app-test-2',
@@ -52,6 +52,6 @@ export class Test2Component implements OnDestroy {
     Test2Component,
   ],
 })
-export class Test2Module implements WithCustomElementComponent {
-  customElementComponent: Type<any> = Test2Component;
+export class Test2Module implements WithComponent {
+  component: Type<any> = Test2Component;
 }

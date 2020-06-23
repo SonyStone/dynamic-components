@@ -1,0 +1,584 @@
+<h1 id="how-to-place-your-goods">Как разместить свои объявления на Biztogo с помощью массовой загрузки</h1>
+
+<h2 id="create-a-price-list">Создание прайс-листа</h2>
+
+<p>
+  <b>Прайс-лист</b> — это список всех позиций, которые вы планируете разместить на портале Biztogo,
+  с дополнительными сведениями о них. Такой список необходимо оформить по правилам Biztogo.
+</p>
+
+<h3 class="icon-border"
+    id="how-to-choose-a-price-list-format"
+    style="--icon: url('/images/svg/empty-documents.svg')">Как выбрать формат прайс-листа</h3>
+
+<p>Допустимые форматы прайс-листа для Biztogo:</p>
+
+<blockquote>
+  <ul class="expressive-list">
+    <li style="--icon: url('/images/svg/ic_profile_info_Default .svg')">
+      <a href="dynamic-2/view#xml-csv-format">
+        <b>Формат XML</b>
+      </a>
+    </li>
+    <li style="--icon: url('/images/svg/ic-car-default.svg')">
+      <a href="dynamic-2/view#xml-csv-format">
+        <b>Формат CSV</b>
+      </a>
+    </li>
+    <li style="--icon: url('/images/svg/clock.svg')">
+      <a href="dynamic-2/view#xls-format">
+        <b>Формат XMS</b>
+      </a>
+    </li>
+  </ul>
+
+  <p>
+    Подготовить прайс-лист в формате XML сложнее, чем в CSV или Excel,
+    однако XML предлагает больше всего возможностей и преимуществ.
+  </p>
+</blockquote>
+
+<h3 class="icon-border"
+    id="how-to-create-a-price-list"
+    style="--icon: url('/images/svg/ic_bag_Default.svg')">Как создать прайс-лист</h3>
+
+<p>Создать прайс-лист можно несколькими способами:</p>
+
+<blockquote>
+  <ul class="navigation-list">
+    <li>
+      <a [routerLink]="['./']"
+         fragment="unload-from-CMS">
+        <b>Выгрузить из CMS</b>
+      </a>
+    </li>
+    <li>
+      <a [routerLink]="['./']"
+         fragment="prepare-using-special-software">
+        <b>Подготовить с помощью специального ПО</b>
+      </a>
+    </li>
+    <li>
+      <a [routerLink]="['./']"
+         fragment="compose-by-hand">
+        <b>Составить вручную</b>
+      </a>
+    </li>
+  </ul>
+</blockquote>
+
+<h4 class="marker-border"
+    id="unload-from-CMS">Выгрузить из CMS</h4>
+
+<p>Если ваш магазин использует CMS, вы можете выгрузить прайс-лист в подходящем для Biztogo формате.</p>
+
+<h4 class="marker-border"
+    id="prepare-using-special-software">Подготовить с помощью специального ПО</h4>
+
+<p>Стороннее или разработанное самостоятельно ПО позволит:</p>
+
+<ul class="marker-list">
+  <li>экспортировать информацию из базы данных и создать файл в выбранном формате;</li>
+  <li>преобразовать ранее созданный прайс-лист в файл нужного формата и вида.</li>
+</ul>
+
+<blockquote>
+  <p>
+    <b>
+      Это трудоемкий способ.
+      <br>
+      Рекомендуем воспользоваться им, если вы планируете:
+    </b>
+  </p>
+  <p>
+    Разместить на Biztogo большое количество товаров;<br>
+    Часто и автоматически обновлять данные, размещенные на портале.
+  </p>
+</blockquote>
+
+<h4 class="marker-border"
+    id="compose-by-hand">Составить вручную</h4>
+
+<p>
+  Простой способ — составить прайс-лист вручную, например, в программе <b>Microsoft Excel</b>
+  или <b>OpenOffice</b>. Такой вариант подойдет, если вы:
+</p>
+
+<ul class="marker-list">
+  <li>планируете размещать на портале небольшой ассортимент товаров;</li>
+  <li>
+    не имеете возможности автоматически выгружать информацию о товарах в подходящем для Biztogo формате
+    и виде.
+  </li>
+</ul>
+
+<blockquote>
+  <p>
+    <b>Отслеживать актуальность и обновлять такой прайс-лист нужно будет самостоятельно.</b>
+  </p>
+</blockquote>
+
+<h3 class="icon-border"
+    id="category-directories"
+    style="--icon: url('/images/svg/ic_ad_Default.svg')">Справочники категорий</h3>
+
+<blockquote>
+  <ul class="tag-list">
+    <li><a href="./dictionary/load/product-categories"
+         download><b>Единицы измерения номенклатуры</b></a></li>
+    <li><a href="./dictionary/load/spec-tech-category"
+         download><b>Категории грузов</b></a></li>
+    <li><a href="./dictionary/load/logistics-types"
+         download><b>Категории транспорта</b></a></li>
+    <li><a href="./dictionary/load/logistics-calculus"
+         download><b>Единицы измерения для транспорта</b></a></li>
+  </ul>
+</blockquote>
+
+<h3 class="icon-border"
+    id="how-to-load-a-price-list"
+    style="--icon: url('/images/svg/empty-documents.svg')">Как загрузить прайс-лист</h3>
+
+<p>
+  Загрузить прайс-лист на портал Biztogo можно в личном кабинете пользователя. Для этого при
+  создании объявления нужно выбрать <b>функцию массовой загрузки</b>.
+</p>
+
+<p>Размер файла не должен превышать <b>100 Мб</b>
+</p>
+
+<ol>
+  <blockquote class="with-picture">
+    <li>
+      <p>
+        Перейдите на страницу «<b>Добавить объявление</b>», нажмите на кнопку «<b>Массовая
+          загрузка</b>» и выберите один из разделов портала для загрузки объявлений
+      </p>
+    </li>
+
+    <picture class="picture">
+      <source media="(max-width: 1200px)"
+              srcset="images/instructions/browser-433w.png">
+      <source media="(min-width: 1500px)"
+              srcset="images/instructions/browser-1299w.png">
+      <img src="images/instructions/browser-866w.png">
+    </picture>
+  </blockquote>
+  <blockquote class="with-picture">
+    <li>
+      <p>
+        Нажмите на кнопку «<b>Загрузить файл</b>» и в появившемся окне выберите файл для загрузки или
+        введите ссылку на размещенный в сети файл;
+      </p>
+    </li>
+
+    <picture class="picture">
+      <source media="(max-width: 1200px)"
+              srcset="images/instructions/browser_2-433w.png">
+      <source media="(min-width: 1500px)"
+              srcset="images/instructions/browser_2-1299w.png">
+      <img src="images/instructions/browser_2-866w.png">
+    </picture>
+  </blockquote>
+  <blockquote>
+    <li>
+      <p>Нажмите кнопку «<b>Продолжить</b>».</p>
+    </li>
+  </blockquote>
+</ol>
+
+<h4 id="by-uploading-the-price-list-you-can">Загрузив прайс-лист, вы сможете:</h4>
+
+<ul class="marker-list">
+  <li>проверить его на наличие ошибок до публикации на портале;</li>
+  <li>
+    обновить и сохранить прайс-лист на портале, чтобы опубликовать новые предложения или новую информацию
+    по старым предложениям;
+  </li>
+  <li>добавить еще один или несколько новых прайс-листов.</li>
+</ul>
+
+<h3 class="icon-border"
+    id="how-to-update-the-price-list"
+    style="--icon: url('/images/svg/emty-feedbacks.svg')">Как обновить прайс-лист</h3>
+
+<p>
+  Информация в прайс-листе должна быть актуальной и совпадать с информацией на вашем сайте, чтобы
+  пользователи Biztogo видели корректную цену и параметры предложения.
+</p>
+
+<p>
+  При обновлении прайс-листа внимательно <b>следите за указанием верных уникальных идентификаторов
+    позиций</b>. При несовпадении идентификаторов возможно как изменение неверных позиций, так и создание
+  новых, нежелательных объявлений.
+</p>
+
+<h4 id="the-number-of-positions-in-the-price-list"
+    class="marker-border">Количество позиций в прайс-листе</h4>
+
+<p>
+  Некоторые прайс-листы могут содержать до 500 тысяч товаров. Такие прайс-листы в течение нескольких часов
+  генерируются на стороне магазина и потом долго загружаются на портал Biztogo. В результате на портале
+  в течение некоторого времени может отображаться старая цена или товары и услуги, которых уже нет в наличии.
+</p>
+
+<h4 class="marker-border"
+    id="recommendations">Рекомендации</h4>
+
+<ul class="marker-list">
+  <li>
+    Разделите прайс-лист на несколько файлов поменьше. Например, прайс-лист с 500 тысячами позиций лучше
+    разделить на пять файлов по 100 тысяч позиций.
+  </li>
+  <li>
+    Соберите предложения, которые часто корректируются, в одном прайс-листе и обновляйте его чаще других.
+  </li>
+  <li>
+    Портал быстрее загружает небольшие прайс-листы и может обрабатывать несколько прайс-листов одновременно.
+    Чтобы загрузить несколько прайс-листов, на странице «Добавить объявление» выберите «Массовая загрузка»
+    и загрузите поочередно все необходимые файлы.
+  </li>
+</ul>
+
+<h3 class="icon-border"
+    id="how-to-check-the-price-list"
+    style="--icon: url('/images/svg/ic_edit_Default.svg')">Как проверить прайс-лист</h3>
+
+<p>
+  После загрузки прайс-листа в базу Biztogo на странице отобразятся ваши данные в виде редактируемой
+  таблицы, в которой позиции с ошибками будут отмечены <b class="red">красным</b> цветом. Чтобы
+  внести изменения, дважды кликните левой кнопкой мыши на нужной позиции и исправьте текст.
+  <br>
+  Также вы можете сортировать и фильтровать таблицы, чтобы проверять загруженный прайс-лист было удобно.
+</p>
+
+<h3 class="icon-border"
+    id="how-to-complete-verification-and-post-offers"
+    style="--icon: url('/images/svg/empty-documents.svg')">
+  Как завершить проверку и опубликовать предложения
+</h3>
+
+<h4 class="marker-border"
+    id="completing-verification-without-publishing-to-biztogo">Завершение проверки без публикации на портале <b>Biztogo</b>
+</h4>
+
+<p>Нажмите кнопку «<b>Отмена</b>», если вы:</p>
+
+<ul class="marker-list">
+  <li>планировали только проверить прайс-лист;</li>
+  <li>не хотите, чтобы данные из этого прайс-листа были опубликованы на портале.</li>
+</ul>
+
+<h4 class="marker-border"
+    id="completion-of-verification-and-publication-on-biztogo">Завершение проверки и публикация на портале Biztogo</h4>
+
+<p>
+  Если вы хотите, чтобы проверенные предложения попали в базу данных Biztogo и были опубликованы на портал,
+  нажмите кнопку «<b>Опубликовать</b>».
+</p>
+
+<h2 id="xls-format">Формат XLS (Excel)</h2>
+
+<p>
+  Прайс-лист можно подготовить в программе Microsoft Excel, а затем проверить его и выгрузить на площадку
+  Biztogo. Это удобно, если вы решили составить прайс-лист вручную.
+</p>
+
+<p>
+  Если вы планируете автоматически экспортировать прайс-лист в формате XLS (Excel) из вашей базы данных,
+  он должен полностью соответствовать шаблону Biztogo.
+</p>
+
+<ol>
+  <blockquote>
+    <li>
+      <p>
+        <b>Скачайте шаблон для соответствующего раздела</b>
+      </p>
+
+    </li>
+
+    <div class="list">
+      <div *ngFor="let section of sections">
+        <mat-icon svgIcon="ic-logistics-small"></mat-icon>
+        <span>Грузы</span>
+        <button mat-icon-button>
+          <mat-icon fontSet="fontawesome"
+                    fontIcon="fa-download"></mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <p>Для каждого из разделов портала используйте специально созданный для него шаблон.</p>
+  </blockquote>
+
+  <blockquote>
+    <li>
+      <div>
+        <p>
+          <b>Добавьте ваши товары и сохраните изменения</b>
+        </p>
+
+        <p>Товары добавляйте прямо в шаблон Biztogo, не нужно создавать отдельный файл.</p>
+      </div>
+    </li>
+  </blockquote>
+
+  <ul class="marker-list">
+    <li>
+      При начале работы с файлом могут отобразиться панели с предупреждениями. Нажмите «Разрешить
+      редактирование», «Включить содержимое» и т. д. Подробнее здесь: Вопросы и ответы по Excel.
+    </li>
+    <li>
+      Откройте лист «Товары» и добавьте ваши товары. Первые строки заполнены для примера. Отредактируйте
+      их, указав свои позиции.
+    </li>
+    <li>
+      Чтобы правильно заполнить поля, сверяйтесь с листом «Как заполнять поля внутри шаблона» или найдите
+      разделы «Поля стандартного шаблона», «Поля шаблонов для книг, музыки и видео» в категории «Помощь».
+    </li>
+  </ul>
+
+  <blockquote>
+    <li>
+      <div>
+        <p>
+          <b>Загрузите прайс-лист на Biztogo</b>
+        </p>
+
+        <p>Загрузите прайс-лист на портал в личном кабинете Biztogo.</p>
+      </div>
+    </li>
+  </blockquote>
+</ol>
+
+<h4 class="marker-border">Описание полей шаблонов</h4>
+
+<h2 id="xml-csv-format">Форматы XML и CSV</h2>
+
+<p>
+  Стандарт XML (eXtensible Market Language) был разработан как язык с простым формальным синтаксисом.
+  Он подходит для создания и обработки документов программами и при этом удобен для чтения и создания
+  документов человеком. Этот формат предоставляет больше возможностей и преимуществ, чем XLS или CSV.
+</p>
+
+<h4 class="marker-border"
+    id="xml-file-requirements">Требования к XML-файлу</h4>
+
+<p>
+  В XML нельзя использовать непечатаемые символы с ASCII-кодами от 0 до 31 (за исключением символов с
+  кодами 9, 10, 13 — табуляция, перевод строки, возврат каретки).
+</p>
+
+<blockquote>
+
+  <table>
+    <thead>
+      <tr>
+        <th>
+          <b>Символ в тексте</b>
+        </th>
+        <th>
+          <b>Символ в тексте</b>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>'</th>
+        <th>&amp;quot;</th>
+      </tr>
+      <tr>
+        <th>&amp;</th>
+        <th>&amp;amp;</th>
+      </tr>
+      <tr>
+        <th>&gt;</th>
+        <th>&amp;gt;</th>
+      </tr>
+      <tr>
+        <th>&lt;</th>
+        <th>&amp;lt;</th>
+      </tr>
+      <tr>
+        <th>&apos;</th>
+        <th>&amp;apos;</th>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Символы &quot; &amp; &gt; &lt; &apos; можно использовать в блоке CDATA в описании предложения.</p>
+
+  <P>Допустимые кодировки XML-файла: UTF-8, windows-1251.</P>
+
+</blockquote>
+
+<h4 class="marker-border"
+    id="xml-file-structure">Структура XML-файла</h4>
+
+<pre>
+<code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;xml_catalog date="2017-02-05 17:22"&gt;
+    &lt;Goods&gt;
+      ...     
+    &lt;/Goods&gt;
+&lt;/xml_catalog&gt;</code>
+</pre>
+
+<blockquote>
+  <p>
+    <b>Элементы и их описание</b>
+  </p>
+
+  <dl>
+    <dt>xml header</dt>
+    <dd>
+      Стандартный XML-заголовок. Должен начинаться с первой строки, с нулевого символа.
+    </dd>
+
+    <dt>xml_catalog</dt>
+    <dd>
+      Любой XML-документ может содержать только один корневой элемент. В качестве корневого используем
+      элемент &lt;xml_catalog&gt;. Атрибут date-элемента &lt;xml_catalog&gt; должен соответствовать
+      дате и времени генерации XML-файла на стороне компании. Дата должна иметь формат YYYY-MM-DD hh:mm
+    </dd>
+
+    <dt>shop</dt>
+    <dd>
+      Стандартный XML-заголовок. Должен начинаться с первой строки, с нулевого символа.
+    </dd>
+  </dl>
+
+</blockquote>
+
+<blockquote>
+  <p>
+    <b>Примеры XML файлов:</b>
+  </p>
+
+  <div class="list">
+    <div *ngFor="let section of sections">
+      <mat-icon svgIcon="ic-logistics-small"></mat-icon>
+      <span>Грузы</span>
+      <button mat-icon-button>
+        <mat-icon fontSet="fontawesome"
+                  fontIcon="fa-download">
+        </mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <p>
+    Текстовый формат с разделителями удобен при создании прайс-листа из базы данных или редакторов
+    электронных таблиц, таких как Exсel, OpenOffice, Google Docs.
+  </p>
+</blockquote>
+
+<h4 class="marker-border"
+    id="requirements-for-the-price-list-in-text-format">Требования к прайс-листу в текстовом формате</h4>
+
+<ul class="marker-list">
+  <li>Одна строка файла должна соответствовать одной строке электронной таблицы.</li>
+  <li>
+    качестве разделителя полей можно использовать запятую или точку с запятой (CSV), а также символ
+    табуляции (TSV).
+  </li>
+  <li>Одна строка файла должна содержать описание одного предложения.</li>
+  <li>Первая строка файла должна содержать названия полей.</li>
+  <li>Кодировка файла должна быть UTF-8</li>
+  <li>Нельзя использовать табуляцию и перенос строки внутри полей.</li>
+  <li>Файл не должен содержать пустых столбцов.</li>
+  <li>
+    Порядок столбцов не обязательно должен быть строгим, но должен соблюдаться в пределах одного файла.
+  </li>
+</ul>
+
+<blockquote>
+  <p>
+    <b>Примеры прайс-листов:</b>
+  </p>
+
+  <div class="list">
+    <div *ngFor="let section of sections">
+      <mat-icon svgIcon="ic-logistics-small"></mat-icon>
+      <span>Грузы</span>
+      <button mat-icon-button>
+        <mat-icon fontSet="fontawesome"
+                  fontIcon="fa-download">
+        </mat-icon>
+      </button>
+    </div>
+  </div>
+
+</blockquote>
+
+<h2 id="faq">F.A.Q.</h2>
+
+<blockquote>
+  <expansion-panel>
+    <expansion-panel-header>
+      <p>У нас уже есть прайс-лист, можно ли использовать его?</p>
+    </expansion-panel-header>
+
+    <p class="expansion-panel-body">
+      Скорее всего, нет. Прайс-лист должен быть создан в одном из указанных форматов (XML, CSV, Excel)
+      и соответствовать правилам Biztogo. Если вы выгружаете его из CMS, то, возможно, он подойдет.
+    </p>
+  </expansion-panel>
+</blockquote>
+
+<blockquote>
+  <expansion-panel>
+    <expansion-panel-header>
+      <p>Может ли портал сам собирать данные о товарах с сайта магазина?</p>
+    </expansion-panel-header>
+    <p class="expansion-panel-body">Да</p>
+  </expansion-panel>
+</blockquote>
+
+<blockquote>
+  <expansion-panel>
+    <expansion-panel-header>
+      <p>В прайс-листе обнаружены ошибки. Что делать?</p>
+    </expansion-panel-header>
+    <p class="expansion-panel-body">
+      Исправьте их, используя таблицу. Если вы хотите получить консультацию по ошибкам, отправьте
+      запрос через форму обратной связи или по электронной почте support@biztogo.com.
+    </p>
+  </expansion-panel>
+</blockquote>
+
+<blockquote>
+  <expansion-panel>
+    <expansion-panel-header>
+      <p>Можно публиковать прайс-лист, если в нем есть ошибки?</p>
+    </expansion-panel-header>
+    <p class="expansion-panel-body">
+      Да, если прайс-лист не содержит критичных ошибок, а только ошибки в отдельных предложениях.
+      На платформе будут опубликованы все предложения без ошибок. Предложения с ошибками
+      опубликованы не будут (будут проигнорированы)
+    </p>
+  </expansion-panel>
+</blockquote>
+
+<blockquote>
+  <expansion-panel>
+    <expansion-panel-header>
+      <p>Когда новый прайс-лист появится на портале?</p>
+    </expansion-panel-header>
+    <p class="expansion-panel-body">Моментально.</p>
+  </expansion-panel>
+</blockquote>
+
+<blockquote>
+  <expansion-panel>
+    <expansion-panel-header>
+      <p>Как часто нужно обновлять прайс-лист?</p>
+    </expansion-panel-header>
+    <p class="expansion-panel-body">
+      Если вы загружаете прайс-лист в личном кабинете или выгружаете напрямую из программы
+      Microsoft Excel, его необходимо обновлять минимум один раз в 60 дней, иначе публикация
+      объявлений на платформе будет приостановлена.
+    </p>
+  </expansion-panel>
+</blockquote>

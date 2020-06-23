@@ -31,7 +31,7 @@ import { Layouts } from './layout.interface';
 })
 export class DynamicModule {
 
-  static forRoot(layouts?: Layouts, config: DynamicOption = {}): ModuleWithProviders<DynamicModule> {
+  static forRoot(layouts?: Layouts | any, config: DynamicOption = {}): ModuleWithProviders<DynamicModule> {
     return {
       ngModule: DynamicModule,
       providers: [

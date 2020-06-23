@@ -49,6 +49,13 @@
       // ],
       "dynamic": [
         "projects/dynamic/src/public-api.ts"
+      ],
+      // "doc-viewer": [
+      //   "dist/doc-viewer/doc-viewer",
+      //   "dist/doc-viewer"
+      // ],
+      "doc-viewer": [
+        "projects/doc-viewer/src/public-api.ts",
       ]
     }
   },

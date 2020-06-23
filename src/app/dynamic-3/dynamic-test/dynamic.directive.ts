@@ -1,36 +1,26 @@
 import {
+  ComponentFactoryResolver,
   Directive,
   Injector,
   Input,
   NgModule,
-  NgModuleRef,
   OnChanges,
   OnDestroy,
   SimpleChanges,
+  Type,
   ViewContainerRef,
 } from '@angular/core';
 import { Context, DynamicComponentBindings } from 'dynamic';
 import { combineLatest, Subject, Subscription } from 'rxjs';
 import { filter, map, shareReplay } from 'rxjs/operators';
 
-import { WithComponent } from './create-component';
-import { ModuleCompiler } from './module-compiler';
-
-export const components = {
-  'test-1': () => import('./test-1').then((m) => m.Test1Module),
-  'test-2': () => import('./test-2').then((m) => m.Test2Module),
-  'test-3': () => import('./test-3').then((m) => m.Test3Module),
-  'test-4': () => import('./test-4').then((m) => m.Test4Module),
-  'test-5': () => import('./test-5').then((m) => m.Test5Module),
-}
-
 @Directive({
   selector: '[dynamic]',
 })
-export class DynamicDirective implements OnChanges, OnDestroy {
+export class DynamicDirective<C> implements OnChanges, OnDestroy {
 
-  @Input('dynamic') selector: string | undefined;
-  private selectorSubject = new Subject<string>();
+  @Input('dynamic') component: Type<C> | undefined;
+  private selectorSubject = new Subject<Type<C>>();
 
   @Input('dynamicContext') context: Context | undefined;
   private contextSubject = new Subject<Context>();
@@ -38,11 +28,7 @@ export class DynamicDirective implements OnChanges, OnDestroy {
   private dynamicComponentBindings = new DynamicComponentBindings<any>();
 
   componentRef$ = this.selectorSubject.pipe(
-    map((selector) => components[selector]),
-    filter((moduleOrFactory) => !!moduleOrFactory),
-    this.moduleCompiler.compile(),
-    map((moduleFactory) => moduleFactory.create(this.moduleRef.injector)),
-    map((moduleRef) => moduleRef.componentFactoryResolver.resolveComponentFactory(moduleRef.instance.component)),
+    map((component) => this.componentFactoryResolver.resolveComponentFactory(component)),
     map((componentFactory) => this.dynamicComponentBindings.set(componentFactory, this.injector)),
     shareReplay(),
   );
@@ -69,16 +55,15 @@ export class DynamicDirective implements OnChanges, OnDestroy {
     )
 
   constructor(
+    private componentFactoryResolver: ComponentFactoryResolver,
     private injector: Injector,
-    private moduleRef: NgModuleRef<WithComponent<any>>,
     private viewContainer: ViewContainerRef,
-    private moduleCompiler: ModuleCompiler<WithComponent<any>>,
   ) {}
 
-  ngOnChanges({ selector, context }: SimpleChanges): void {
-    if (selector && selector.currentValue !== selector.previousValue) {
+  ngOnChanges({ component, context }: SimpleChanges): void {
+    if (component && component.currentValue !== component.previousValue) {
 
-      this.selectorSubject.next(this.selector);
+      this.selectorSubject.next(this.component);
     }
 
     if (context) {
