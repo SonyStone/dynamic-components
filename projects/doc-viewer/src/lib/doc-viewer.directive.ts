@@ -1,20 +1,30 @@
-import { Directive, ElementRef, EventEmitter, Inject, Input, OnDestroy, Optional, Output, Renderer2 } from '@angular/core';
-import { WebComponentLoader } from 'dynamic';
-import { forkJoin, Observable, pipe, throwError } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
+import {
+  Directive,
+  ElementRef,
+  EventEmitter,
+  Inject,
+  Injector,
+  Input,
+  OnDestroy,
+  Optional,
+  Output,
+  PLATFORM_ID,
+  Renderer2,
+} from '@angular/core';
+import { CustomElementLoader } from 'custom-element';
+import { forkJoin, Observable, pipe } from 'rxjs';
 import { catchError, mapTo, switchMap, tap } from 'rxjs/operators';
 
 import { animateProp } from './animate-prop';
-import { CONSOLE } from './console';
+import { CONSOLE } from './console.injection-token';
 import { DocumentContents } from './document-contents.interface';
+import { DocumentView } from './document-view';
 import { TARGET_ELEMENT_PARSER, TargetElementParser } from './target-element-parser';
 import { VOID } from './utils/void';
 
 // Constants
 export const NO_ANIMATIONS = 'no-animations';
-
-// Initialization prevents flicker once pre-rendering is on
-const initialDocViewerElement = document.querySelector('aio-doc-viewer');
-const initialDocViewerContent = initialDocViewerElement ? initialDocViewerElement.innerHTML : '';
 
 @Directive({
   selector: '[docViewer]',
@@ -28,7 +38,9 @@ export class DocViewerDirective implements OnDestroy, TargetElementParser {
   private docContents$ = new EventEmitter<DocumentContents>();
 
   protected currViewContainer: HTMLElement = this.renderer.createElement('div');
-  protected nextViewContainer: HTMLElement = this.renderer.createElement('div');
+
+  private view = new DocumentView()
+    .set(this.renderer.createElement('div'));
 
   @Input()
   set doc(newDoc: DocumentContents) {
@@ -57,22 +69,27 @@ export class DocViewerDirective implements OnDestroy, TargetElementParser {
 
   private subscription = this.docContents$
     .pipe(
-      switchMap(newDoc => this.render(newDoc)),
+      tap((newDoc) => {
+        this.view.update(newDoc)
+      }),
+      switchMap(() => this.render(this.view)),
     )
     .subscribe();
 
   constructor(
     elementRef: ElementRef,
-    @Inject(CONSOLE) private console: Console,
-    private componentLoader: WebComponentLoader,
     private renderer: Renderer2,
+    private elementLoader: CustomElementLoader,
+    private injector: Injector,
+    @Inject(CONSOLE) private console: Console,
     @Optional() @Inject(TARGET_ELEMENT_PARSER) private parsers: TargetElementParser[] | undefined,
+    @Inject(PLATFORM_ID) private platformId: string
   ) {
     this.hostElement = elementRef.nativeElement;
     this.hostElement = this.renderer.parentNode(this.hostElement);
 
     // Security: the initialDocViewerContent comes from the prerendered DOM and is considered to be secure
-    this.hostElement.innerHTML = initialDocViewerContent;
+    this.hostElement.innerHTML = '';
 
     if (this.hostElement.firstElementChild) {
       this.currViewContainer = this.hostElement.firstElementChild as HTMLElement;
@@ -84,18 +101,18 @@ export class DocViewerDirective implements OnDestroy, TargetElementParser {
     this.dispose();
   }
 
-  prepare(targetElem: HTMLElement, docId: string): Observable<void> {
+  prepare(container: DocumentView): Observable<void> {
     return this.parsers
-      ? forkJoin(this.parsers?.map(parser => parser.prepare(targetElem, docId)))
+      ? forkJoin(this.parsers?.map(parser => parser.prepare(container)))
           .pipe(mapTo(undefined))
       : VOID;
   }
 
   execute(): Observable<void> {
     return this.parsers
-    ? forkJoin(this.parsers?.map(parser => parser.execute()))
-        .pipe(mapTo(undefined))
-    : VOID;
+      ? forkJoin(this.parsers?.map(parser => parser.execute()))
+          .pipe(mapTo(undefined))
+      : VOID;
   }
 
 
@@ -110,29 +127,24 @@ export class DocViewerDirective implements OnDestroy, TargetElementParser {
   /**
    * Add doc content to host element and build it out with embedded components.
    */
-  protected render(doc: DocumentContents): Observable<void> {
-
-    // this.robotsService.setNoIndex(doc.id === DOCUMENT_ID.FILE_NOT_FOUND || doc.id === DOCUMENT_ID.FETCHING_ERROR);
-
+  protected render(container: DocumentView): Observable<void> {
     return VOID.pipe(
-        // Security: `doc.contents` is always authored by the documentation team
-        //           and is considered to be safe.
-        tap(() => this.nextViewContainer.innerHTML = doc.contents || ''),
-        // tap(() => this.prepare(this.nextViewContainer, doc.id)),
-        switchMap(() => Math.random() > 0.8 ? throwError('asdasd') : VOID),
-        switchMap(() => this.prepare(this.nextViewContainer, doc.id)),
-        switchMap(() => this.componentLoader.loadContainedCustomElements(this.nextViewContainer)),
-        tap(() => this.docReady.emit()),
-        switchMap(() => this.swapViews()),
-        tap(() => this.docRendered.emit()),
-        catchError(err => {
-          const errorMessage = (err instanceof Error) ? err.stack : err;
-          this.console.error(new Error(`[DocViewer] Error preparing document '${doc.id}': ${errorMessage}`));
-          this.nextViewContainer.innerHTML = '';
-          this.onError(err);
+      // Security: `doc.contents` is always authored by the documentation team
+      //           and is considered to be safe.
+      switchMap(() => this.prepare(container)),
+      switchMap(() => this.elementLoader.loadContainedCustomElements(container.container, this.injector)),
+      tap(() => this.docReady.emit()),
+      switchMap(() => this.swapViews()),
+      tap(() => this.docRendered.emit()),
+      catchError(err => {
+        const errorMessage = (err instanceof Error) ? err.stack : err;
+        this.console.error(new Error(`[DocViewer] Error preparing document '${container.id}': ${errorMessage}`));
 
-          return VOID;
-        }),
+        this.view.reset();
+        this.onError(err);
+
+        return VOID;
+      }),
     );
   }
 
@@ -157,7 +169,7 @@ export class DocViewerDirective implements OnDestroy, TargetElementParser {
     if (this.currViewContainer.parentElement) {
       done$ = done$.pipe(
         // Remove the current view from the viewer.
-        animationsEnabled ? switchMap(() => animateLeave(this.currViewContainer)) : pipe(),
+        animationsEnabled && isPlatformBrowser(this.platformId) ? switchMap(() => animateLeave(this.currViewContainer)) : pipe(),
         tap(() => this.currViewContainer.parentElement.removeChild(this.currViewContainer)),
         tap(() => this.docRemoved.emit()),
       );
@@ -166,19 +178,17 @@ export class DocViewerDirective implements OnDestroy, TargetElementParser {
     return done$.pipe(
       // Insert the next view into the viewer.
       tap(() => {
-        this.renderer.appendChild(this.hostElement, this.nextViewContainer);
+        this.renderer.appendChild(this.hostElement, this.view.container);
       }),
       // tap(() => this.hostElement.appendChild(this.nextViewContainer)),
       // tap(() => this.execute()),
       switchMap(() => this.execute()),
       tap(() => this.docInserted.emit()),
-      animationsEnabled ? switchMap(() => animateEnter(this.nextViewContainer)) : pipe(),
+      animationsEnabled && isPlatformBrowser(this.platformId) ? switchMap(() => animateEnter(this.view.container)) : pipe(),
       // Update the view references and clean up unused nodes.
       tap(() => {
-        const prevViewContainer = this.currViewContainer;
-        this.currViewContainer = this.nextViewContainer;
-        this.nextViewContainer = prevViewContainer;
-        this.nextViewContainer.innerHTML = '';  // Empty to release memory.
+        this.currViewContainer = this.view.swap(this.currViewContainer);
+        this.view.reset(); // Empty to release memory.
       }),
     );
   }

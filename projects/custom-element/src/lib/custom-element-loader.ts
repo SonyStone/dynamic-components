@@ -1,27 +1,30 @@
-import { Injectable, NgModuleRef } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { LoadChildrenCallback } from '@angular/router';
+import { Compiler } from 'dynamic';
 import { EMPTY, forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, mapTo, tap } from 'rxjs/operators';
 import { switchToObservable } from 'store';
 
-import { Compiler } from './compiler';
-import { WebComponentConfig } from './element-registry';
+import { CustomElementConfig } from './custom-element-registry';
 import { WebComponents, WithComponent } from './with-component';
 
-@Injectable({ providedIn: 'root' })
-export class WebComponentLoader {
+@Injectable({
+  providedIn: 'root'
+})
+export class CustomElementLoader {
+
   /** Map of unregistered custom elements and their respective module paths to load. */
   private elementsToLoad = new Map<string, LoadChildrenCallback>();
   /** Map of custom elements that are in the process of being loaded and registered. */
   private elementsLoading = new Map<string, Observable<void>>();
 
   constructor(
-    private moduleRef: NgModuleRef<any>,
     private compiler: Compiler<WithComponent>,
     private webComponents: WebComponents,
+    private injector: Injector,
   ) {}
 
-  addConfig(config: WebComponentConfig): void {
+  addConfig(config: CustomElementConfig): void {
     const { selector, load } = config;
 
     if (this.elementsToLoad.has(selector)) {
@@ -36,19 +39,19 @@ export class WebComponentLoader {
    * the browser. Custom elements that are registered will be removed from the list of unregistered
    * elements so that they will not be queried in subsequent calls.
    */
-  loadContainedCustomElements(element: HTMLElement): Observable<void> {
+  loadContainedCustomElements(element: HTMLElement, injector: Injector = this.injector): Observable<void> {
     const unregisteredSelectors = Array.from(this.elementsToLoad.keys())
         .filter(s => element.querySelector(s));
 
     if (!unregisteredSelectors.length) { return of(undefined); }
 
     // Returns observable that completes when all discovered elements have been registered.
-    return forkJoin(unregisteredSelectors.map(s => this.loadCustomElement(s)))
+    return forkJoin(unregisteredSelectors.map(s => this.loadCustomElement(s, injector)))
       .pipe(mapTo(undefined));
   }
 
   /** Loads and registers the custom element defined on the `WithCustomElement` module factory. */
-  loadCustomElement(selector: string): Observable<void> {
+  loadCustomElement(selector: string, injector: Injector = this.injector): Observable<void> {
     if (this.elementsLoading.has(selector)) {
       // The custom element is in the process of being loaded and registered.
       return this.elementsLoading.get(selector);
@@ -63,7 +66,7 @@ export class WebComponentLoader {
         .pipe(
           switchToObservable(),
           this.compiler.compileModuleAsync,
-          map((moduleFactory) => moduleFactory.create(this.moduleRef.injector)),
+          map((moduleFactory) => moduleFactory.create(injector)),
           this.webComponents.create(selector),
           tap(() => {
             // The custom element has been successfully loaded and registered.

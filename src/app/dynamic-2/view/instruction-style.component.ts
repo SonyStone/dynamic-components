@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, NgModule, OnDestroy, Renderer2 } from '@angular/core';
-
 import style2 from '!!raw-loader!./instruction-style.css';
+import { DOCUMENT } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Inject, NgModule, OnDestroy, Renderer2 } from '@angular/core';
 
 @Component({
   selector: 'instruction-style',
@@ -13,8 +13,9 @@ export class InstructionStyleComponent implements OnDestroy {
 
   constructor(
     private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document
   ) {
-    this.host = document.head;
+    this.host = this.document.head;
 
     // console.log(style);
     this.addStyle('instruction', style2);

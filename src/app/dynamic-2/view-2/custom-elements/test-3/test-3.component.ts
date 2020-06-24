@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, NgModule, Type } from '@angular/core';
-import { WithComponent } from 'dynamic';
-
+import { WithComponent } from 'custom-element';
 
 @Component({
   selector: 'app-test-3',

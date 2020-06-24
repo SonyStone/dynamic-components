@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
+import { CustomElementModule } from 'custom-element';
 import { CONSOLE, DocViewerModule } from 'doc-viewer';
-import { WebComponentModule } from 'dynamic';
 
 import { ViewComponent } from './view.component';
 
 @NgModule({
   imports: [
     DocViewerModule,
-    WebComponentModule.forChild([
+    CustomElementModule.forChild([
       {
         selector: 'app-test-3',
         load: () => import('./custom-elements/test-3/test-3.component').then((m) => m.Test3Module),

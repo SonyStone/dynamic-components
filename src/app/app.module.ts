@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 @NgModule({
 
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
   ],
   declarations: [

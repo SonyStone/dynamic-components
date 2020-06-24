@@ -4,7 +4,8 @@
 
 export { DocumentContents, DOCUMENT_ID } from './lib/document-contents.interface';
 export { TARGET_ELEMENT_PARSER, TargetElementParser } from './lib/target-element-parser';
-export { CONSOLE } from './lib/console';
+export { DocumentView } from './lib/document-view';
+export { CONSOLE } from './lib/console.injection-token';
 
 export { DocViewerModule } from './lib/doc-viewer.module';
 export { DocViewerDirective } from './lib/doc-viewer.directive';

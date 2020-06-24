@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
-import { TargetElementParser, VOID } from 'doc-viewer';
+import { DocumentView, TargetElementParser, VOID } from 'doc-viewer';
 import { Observable } from 'rxjs';
-import { tap, delay } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 /**
  * Prepare for setting the window title.
@@ -26,10 +26,10 @@ export class TitleService implements OnDestroy, TargetElementParser {
     this.dispose();
   }
 
-  prepare(targetElem: HTMLElement, docId: string): Observable<void> {
+  prepare(view: DocumentView): Observable<void> {
     return VOID.pipe(
       tap(() => {
-        this.titleElement = targetElem.querySelector('h1');
+        this.titleElement = view.container.querySelector('h1');
       })
     );
   }
@@ -74,10 +74,10 @@ export class MetaTagsService implements OnDestroy, TargetElementParser {
     this.dispose();
   }
 
-  prepare(targetElem: HTMLElement, docId: string): Observable<void> {
+  prepare(view: DocumentView): Observable<void> {
     return VOID.pipe(
       tap(() => {
-        this.descriptionElement = targetElem.querySelector('.api-body > p:nth-child(2)');
+        this.descriptionElement = view.container.querySelector('.api-body > p:nth-child(2)');
       })
     );
   }

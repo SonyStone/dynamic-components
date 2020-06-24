@@ -17,7 +17,12 @@
     "build:dynamic-components": "ng build dynamic-components",
     "// lib store": "//",
     "start:store": "ng build store --watch",
-    "build:store": "ng build store"
+    "build:store": "ng build store",
+    "// ssr": "//",
+    "dev:ssr": "ng run dynamic-components:serve-ssr",
+    "serve:ssr": "node dist/dynamic-components/server/main.js",
+    "build:ssr": "ng build --prod && ng run dynamic-components:server:production",
+    "prerender": "ng run dynamic-components:prerender"
   },
   "private": true,
   "dependencies": {
@@ -29,8 +34,11 @@
     "@angular/forms": "~9.0.1",
     "@angular/platform-browser": "~9.0.1",
     "@angular/platform-browser-dynamic": "~9.0.1",
+    "@angular/platform-server": "~9.0.1",
     "@angular/router": "~9.0.1",
+    "@nguniversal/express-engine": "^9.0.0",
     "@ngxd/core": "^9.0.3",
+    "express": "^4.15.2",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
@@ -41,6 +49,8 @@
     "@angular/cli": "~9.0.2",
     "@angular/compiler-cli": "~9.0.1",
     "@angular/language-service": "~9.0.1",
+    "@nguniversal/builders": "^9.0.0",
+    "@types/express": "^4.17.6",
     "@types/jasmine": "~3.5.4",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",

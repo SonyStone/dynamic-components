@@ -55,7 +55,14 @@
       //   "dist/doc-viewer"
       // ],
       "doc-viewer": [
-        "projects/doc-viewer/src/public-api.ts",
+        "projects/doc-viewer/src/public-api.ts"
+      ],
+      // "custom-element": [
+      //   "dist/custom-element/custom-element",
+      //   "dist/custom-element"
+      // ],
+      "custom-element": [
+        "projects/custom-element/src/public-api.ts",
       ]
     }
   },

@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Meta } from '@angular/platform-browser';
-import { DOCUMENT_ID, TargetElementParser, VOID } from 'doc-viewer';
+import { DOCUMENT_ID, DocumentView, TargetElementParser, VOID } from 'doc-viewer';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -15,11 +15,10 @@ export class RobotsService implements OnDestroy, TargetElementParser {
     this.dispose();
   }
 
-  prepare(targetElem: HTMLElement, docId: string): Observable<void> {
+  prepare(view: DocumentView): Observable<void> {
     return VOID.pipe(
-      tap((v) => console.log(`log-name`, v)),
       tap(() => {
-        this.setNoIndex(docId === DOCUMENT_ID.FILE_NOT_FOUND || docId === DOCUMENT_ID.FETCHING_ERROR)
+        this.setNoIndex(view.id === DOCUMENT_ID.FILE_NOT_FOUND || view.id === DOCUMENT_ID.FETCHING_ERROR)
       })
     );
   }

@@ -1,8 +1,12 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DocumentView } from 'doc-viewer';
 import { ReplaySubject } from 'rxjs';
-import { ScrollSpyInfo, ScrollSpyService } from 'app/shared/scroll-spy.service';
+
+import { ScrollSpyInfo, ScrollSpyService } from './scroll-spy.service';
+import { querySelectorAll } from './utils/query-selector-all';
+import { removeNode } from './utils/remove-node';
 
 
 export interface TocItem {
@@ -20,27 +24,31 @@ export class TocService {
   private scrollSpyInfo: ScrollSpyInfo | null = null;
 
   constructor(
-      @Inject(DOCUMENT) private document: any,
-      private domSanitizer: DomSanitizer,
-      private scrollSpyService: ScrollSpyService
+    @Inject(DOCUMENT) private document: Document,
+    private domSanitizer: DomSanitizer,
+    private scrollSpyService: ScrollSpyService
   ) { }
 
-  genToc(docElement?: Element, docId = '') {
+  genToc(view?: DocumentView) {
     this.resetScrollSpyInfo();
 
-    if (!docElement) {
+    if (!view?.container) {
       this.tocList.next([]);
       return;
     }
 
-    const headings = this.findTocHeadings(docElement);
+    const headings = this.findTocHeadings(view.container);
+
+
+
     const idMap = new Map<string, number>();
+
     const tocList = headings.map(heading => {
       const {title, content} = this.extractHeadingSafeHtml(heading);
 
       return {
         level: heading.tagName.toLowerCase(),
-        href: `${docId}#${this.getId(heading, idMap)}`,
+        href: `${view.id}#${this.getId(heading, idMap)}`,
         title,
         content,
       };
@@ -49,7 +57,8 @@ export class TocService {
     this.tocList.next(tocList);
 
     this.scrollSpyInfo = this.scrollSpyService.spyOn(headings);
-    this.scrollSpyInfo.active.subscribe(item => this.activeItemIndex.next(item && item.index));
+    this.scrollSpyInfo.active
+      .subscribe((item) => this.activeItemIndex.next(item && item.index));
   }
 
   reset() {
@@ -71,7 +80,7 @@ export class TocService {
     // Remove any remaining `a` elements (but keep their content).
     querySelectorAll(div, 'a').forEach(anchorLink => {
       // We want to keep the content of this anchor, so move it into its parent.
-      const parent = anchorLink.parentNode!;
+      const parent = anchorLink.parentNode;
       while (anchorLink.childNodes.length) {
         parent.insertBefore(anchorLink.childNodes[0], anchorLink);
       }
@@ -125,23 +134,5 @@ export class TocService {
       idMap.set(key, count);
       return count === 1 ? key : `${key}-${count}`;
     }
-  }
-}
-
-// Helpers
-function querySelectorAll<K extends keyof HTMLElementTagNameMap>(parent: Element, selector: K): HTMLElementTagNameMap[K][];
-function querySelectorAll<K extends keyof SVGElementTagNameMap>(parent: Element, selector: K): SVGElementTagNameMap[K][];
-function querySelectorAll<E extends Element = Element>(parent: Element, selector: string): E[];
-function querySelectorAll(parent: Element, selector: string) {
-  // Wrap the `NodeList` as a regular `Array` to have access to array methods.
-  // NOTE: IE11 does not even support some methods of `NodeList`, such as
-  //       [NodeList#forEach()](https://developer.mozilla.org/en-US/docs/Web/API/NodeList/forEach).
-  return Array.from(parent.querySelectorAll(selector));
-}
-
-function removeNode(node: Node): void {
-  if (node.parentNode !== null) {
-    // We cannot use `Node.remove()` because of IE11.
-    node.parentNode.removeChild(node);
   }
 }
