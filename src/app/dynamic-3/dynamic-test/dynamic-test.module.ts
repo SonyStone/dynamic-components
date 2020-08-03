@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NgxdModule } from '@ngxd/core';
+import { InsertVideoModule } from 'research';
 import { StoreModule } from 'store';
 
 import { DynamicTestComponent } from './dynamic-test.component';
@@ -20,6 +21,7 @@ const routes: Routes = [
     [
       StoreModule,
       NgxdModule,
+      InsertVideoModule,
     ],
     [
       DynamicModule,

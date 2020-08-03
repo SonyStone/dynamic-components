@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { Context, DynamicComponentBindings } from 'dynamic';
 import { combineLatest, Subject, Subscription } from 'rxjs';
-import { filter, map, shareReplay } from 'rxjs/operators';
+import { filter, map, shareReplay, tap } from 'rxjs/operators';
 
 @Directive({
   selector: '[dynamic]',

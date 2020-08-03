@@ -12,6 +12,7 @@
     "test:object-pool": "ng test object-pool",
     "// lib differs": "//",
     "test:differs": "ng test differs",
+    "build:differs": "ng build differs --prod",
     "// dynamic-components": "//",
     "start:dynamic-components": "ng serve dynamic-components",
     "build:dynamic-components": "ng build dynamic-components",

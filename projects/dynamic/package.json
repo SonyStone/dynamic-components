@@ -1,9 +1,14 @@
 {
-  "name": "dynamic",
+  "name": "@ngx-factory/dynamic",
   "version": "0.0.1",
+  "description": "Angular Dynamic Components Creation",
+  "author": "LastStone <iliaverpa@gmail.com>",
+  "license": "MIT",
   "peerDependencies": {
     "@angular/common": "^9.0.1",
     "@angular/core": "^9.0.1",
-    "tslib": "^1.10.0"
+    "tslib": "^1.10.0",
+    "rxjs": "~6.5.4",
+    "@ngx-factory/differs": "^0.0.1"
   }
 }

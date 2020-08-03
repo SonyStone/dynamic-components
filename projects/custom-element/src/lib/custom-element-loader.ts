@@ -1,11 +1,11 @@
 import { Injectable, Injector } from '@angular/core';
-import { LoadChildrenCallback } from '@angular/router';
 import { Compiler } from 'dynamic';
 import { EMPTY, forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, mapTo, tap } from 'rxjs/operators';
 import { switchToObservable } from 'store';
 
 import { CustomElementConfig } from './custom-element-registry';
+import { LoadCallback } from './load-callback.interface';
 import { WebComponents, WithComponent } from './with-component';
 
 @Injectable({
@@ -14,7 +14,7 @@ import { WebComponents, WithComponent } from './with-component';
 export class CustomElementLoader {
 
   /** Map of unregistered custom elements and their respective module paths to load. */
-  private elementsToLoad = new Map<string, LoadChildrenCallback>();
+  private elementsToLoad = new Map<string, LoadCallback>();
   /** Map of custom elements that are in the process of being loaded and registered. */
   private elementsLoading = new Map<string, Observable<void>>();
 

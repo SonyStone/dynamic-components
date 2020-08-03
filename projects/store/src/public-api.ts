@@ -4,7 +4,7 @@
 
 export { StoreService } from './lib/store.service';
 
-export { Store } from './lib/store.interface';
+export { Store, AnyOperatorFunction } from './lib/store.interface';
 export { GetDataDirective } from './lib/get-data.directive';
 
 export { ViewContextHandler } from './lib/view-context.service';

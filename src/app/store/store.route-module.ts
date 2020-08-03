@@ -12,6 +12,11 @@ const routes: Routes = [
     loadChildren: () => import('./store-test-2/store-test-2.route-module')
       .then((m) => m.StoreTest2RouteModule),
   },
+  {
+    path: 'store-research',
+    loadChildren: () => import('./research/research.route-module')
+      .then((m) => m.ResearchRouteModule),
+  },
 ];
 
 @NgModule({

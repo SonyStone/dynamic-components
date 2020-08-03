@@ -8,12 +8,14 @@ import { ScrollSpyService } from './table-of-content/scroll-spy.service';
 import { ScrollService } from './table-of-content/scroll.service';
 import { TableOfContent } from './table-of-content/table-of-content.parser';
 import { TocService } from './table-of-content/toc.service';
+import { WINDOW } from './table-of-content/window.injection-token';
 import { ViewComponent } from './view.component';
 
 const tableOfContentProviders = [
   ScrollService,
   ScrollSpyService,
   TocService,
+  { provide: WINDOW, useValue: window },
   { provide: TARGET_ELEMENT_PARSER, useClass: TableOfContent, multi: true, },
 ];
 
@@ -52,7 +54,7 @@ const tableOfContentProviders = [
     MetaTagsService,
     { provide: TARGET_ELEMENT_PARSER, useExisting: TitleService, multi: true, },
     { provide: TARGET_ELEMENT_PARSER, useExisting: MetaTagsService, multi: true, },
-    // tableOfContentProviders,
+    tableOfContentProviders,
     { provide: TARGET_ELEMENT_PARSER, useClass: RobotsService, multi: true },
     { provide: CONSOLE, useValue: console, },
   ],

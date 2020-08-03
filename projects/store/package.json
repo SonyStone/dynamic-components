@@ -1,5 +1,5 @@
 {
-  "name": "store",
+  "name": "@ngx-factory/store",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^9.0.1",

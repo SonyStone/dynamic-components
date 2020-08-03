@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, timer } from 'rxjs';
+import { BehaviorSubject, timer, Observable } from 'rxjs';
 import { AbstractContext, Data } from 'store';
 
 // tslint:disable:member-ordering

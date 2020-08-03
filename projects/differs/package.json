@@ -1,9 +1,21 @@
 {
-  "name": "differs",
+  "name": "@ngx-dactory/differs",
   "version": "0.0.1",
-  "peerDependencies": {
-    "@angular/common": "^9.0.1",
-    "@angular/core": "^9.0.1",
-    "tslib": "^1.10.0"
-  }
+  "description": "Angular differs",
+  "author": "LastStone <iliaverpa@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SonyStone/dynamic-components.git"
+  },
+  "maintainers": [
+    {
+      "name": "LastStone",
+      "email": "iliaverpa@gmail.com"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/SonyStone/dynamic-components/issues"
+  },
+  "homepage": "https://github.com/SonyStone/dynamic-components"
 }

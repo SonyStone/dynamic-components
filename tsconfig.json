@@ -62,8 +62,15 @@
       //   "dist/custom-element"
       // ],
       "custom-element": [
-        "projects/custom-element/src/public-api.ts",
-      ]
+        "projects/custom-element/src/public-api.ts"
+      ],
+      // "research": [
+      //   "dist/research/research",
+      //   "dist/research"
+      // ],
+      "research": [
+        "projects/research/src/public-api.ts"
+      ],
     }
   },
   "angularCompilerOptions": {

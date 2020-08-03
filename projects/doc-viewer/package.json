@@ -1,6 +1,9 @@
 {
-  "name": "doc-viewer",
+  "name": "@ngx-dactory/doc-viewer",
   "version": "0.0.1",
+  "description": "Angular HTML viewer with custom elements",
+  "author": "LastStone <iliaverpa@gmail.com>",
+  "license": "MIT",
   "peerDependencies": {
     "@angular/common": "^9.0.1",
     "@angular/core": "^9.0.1",

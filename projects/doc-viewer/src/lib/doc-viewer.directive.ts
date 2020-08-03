@@ -159,7 +159,10 @@ export class DocViewerDirective implements OnDestroy, TargetElementParser {
    */
   protected swapViews(): Observable<void> {
 
-    const animationsEnabled = DocViewerDirective.animationsEnabled && !this.hostElement.classList.contains(NO_ANIMATIONS);
+    const animationsEnabled =
+      DocViewerDirective.animationsEnabled
+      && !this.hostElement.classList.contains(NO_ANIMATIONS)
+      && isPlatformBrowser(this.platformId);
 
     const animateLeave = (elem: HTMLElement) => animateProp(elem, 'opacity', '1', '0.1');
     const animateEnter = (elem: HTMLElement) => animateProp(elem, 'opacity', '0.1', '1');
@@ -169,7 +172,7 @@ export class DocViewerDirective implements OnDestroy, TargetElementParser {
     if (this.currViewContainer.parentElement) {
       done$ = done$.pipe(
         // Remove the current view from the viewer.
-        animationsEnabled && isPlatformBrowser(this.platformId) ? switchMap(() => animateLeave(this.currViewContainer)) : pipe(),
+        animationsEnabled ? switchMap(() => animateLeave(this.currViewContainer)) : pipe(),
         tap(() => this.currViewContainer.parentElement.removeChild(this.currViewContainer)),
         tap(() => this.docRemoved.emit()),
       );
@@ -184,7 +187,7 @@ export class DocViewerDirective implements OnDestroy, TargetElementParser {
       // tap(() => this.execute()),
       switchMap(() => this.execute()),
       tap(() => this.docInserted.emit()),
-      animationsEnabled && isPlatformBrowser(this.platformId) ? switchMap(() => animateEnter(this.view.container)) : pipe(),
+      animationsEnabled ? switchMap(() => animateEnter(this.view.container)) : pipe(),
       // Update the view references and clean up unused nodes.
       tap(() => {
         this.currViewContainer = this.view.swap(this.currViewContainer);

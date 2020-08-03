@@ -10,7 +10,8 @@ import { userTypeProviders } from '../user-type';
 
   <span>(Component) user-3</span>
 
-  <ng-container *getData="let userType from 'user-type'; let next = next">
+  <ng-container *getData="let userType from 'user-type';
+                          let next = next">
 
     <pre>userType: {{ userType }}</pre>
 

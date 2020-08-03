@@ -13,23 +13,24 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { randomNumber } from './random-number';
+import { CommonModule } from '@angular/common';
 
 // tslint:disable:no-input-rename
 
 @Component({
   selector: 'app-test-1',
   template: `
-  Link app-test-1
-  <ng-content select="div"></ng-content>
-  <input [value]="number">
-  <p>{{ number }}</p>
-  <pre>prop1: {{ prop1 }}</pre>
-  <pre>prop2: {{ prop2 }}</pre>
-  <ng-content></ng-content>
+    Link app-test-1
+    <ng-content select="div"></ng-content>
+    <input [value]="number">
+    <p>{{ number }}</p>
+    <pre>prop1: {{ prop1 }}</pre>
+    <pre>prop2: {{ prop2 }}</pre>
+    <ng-content></ng-content>
 
-  <button (click)="changeTime()">time Changes</button>
+    <button (click)="changeTime()">time Changes</button>
 
-  <app-sub-test></app-sub-test>
+    <app-sub-test></app-sub-test>
   `,
   styles: [`
     :host {
@@ -85,7 +86,9 @@ export class Test1Component implements OnChanges, OnInit, OnDestroy {
 export class SubTest1Component {}
 
 @NgModule({
-  imports: [],
+  imports: [
+    CommonModule,
+  ],
   declarations: [
     Test1Component,
     SubTest1Component,
