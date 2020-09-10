@@ -1,6 +1,5 @@
-import { stringify } from '@angular/compiler/src/util';
-
 import { isJsObject } from '../utils/is-js-object';
+import { stringify } from '../utils/stringify';
 import { DefaultKeyValuChanges } from './keyvalu-changes';
 import { DefaultKeyValueChangeRecord } from './keyvalue-change-record';
 import { KeyValueChangeRecors } from './keyvalue-change-recors';
@@ -76,8 +75,12 @@ export class DefaultKeyValueDiffer<K, V> implements KeyValueDiffer<K, V> {
     }
 
     // Make sure tails have no next records from previous runs
-    if (this.changeRecors.changesTail) this.changeRecors.changesTail._nextChanged = null;
-    if (this.changeRecors.additionsTail) this.changeRecors.additionsTail._nextAdded = null;
+    if (this.changeRecors.changesTail) {
+      this.changeRecors.changesTail._nextChanged = null;
+    }
+    if (this.changeRecors.additionsTail) {
+      this.changeRecors.additionsTail._nextAdded = null;
+    }
 
     return this.changeRecors.isDirty;
   }

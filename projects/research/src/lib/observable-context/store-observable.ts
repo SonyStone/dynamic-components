@@ -13,11 +13,7 @@ import { tap } from 'rxjs/operators';
 
 export class StoreSubject<T> extends Subject<T> {
 
-  source = of(this.value);
-
-  constructor(
-    protected value?: T,
-  ) {
+  constructor() {
     super();
   }
 
@@ -26,13 +22,27 @@ export class StoreSubject<T> extends Subject<T> {
       throw new ObjectUnsubscribedError();
     }
 
-    operator(this.source)
+    of(this)
       .pipe(
+        tap((v) => console.log(`log-name`, v)),
         // tap((v) => console.log(`log-name`, v)),
       )
       .subscribe((value) => {
-        this.next(this.value = value);
-      })
+        // this.next(value as any);
+      });
+  }
+
+  /** @deprecated This is an internal implementation detail, do not use. */
+  _subscribe(subscriber: Subscriber<T>): Subscription {
+
+    console.log(`_subscribe`, subscriber);
+
+    const subscription = super._subscribe(subscriber);
+
+    if (subscription && !(subscription as SubscriptionLike).closed) {
+      subscriber.next(this as any);
+    }
+    return subscription;
   }
 }
 
@@ -60,7 +70,7 @@ export class Store<T> extends Observable<T> implements SubscriptionLike {
       throw new ObjectUnsubscribedError();
     }
 
-     console.log(`Store`, this);
+    console.log(`Store`, this);
 
     operator(this.source)
       .pipe(
@@ -68,7 +78,7 @@ export class Store<T> extends Observable<T> implements SubscriptionLike {
       )
       .subscribe((value) => {
         this.next(value);
-      })
+      });
 
     // of(this.value).pipe(operator)
     //   .pipe(

@@ -1,9 +1,8 @@
-import { ChangeDetectorRef, Inject, Injector, OnDestroy, Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectorRef, OnDestroy, Pipe, PipeTransform } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { Updatetable } from './abstract.context';
-import { DATA_INJECTOR, DataInjectorGetter } from './data';
+import { AbstractContext, Updatetable } from './abstract.context';
 import { switchToObservable } from './utils/switch-to-observable';
 
 @Pipe({
@@ -12,33 +11,29 @@ import { switchToObservable } from './utils/switch-to-observable';
 })
 export class GetDataPipe<C> implements PipeTransform, OnDestroy, Updatetable<C> {
 
-  private selector: string | undefined;
-  private selectorSubject = new Subject<string>();
+  private selector: AbstractContext<C> | undefined;
+  private selectorSubject = new Subject<AbstractContext<C>>();
 
   private context: C | undefined;
 
   private subscription = this.selectorSubject
     .pipe(
-      this.getDataInjector(this.injector),
-      switchToObservable(),
       map((obj) => obj?.context$ || undefined),
       switchToObservable(),
     )
     .subscribe((context) => {
       this.update(context);
-    })
+    });
 
   constructor(
-    @Inject(DATA_INJECTOR) private getDataInjector: DataInjectorGetter<C>,
-    private injector: Injector,
     private cd: ChangeDetectorRef,
   ) {}
 
-  transform(selector: string): any {
+  transform(selector: AbstractContext<C> | undefined): any {
 
     if (!this.selector) {
 
-      if (typeof selector === 'string') {
+      if (selector?.context$) {
         this.selector = selector;
 
         this.selectorSubject.next(this.selector);

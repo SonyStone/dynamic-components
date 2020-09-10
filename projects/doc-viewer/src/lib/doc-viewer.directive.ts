@@ -70,7 +70,7 @@ export class DocViewerDirective implements OnDestroy, TargetElementParser {
   private subscription = this.docContents$
     .pipe(
       tap((newDoc) => {
-        this.view.update(newDoc)
+        this.view.update(newDoc);
       }),
       switchMap(() => this.render(this.view)),
     )

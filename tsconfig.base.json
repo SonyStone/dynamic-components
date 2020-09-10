@@ -1,0 +1,81 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "module": "es2020",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "@factory/utils": [
+        "libs/utils/index.ts"
+      ],
+      // "store": [
+      //   "dist/store/store",
+      //   "dist/store"
+      // ],
+      "store": [
+        "projects/store/src/public-api.ts"
+      ],
+      // "object-pool": [
+      //   "dist/object-pool/object-pool",
+      //   "dist/object-pool"
+      // ],
+      "object-pool": [
+        "projects/object-pool/src/public-api.ts"
+      ],
+      // "differs": [
+      //   "dist/differs/differs",
+      //   "dist/differs"
+      // ],
+      "differs": [
+        "projects/differs/src/public-api.ts"
+      ],
+      // "dynamic": [
+      //   "dist/dynamic/dynamic",
+      //   "dist/dynamic"
+      // ],
+      "dynamic": [
+        "projects/dynamic/src/public-api.ts"
+      ],
+      // "doc-viewer": [
+      //   "dist/doc-viewer/doc-viewer",
+      //   "dist/doc-viewer"
+      // ],
+      "doc-viewer": [
+        "projects/doc-viewer/src/public-api.ts"
+      ],
+      // "custom-element": [
+      //   "dist/custom-element/custom-element",
+      //   "dist/custom-element"
+      // ],
+      "custom-element": [
+        "projects/custom-element/src/public-api.ts"
+      ],
+      // "research": [
+      //   "dist/research/research",
+      //   "dist/research"
+      // ],
+      "research": [
+        "projects/research/src/public-api.ts"
+      ],
+    }
+  },
+  "angularCompilerOptions": {
+    "enableIvy": true,
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
+}

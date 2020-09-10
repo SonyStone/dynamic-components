@@ -1,21 +1,27 @@
-<span>
-  <a routerLink="./dynamic/dynamic-test">dynamic-test</a>&nbsp;
-  <a routerLink="./dynamic/outlet-test">outlet-test</a>&nbsp;
-  <a routerLink="./dynamic/ngxd-outlet-test">ngxd-outlet-test</a>&nbsp;
-  <a routerLink="./dynamic/lazy-load-test">lazy-load-test</a>&nbsp;
-  <br>
-  <a routerLink="./dynamic-2/view">view-1</a>&nbsp;
-  <a routerLink="./dynamic-2/view-2">view-2</a>&nbsp;
-  <br>
-  <a routerLink="./dynamic-3/dynamic-test">dynamic-test</a>&nbsp;
-  <br>
-  <a routerLink="./dynamic-4/view">more dynamic test</a>&nbsp;
-  <br>
-  <a routerLink="./store/store-test">store test</a>&nbsp;
-  <a routerLink="./store/store-test-2">store test 2</a>&nbsp;
-  <a routerLink="./store/store-research">store research</a>&nbsp;
-</span>
-<br>
+<button dropdown>
+  Dynamic
+  <ng-template>
+    <a routerLink="./dynamic-test">dynamic-test</a>
+    <a routerLink="./outlet-test">outlet-test</a>
+    <a routerLink="./ngxd-outlet-test">ngxd-outlet-test</a>
+    <a routerLink="./lazy-load-test">lazy-load-test</a>
+    <hr>
+    <a routerLink="./view">view-1</a>
+    <a routerLink="./view-2">view-2</a>
+    <hr>
+    <a routerLink="./dynamic-test-2">dynamic-test</a>
+    <hr>
+    <a routerLink="./dynamic-template">dynamic-template</a>
+    <hr>
+    <a routerLink="./store-test">store test</a>
+    <a routerLink="./empty-route">empty route</a>
+    <a routerLink="./dynamic-counter">dynamic-counter</a>
+    <a routerLink="./store-paginator">store-paginator</a>
+    <hr>
+    <a routerLink="./dynamic-test-3">dynamic-test-3</a>
+  </ng-template>
+</button>
+
 <insert-video></insert-video>
 
 <router-outlet></router-outlet>

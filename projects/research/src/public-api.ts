@@ -16,3 +16,5 @@ export * from './lib/stored-component/insert-video.directive';
 // ngBeforeDestroy
 export * from './lib/stored-component/before-destroy.directive';
 export * from './lib/stored-component/before-on-destroy';
+
+export * from './lib/lazy-lib/lazy-lib.token';

@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/SonyStone/dynamic-components/issues"
   },
-  "homepage": "https://github.com/SonyStone/dynamic-components"
+  "homepage": "https://github.com/SonyStone/dynamic-components",
+  "dependencies": {
+    "tslib": "^2.0.0"
+  }
 }

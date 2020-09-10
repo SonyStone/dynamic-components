@@ -7,19 +7,19 @@ import { ChangeDetectionStrategy, Component, OnInit, AfterViewInit, OnDestroy } 
 export class VideoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor() {
-    console.log(`VideoComponent Created`)
+    // console.log(`VideoComponent Created`);
   }
 
   ngOnInit(): void {
-    console.log(`VideoComponent OnInit`)
+    console.log(`VideoComponent OnInit`);
   }
 
   ngAfterViewInit(): void {
-    console.log(`VideoComponent AfterViewInit`)
+    console.log(`VideoComponent AfterViewInit`);
   }
 
   ngOnDestroy(): void {
-    console.log(`VideoComponent OnDestroy`)
+    console.log(`VideoComponent OnDestroy`);
   }
 
 }

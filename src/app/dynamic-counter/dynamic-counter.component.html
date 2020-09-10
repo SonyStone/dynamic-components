@@ -1,0 +1,56 @@
+<hr>
+<p>dynamic counter</p>
+
+<p>appDynamicCounter</p>
+
+<ng-container *appDynamicCounter="let data;">
+  <pre>{{ data | json }}</pre>
+</ng-container>
+
+<p>appDataObservable</p>
+
+<ng-container *appDataObservable="let data; let name = name">
+  <pre>{{ data | json }}</pre>
+</ng-container>
+
+<p>store Observable</p>
+
+<ng-container *store="let data; from state1Store; let name = name;">
+  <pre>{{ data | json }}</pre>
+  <button (click)="data.next()">next</button>
+</ng-container>
+
+<ng-container *appStoreSubject="let data">
+  <pre>{{ data | json }}</pre>
+  <!-- <button (click)="next()">next</button> -->
+</ng-container>
+
+<p>appDynamicCounter</p>
+<div *appDynamicCounter="let data;
+                         let count = count;
+                         let start = start;">
+  <pre>{{ data | json }}</pre>
+
+  <h1>{{ data.count }}</h1>
+  <button (click)="data.start()">start</button>
+  <button (click)="data.pause()">pause</button>
+  <br>
+  <button (click)="data.setTo(setTo.valueAsNumber)">setTo</button>
+  <input type="number"
+         value=0
+         #setTo>
+  <br>
+  <button (click)="data.reset()">reset</button>
+  <button (click)="data.countUp()">countUp</button>
+  <button (click)="data.countDown()">countDown</button>
+  <br>
+  Tick Speed:
+  <input type="number"
+         [(ngModel)]="data.tickSpeed"
+         (ngModelChange)="data.setSpeed($event)">
+  Count Diff:
+  <input type="number"
+         [(ngModel)]="data.countDiff"
+         (ngModelChange)="data.setDiff($event)">
+
+</div>

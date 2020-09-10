@@ -28,6 +28,7 @@ export class DataObservable extends Observable<UserService> {
     private user: UserService,
   ) {
     super();
+
   }
 }
 

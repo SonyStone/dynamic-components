@@ -1,4 +1,4 @@
-import { OnDestroy } from '@angular/core';
+import { OnDestroy, Injectable, INJECTOR, Inject } from '@angular/core';
 import { ConnectableObservable, ObservableInput, of, OperatorFunction, Subject, Unsubscribable } from 'rxjs';
 import { exhaustMap, publishReplay, tap } from 'rxjs/operators';
 
@@ -7,6 +7,8 @@ import { AnyOperatorFunction, Store } from './store.interface';
 type TransformingOperator<T, B> =
   (project: (value: AnyOperatorFunction<T, B>, index: number) => ObservableInput<any>) => OperatorFunction<any, any>;
 
+// TODO: Add Angular decorator.
+@Injectable()
 export class StoreService<T, B = T> implements Store<T, B>, Unsubscribable, OnDestroy {
 
   protected readonly actions$ = new Subject<AnyOperatorFunction<T, B>>();
@@ -21,8 +23,8 @@ export class StoreService<T, B = T> implements Store<T, B>, Unsubscribable, OnDe
   private readonly subscription = this.state$.connect();
 
   constructor(
-    protected state?: T | B,
-    protected transformingOperator: TransformingOperator<T, B> = exhaustMap,
+    @Inject(INJECTOR) protected state?: T | B,
+    @Inject(INJECTOR) protected transformingOperator: TransformingOperator<T, B> = exhaustMap,
   ) {}
 
   ngOnDestroy(): void {

@@ -1,0 +1,93 @@
+<ng-container *getData="let paginator from paginatorContext">
+
+  <div class="mat-paginator-outer-container">
+    <div class="mat-paginator-container">
+      <div class="mat-paginator-page-size">
+        <div class="mat-paginator-page-size-label">
+          Items per page
+        </div>
+
+        <mat-form-field *ngIf="paginator.pageSizeOptions.length > 1"
+                        class="mat-paginator-page-size-select">
+          <mat-select [value]="paginator.pageSize"
+                      (selectionChange)="paginator.changePageSize($event.value)">
+            <mat-option *ngFor="let pageSizeOption of paginator.pageSizeOptions"
+                        [value]="pageSizeOption">
+              {{pageSizeOption}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="mat-paginator-page-size-value"
+             *ngIf="paginator.pageSizeOptions.length <= 1">{{paginator.pageSize}}</div>
+      </div>
+
+      <div class="mat-paginator-range-actions">
+        <div class="mat-paginator-range-label">
+          {{paginator.rangeLabel}}
+        </div>
+
+        <button mat-icon-button
+                type="button"
+                class="mat-paginator-navigation-first"
+                (click)="paginator.firstPage()"
+                matTooltip="First page"
+                [matTooltipDisabled]="!paginator.hasPreviousPage"
+                [matTooltipPosition]="'above'"
+                [disabled]="!paginator.hasPreviousPage">
+          <svg class="mat-paginator-icon"
+               viewBox="0 0 24 24"
+               focusable="false">
+            <path d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z" />
+          </svg>
+        </button>
+        <button mat-icon-button
+                type="button"
+                class="mat-paginator-navigation-previous"
+                (click)="paginator.previousPage()"
+                [attr.aria-label]="'Previous Page'"
+                [matTooltip]="'Previous Page'"
+                [matTooltipDisabled]="!paginator.hasPreviousPage"
+                [matTooltipPosition]="'above'"
+                [disabled]="!paginator.hasPreviousPage">
+          <svg class="mat-paginator-icon"
+               viewBox="0 0 24 24"
+               focusable="false">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+          </svg>
+        </button>
+        <button mat-icon-button
+                type="button"
+                class="mat-paginator-navigation-next"
+                (click)="paginator.nextPage()"
+                [attr.aria-label]="'Next Page'"
+                [matTooltip]="'Next Page'"
+                [matTooltipDisabled]="!paginator.hasNextPage"
+                [matTooltipPosition]="'above'"
+                [disabled]="!paginator.hasNextPage">
+          <svg class="mat-paginator-icon"
+               viewBox="0 0 24 24"
+               focusable="false">
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+          </svg>
+        </button>
+        <button mat-icon-button
+                type="button"
+                class="mat-paginator-navigation-last"
+                (click)="paginator.lastPage()"
+                [attr.aria-label]="'Last Page'"
+                [matTooltip]="'Last Page'"
+                [matTooltipDisabled]="!paginator.hasNextPage"
+                [matTooltipPosition]="'above'"
+                [disabled]="!paginator.hasNextPage">
+          <svg class="mat-paginator-icon"
+               viewBox="0 0 24 24"
+               focusable="false">
+            <path d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</ng-container>

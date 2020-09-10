@@ -80,9 +80,9 @@ export class CustomElementLoader {
             // (Do not remove from `elementsToLoad` in case it was a temporary error.)
             this.elementsLoading.delete(selector);
 
-            return of(error)
+            return of(error);
           })
-        )
+        );
 
       this.elementsLoading.set(selector, loadedAndRegistered);
 

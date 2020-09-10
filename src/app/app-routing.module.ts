@@ -4,29 +4,69 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'dynamic',
-    loadChildren: () => import('./dynamic/dynamic.route-module')
-      .then((m) => m.DynamicRouteModule),
+    path: 'dynamic-test',
+    loadChildren: () => import('./dynamic-test/dynamic-test.module')
+      .then((m) => m.DynamicTestModule),
   },
   {
-    path: 'dynamic-2',
-    loadChildren: () => import('./dynamic-2/dynamic-2.route-module')
-      .then((m) => m.Dynamic2RouteModule),
+    path: 'outlet-test',
+    loadChildren: () => import('./outlet-test/outlet-test.module')
+      .then((m) => m.OutletTestModule),
   },
   {
-    path: 'dynamic-3',
-    loadChildren: () => import('./dynamic-3/dynamic-3.route-module')
-      .then((m) => m.Dynamic3RouteModule),
+    path: 'lazy-load-test',
+    loadChildren: () => import('./lazy-load-test/lazy-load-test.module')
+      .then((m) => m.LazyLoadTestModule),
   },
   {
-    path: 'dynamic-4',
-    loadChildren: () => import('./dynamic-4/dynamic-routing.module')
-      .then((m) => m.Dynamic4RoutingModule),
+    path: 'ngxd-outlet-test',
+    loadChildren: () => import('./ngx-outlet-test/ngx-outlet-test.module')
+      .then((m) => m.NgxOutletTestModule),
   },
   {
-    path: 'store',
-    loadChildren: () => import('./store/store.route-module')
-      .then((m) => m.StoreRouteModule),
+    path: 'view',
+    loadChildren: () => import('./view/view-routing.module')
+      .then((m) => m.ViewRoutingModule),
+  },
+  {
+    path: 'view-2',
+    loadChildren: () => import('./view-2/view.route-module')
+      .then((m) => m.View2RouteModule),
+  },
+  {
+    path: 'dynamic-test-2',
+    loadChildren: () => import('./dynamic-test-2/dynamic-test.module')
+      .then((m) => m.DynamicTestModule),
+  },
+  {
+    path: 'dynamic-test-3',
+    loadChildren: () => import('./dynamic-test-3/dynamic-test.module')
+      .then((m) => m.DynamicTestModule),
+  },
+  {
+    path: 'dynamic-template',
+    loadChildren: () => import('./dynamic-template/view.route-module')
+      .then((m) => m.ViewRouteModule),
+  },
+  {
+    path: 'store-test',
+    loadChildren: () => import('./store-test/store-test.route-module')
+      .then((m) => m.StoreTestRouteModule),
+  },
+  {
+    path: 'dynamic-counter',
+    loadChildren: () => import('./dynamic-counter/dynamic-counter.route-module')
+      .then((m) => m.DynamicCounterRouteModule),
+  },
+  {
+    path: 'store-paginator',
+    loadChildren: () => import('./store-paginator/store-paginator.route-module')
+      .then((m) => m.StorePaginatorRouteModule),
+  },
+  {
+    path: '**',
+    loadChildren: () => import('./empty-route/empty-route.route-module')
+      .then((m) => m.EmptyRouteRouteModule),
   },
 ];
 

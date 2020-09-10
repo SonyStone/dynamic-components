@@ -1,5 +1,9 @@
 // tslint:disable:ban-types
 
+/**
+ * Не подходит для работы со View, так как работает только в рамках своего класса
+ * (View уничтожается раньше вызвова ngxBeforeOnDestroy)
+ */
 export interface BeforeOnDestroy {
   ngxBeforeOnDestroy();
 }
@@ -9,23 +13,12 @@ type Descriptor = TypedPropertyDescriptor<Function>;
 type Key = string | symbol;
 
 export function BeforeOnDestroy(target: NgxInstance, key: Key, descriptor: Descriptor) {
+
   return {
-      value: async function( ... args: any[]) {
-          await target.ngxBeforeOnDestroy.apply(this);
-          return descriptor.value.apply(target, args);
-      }
-  }
+    async value( ... args: any[]) {
+
+      await target.ngxBeforeOnDestroy.apply(this);
+      return descriptor.value.apply(this, args);
+    }
+  };
 }
-
-// export function BeforeOnDestroy() {
-//   return (target: NgxInstance, key: Key, descriptor: Descriptor) => {
-
-//     console.log(`BeforeOnDestroy`, target, key, descriptor)
-
-//     descriptor.value = ( ... args: any[]) => {
-//       console.log(`call BeforeOnDestroy`, target, key, descriptor)
-//       target.ngxBeforeOnDestroy.apply(this);
-//       return descriptor.value.apply(target, args);
-//     }
-//   }
-// }

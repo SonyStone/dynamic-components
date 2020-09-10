@@ -1,7 +1,6 @@
-import { stringify } from '@angular/compiler/src/util';
-
 import { isListLikeIterable } from '../utils/is-list-like-iterable';
 import { looseIdentical } from '../utils/loose-identical';
+import { stringify } from '../utils/stringify';
 import { DefaultIterableChanges } from './default-iterable-changes';
 import { DefaultIterableChangeRecord } from './iterable-change-record';
 import { IterableChangeRecors } from './iterable-change-recors';
@@ -67,12 +66,12 @@ export class DefaultIterableDiffer<V> implements IterableDiffer<V> {
           record = this.changeRecors.verifyReinsertion(record, item, itemTrackBy, index);
         }
         if (!looseIdentical(record.item, item)) {
-          this.changeRecors.addIdentityChange(record, item)
-        };
+          this.changeRecors.addIdentityChange(record, item);
+        }
       }
       record = record._next;
       index++;
-    };
+    }
 
     (this.length as number) = index;
 

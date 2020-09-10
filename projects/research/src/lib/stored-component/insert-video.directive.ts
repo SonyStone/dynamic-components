@@ -1,5 +1,5 @@
-import { Directive, ElementRef, NgModule, OnDestroy, Renderer2 } from '@angular/core';
-import { delay } from 'rxjs/operators';
+import { Directive, ElementRef, NgModule, OnDestroy, Renderer2, ViewContainerRef } from '@angular/core';
+import { tap, delay } from 'rxjs/operators';
 
 import { VideoService } from './video.service';
 
@@ -8,23 +8,34 @@ import { VideoService } from './video.service';
 })
 export class InsertVideoDirective implements OnDestroy {
 
+  // viewRef: ViewRef | undefined;
+
   subscription = this.videoService.append$
-    // .pipe(
-    //   delay(1000),
-    // )
+    .pipe(
+      delay(0)
+    )
     .subscribe((componentRef) => {
+
+      // this.viewRef = componentRef.hostView;
+      // this.viewContainerRef.insert(componentRef.hostView);
+      // console.log(this.elementRef.nativeElement, componentRef.location.nativeElement)
+
       this.renderer.appendChild(this.elementRef.nativeElement, componentRef.location.nativeElement);
-    })
+    });
 
   constructor(
     private videoService: VideoService,
     private renderer: Renderer2,
     private elementRef: ElementRef,
+    // private viewContainerRef: ViewContainerRef,
   ) { }
 
   ngOnDestroy(): void {
-    console.log(`insert-video ngOnDestroy`);
-    this.videoService.append.next(1312);
+    // if (this.viewRef) {
+    //   const index = this.viewContainerRef.indexOf(this.viewRef);
+    //   this.viewContainerRef.detach(index);
+    // }
+    this.videoService.append.next();
     this.subscription.unsubscribe();
   }
 }
