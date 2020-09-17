@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { DynamicModule } from 'dynamic';
 
 import { PortalContentModule } from '../lib/portal-content.module';
 import { Test3Component } from './test-3.component';
@@ -6,6 +7,7 @@ import { Test4Component } from './test-4.component';
 
 @NgModule({
   imports: [
+    DynamicModule,
     PortalContentModule.forChild({
       types: [
         {

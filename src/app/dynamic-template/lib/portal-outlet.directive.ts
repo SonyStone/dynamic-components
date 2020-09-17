@@ -1,13 +1,12 @@
 import { Compiler, Directive, Inject, Injector, OnDestroy, Provider, ViewContainerRef } from '@angular/core';
 import { CONSOLE } from 'doc-viewer';
-import { ComponentPortal, resolveDynamicModule, NgModulePortal, TemplatePortal } from 'dynamic';
-import { from, of } from 'rxjs';
+import { NgModulePortal, resolveDynamicModule } from 'dynamic';
+import { forkJoin, from, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 
 import { Test2Module } from '../test-2/test-2.module';
-import { ConfigService } from './config.service';
-import { ComponentTypeOption, TemplateTypeOption } from './dynamic-config';
-import { TemplatesService } from './templates.service';
+import { Test3Component } from '../test-2/test-3.component';
+import { Test4Component } from '../test-2/test-4.component';
 
 
 // tslint:disable:only-arrow-functions
@@ -31,11 +30,6 @@ const dynamicTemplatesProviders: Provider[] = [
   }
 ];
 
-const isTemplateTypeOption = (type: TemplateTypeOption | ComponentTypeOption): type is TemplateTypeOption =>
-  !!(type as TemplateTypeOption)?.names;
-
-const isComponentTypeOption = (type: TemplateTypeOption | ComponentTypeOption): type is ComponentTypeOption =>
-  !!((type as ComponentTypeOption)?.name);
 
 // tslint:disable:directive-selector
 
@@ -55,71 +49,20 @@ export class PortalOutletDirective implements OnDestroy {
 
   sub = of(Test2Module)
     .pipe(
-      map((module) => NgModulePortal.withModule(module)),
+      map((module) =>
+        NgModulePortal.withModule(module)
+          .withComponent(Test3Component, 'test-3-component')
+          .withTemplates(Test4Component, ['test-3-template', 'test-4-template'])
+      ),
       // Компилируем? модуль (Почему компилируем, почему это называется компиляция?)
       // нужен, чтобы появился ComponentFactory
       switchMap((modulePortal) => from(modulePortal.compile(this.compiler))),
       map((modulePortal) => modulePortal.create(this.injector)),
-      map((modulePortal) => {
+      switchMap((modulePortal) => forkJoin(modulePortal.types.map((type) => type.create()))),
+      map((typeHolders) => {
+        for (const holder of typeHolders) {
 
-        for (const type of this.config.config.types) {
-          if (isTemplateTypeOption(type)) {
-            const { component, names } = type;
-
-            const componentPortal = new ComponentPortal();
-
-            // имеем класс (type) компонента
-            componentPortal.type = component;
-            componentPortal.moduleRef = modulePortal.moduleRef;
-
-            componentPortal.createFactory();
-
-            componentPortal.createComponent();
-
-            componentPortal.ref = componentPortal.factory.create(modulePortal.moduleRef.injector);
-            // componentPortal.injector = componentPortal.ref.injector;
-            // componentPortal.viewRef = componentPortal.ref.hostView;
-
-
-            const templateRefs = this.templatesService.templates.get(component);
-
-            if (names.length > templateRefs.length) {
-              throw new Error('The number of names must not exceed the number of templates');
-            }
-
-            for (let index = 0; index < names.length; index++) {
-              const name = names[index];
-              const templateRef = templateRefs[index];
-
-              const templatePortal = new TemplatePortal();
-              templatePortal.tag = name;
-              templatePortal.ref = templateRef;
-              templatePortal.viewRef = templatePortal.ref.createEmbeddedView(undefined);
-
-              modulePortal.portals.set(name, templatePortal);
-            }
-
-          } else if (isComponentTypeOption(type)) {
-            const { component, name } = type;
-            const componentPortal = new ComponentPortal();
-
-            componentPortal.type = component;
-            componentPortal.factory = modulePortal.moduleRef.componentFactoryResolver.resolveComponentFactory(component);
-            componentPortal.ref = componentPortal.factory.create(modulePortal.moduleRef.injector);
-
-            componentPortal.injector = componentPortal.ref.injector;
-            componentPortal.viewRef = componentPortal.ref.hostView;
-
-            modulePortal.portals.set(name, componentPortal);
-          }
-        }
-
-        return modulePortal;
-      }),
-      map((portal) => {
-        for (const [_, p] of portal.portals) {
-
-          this.viewContainer.insert(p.viewRef);
+          holder.attach(this.viewContainer);
         }
       }),
     )
@@ -127,10 +70,8 @@ export class PortalOutletDirective implements OnDestroy {
 
   constructor(
     @Inject('test') private testLoader: any,
-    private config: ConfigService,
     private injector: Injector,
     private compiler: Compiler,
-    private templatesService: TemplatesService,
     private viewContainer: ViewContainerRef,
     @Inject(CONSOLE) private console: Console,
   ) {}

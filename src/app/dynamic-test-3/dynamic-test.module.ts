@@ -20,14 +20,14 @@ const routes: Routes = [
         types: [
           {
             types: ['hero-card'],
-            loadModule: () => import('./components/hero-card').then((m) =>
+            async: () => import('./components/hero-card').then((m) =>
               resolveDynamicModule(m.HeroCardModule)
                 .withComponent(m.HeroCardComponent, 'hero-card')
             ),
           },
           {
             types: ['hero-name-common', 'hero-name-epic'],
-            loadModule: () => import('./components/hero-name').then((m) =>
+            async: () => import('./components/hero-name').then((m) =>
               resolveDynamicModule(m.HeroNameModule)
                 .withTemplates(m.HeroNameComponent, ['hero-name-common', 'hero-name-epic'])
             ),

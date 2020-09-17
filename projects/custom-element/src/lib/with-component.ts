@@ -22,8 +22,7 @@ export class WebComponents {
     const CustomElementComponent = moduleRef.instance.component;
     const CustomElement = createCustomElement(CustomElementComponent, {injector});
 
-    customElements.define(selector, CustomElement as any);
+    customElements.define(selector, CustomElement);
     return from(customElements.whenDefined(selector));
   })
-
 }

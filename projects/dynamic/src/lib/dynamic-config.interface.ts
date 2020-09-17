@@ -9,6 +9,10 @@ export type LoadCallback<T> = () => Promise<T>;
 export interface TypeOption<T> {
   type?: string;
   types?: string[];
-  loadModule?: LoadCallback<NgModulePortal<T>>;
-  module?: NgModulePortal<T>;
+
+  /** load module async */
+  async?: LoadCallback<NgModulePortal<T>>;
+
+  /** load module sync */
+  sync?: NgModulePortal<T>;
 }

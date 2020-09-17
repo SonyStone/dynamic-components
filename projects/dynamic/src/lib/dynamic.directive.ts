@@ -9,7 +9,7 @@ import {
   SimpleChanges,
   ViewContainerRef,
 } from '@angular/core';
-import { from, of, Subject } from 'rxjs';
+import { from, of, Subject, forkJoin } from 'rxjs';
 import { filter, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 
 import { DYNAMIC_TYPES_MAP } from './dynamic.injection-tolens';
@@ -34,21 +34,23 @@ export class DynamicDirective implements OnChanges, OnDestroy {
         this.viewContainerRef.clear();
       }),
       switchMap((typeOptions) =>
-        typeOptions.map((typeOption, index) =>
-          componentCreater(typeOption, index, this.typesMap, this.compiler, this.injector),
+        forkJoin(
+          typeOptions.map((typeOption, index) => componentCreater(
+            typeOption,
+            index,
+            this.typesMap,
+            this.compiler,
+            this.injector
+            )),
       )),
       mergeAll(),
     )
     .subscribe(({ component, index }) => {
-      const componentRef = component.createComponent();
-
       const tempIndex = this.viewContainerRef.length < index
         ? this.viewContainerRef.length
         : index;
 
-      this.viewContainerRef.insert(componentRef.hostView, tempIndex);
-
-      componentRef.changeDetectorRef.markForCheck();
+      component.attach(this.viewContainerRef, tempIndex);
     });
 
   constructor(
@@ -80,10 +82,10 @@ export const componentCreater = (
   map((option) => typesMap.get(option?.type)),
   filter((holder) => !!holder),
   switchMap((holder) => from(holder.compile(compiler))),
-  map((holder) => {
+  switchMap((holder) => {
     const moduleRef = holder.create(injector);
-    const component = moduleRef.components.get(typeOption.type).createFactory();
+    const component = from(moduleRef.selectors.get(typeOption.type).create());
 
-    return { component, index };
-  }),
+    return component;
+  }, (_, component) => ({ component, index })),
 );

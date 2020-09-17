@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-
-import { provideComponentAccessor } from '../lib/portal-content.directive';
+import { provideComponentAccessor } from 'dynamic';
 
 @Component({
   selector: 'test-4',
