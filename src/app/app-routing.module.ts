@@ -53,15 +53,22 @@ const routes: Routes = [
     loadChildren: () => import('./store-test/store-test.route-module')
       .then((m) => m.StoreTestRouteModule),
   },
+  /** реализация примера со счётиком и кастомным стором  */
   {
     path: 'dynamic-counter',
     loadChildren: () => import('./dynamic-counter/dynamic-counter.route-module')
       .then((m) => m.DynamicCounterRouteModule),
   },
+  /** реализация примера с пагинатором и кастомным стором */
   {
     path: 'store-paginator',
     loadChildren: () => import('./store-paginator/store-paginator.route-module')
       .then((m) => m.StorePaginatorRouteModule),
+  },
+  {
+    path: 'ecs-test',
+    loadChildren: () => import('./ecs-test/ecs-test.route-module')
+      .then((m) => m.ECSTestRouteModule),
   },
   {
     path: '**',

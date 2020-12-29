@@ -58,7 +58,6 @@ export class DynamicTestComponent implements OnInit, OnDestroy {
     const injector = this.viewContainerRef.parentInjector;
 
 
-
     const componentsReduser = (accumulator: Array<ComponentRef<Test1Component>>, component: typeof Test1Component, index: number) => {
 
       const componentRef = (accumulator.length === 0)
