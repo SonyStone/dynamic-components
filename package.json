@@ -39,7 +39,7 @@
     "@angular/platform-browser-dynamic": "~10.0.7",
     "@angular/platform-server": "~10.0.7",
     "@angular/router": "~10.0.7",
-    "@ngxd/core": "^9.0.3",
+    "@ngxd/core": "^10.0.0",
     "express": "^4.15.2",
     "rxjs": "~6.5.4",
     "tslib": "^2.0.0",
